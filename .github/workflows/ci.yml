@@ -29,6 +29,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build docs
+        run: echo "Building docs..." # Placeholder for actual docs build command 
+
       #- name: Lint
       #  run: pnpm lint
 
