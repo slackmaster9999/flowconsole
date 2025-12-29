@@ -1,0 +1,4 @@
+packages:
+  - src/app
+  - src/core
+  - src/docs

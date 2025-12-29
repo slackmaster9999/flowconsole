@@ -1,0 +1,161 @@
+.code-pane {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 12px;
+  gap: 12px;
+  background: #0b1120;
+  color: #f0f4ff;
+  width: 100%;
+}
+
+.code-pane__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.code-pane__header label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #cbd5f5;
+}
+
+.code-pane__header p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.code-pane__sample-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #cbd5f5;
+}
+
+.code-pane__sample-picker select {
+  background: #0f172a;
+  border: 1px solid #1f2937;
+  border-radius: 8px;
+  color: #f8fafc;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.code-pane__sample-description {
+  margin: 0;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.code-pane__editor {
+  flex: 1;
+  min-height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #1f2937;
+}
+
+.code-pane__error {
+  background: #2b0d0d;
+  border: 1px solid #7f1d1d;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #fecaca;
+}
+
+.code-pane__error pre {
+  margin: 6px 0 0;
+  white-space: pre-wrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.diagram-pane {
+  position: relative;
+  height: 100%;
+  background: #020617;
+}
+
+.diagram-pane__canvas {
+  height: 100%;
+  transition: filter 0.3s ease;
+}
+
+.diagram-pane__canvas.is-blurred {
+  filter: blur(4px);
+}
+
+.diagram-pane__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.progress-card {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: #f8fafc;
+  min-width: 220px;
+  box-shadow: 0 20px 70px rgba(2, 6, 23, 0.7);
+}
+
+.progress-card__spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 4px solid rgba(148, 163, 184, 0.5);
+  border-left-color: #60a5fa;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+.progress-card__bar {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.progress-card__bar span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #60a5fa 0%, #a855f7 50%, #60a5fa 100%);
+  animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.progress-card p {
+  margin: 0;
+  font-size: 13px;
+  text-align: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

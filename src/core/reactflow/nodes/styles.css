@@ -1,0 +1,219 @@
+
+.diagram-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  padding: 5px 5px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--diagram-border);
+  border-radius: 14px;
+  box-shadow: var(--diagram-card-shadow);
+}
+
+.diagram-container__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.diagram-container__body {
+  font-size: 13px;
+  color: var(--diagram-text-muted);
+  line-height: 1.4;
+}
+
+.diagram-note {
+  position: relative;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed var(--diagram-border);
+  border-radius: 12px;
+  color: var(--diagram-text);
+  box-shadow: var(--diagram-card-shadow);
+}
+
+.diagram-note__title {
+  font-weight: 700;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.diagram-note__body {
+  color: var(--diagram-text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.diagram-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border: 1px solid var(--diagram-border);
+  border-radius: 14px;
+  box-shadow: var(--diagram-card-shadow);
+  color: var(--diagram-text);
+  padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.diagram-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.diagram-card__title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.diagram-card__subtitle {
+  font-size: 12px;
+  color: var(--diagram-text-muted);
+}
+
+.diagram-card__tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.diagram-tag {
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--diagram-border);
+  color: var(--diagram-text-muted);
+}
+
+.diagram-badge {
+  padding: 4px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  border: 1px solid var(--diagram-border-strong);
+}
+
+.diagram-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--diagram-text);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--diagram-border-strong);
+}
+
+.diagram-status {
+  display: grid;
+  place-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  border: 2px solid var(--diagram-panel);
+}
+
+.diagram-footer {
+  font-size: 12px;
+  color: var(--diagram-text-muted);
+  border-top: 1px solid var(--diagram-border);
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.react-flow__edge-labels {
+  position: relative;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.react-flow__edge-labels .relationship-label {
+  pointer-events: auto;
+}
+
+.react-flow .react-flow__edges svg {
+  z-index: 2 !important;
+}
+
+.relationship-label__main {
+  font-weight: 700;
+}
+
+.relationship-label__detail {
+  color: var(--diagram-text-muted);
+}
+
+.relationship-label__icon {
+  font-size: 13px;
+}
+
+.perimeter-handle {
+  opacity: 0;
+}
+
+.perimeter-handle:focus-visible {
+  outline: 1px solid var(--diagram-primary);
+  opacity: 0.6;
+}
+
+.relationship-path {
+  transition: stroke 150ms ease, stroke-width 150ms ease, opacity 150ms ease;
+}
+
+.relationship-path--animated {
+  stroke-dasharray: 8 10;
+  animation: dash-move 1s linear infinite;
+}
+
+.relationship-path--flow {
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.6));
+}
+
+.relationship-control-point {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--diagram-primary);
+  background: var(--diagram-panel);
+  box-shadow: var(--diagram-card-shadow);
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.relationship-control-point:hover {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.relationship-label {
+  position: absolute;
+  transform-origin: center center;
+  background: var(--diagram-panel);
+  border: 1px solid var(--diagram-border);
+  color: var(--diagram-text);
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  box-shadow: var(--diagram-card-shadow);
+  z-index: 2;
+}
+
+.hidden-handle {
+  opacity: 0;
+  border: none;
+}
