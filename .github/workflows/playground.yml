@@ -66,10 +66,10 @@ jobs:
           path: |
             .next/cache
           # Generate a new cache whenever packages or source files change.
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
           # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
+            ${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
 
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
@@ -79,11 +79,10 @@ jobs:
 
       - name: Deploy to Cloudflare Pages
         uses: andykenward/github-actions-cloudflare-pages@v3.0.0
-        id: pages
         with:
           cloudflare-api-token: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           cloudflare-account-id: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
           cloudflare-project-name: ${{ vars.CLOUDFLARE_PROJECT_NAME }}
-          directory: src/app/out
+          directory: src/app/dist
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          github-environment: 'Cloudflare Wrangler Pages'
+          github-environment: Cloudflare Wrangler Pages
