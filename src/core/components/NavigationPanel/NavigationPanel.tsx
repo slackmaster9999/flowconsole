@@ -7,6 +7,7 @@ import SearchOverlay from './SearchOverlay';
 import type { ArchitectureNode, ArchitectureDiagramModel, FlowDefinition } from '../../diagram/types';
 import { useHoverPopover, useNavigationHistory } from '../../hooks/hooks';
 import type { ThemeControls } from '../../types/theme';
+import './styles.css';
 
 export type NavigationItem = {
   id: string;
