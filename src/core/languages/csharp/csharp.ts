@@ -5,7 +5,7 @@ const csharpSamples = [
   {
     id: 'retail-banking-cs',
     title: 'Retail Banking (C#)',
-    description: 'Тот же сценарий, но на C# DSL.',
+    description: 'The same sample as in the main demo, but in C#',
     code: `var customer = new User { Name = "Customer", Description = "Retail banking customer" };
 var platform = new ComputerSystem { Name = "Cloud Banking" };
 var backend = new Container { Name = "Core Services", System = platform };

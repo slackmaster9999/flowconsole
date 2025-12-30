@@ -24,7 +24,7 @@ dotnet publish "$PROJECT" \
 FRAMEWORK_DIR="$TMP_DIR/AppBundle/_framework" 
 
 if [[ -z "$FRAMEWORK_DIR" ]]; then
-  echo "Не удалось найти _framework в $TMP_DIR" >&2
+  echo "_framework not found in $TMP_DIR" >&2
   exit 1
 fi
 

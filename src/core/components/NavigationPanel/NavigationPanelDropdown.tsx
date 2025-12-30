@@ -92,7 +92,7 @@ export function NavigationPanelDropdown({
                 ))
               : null}
             {listToRender && listToRender.length === 0 ? (
-              <div className="navpanel-empty">Ничего не найдено</div>
+              <div className="navpanel-empty">Empty</div>
             ) : null}
           </div>
         </ScrollArea>

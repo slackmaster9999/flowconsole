@@ -6,20 +6,15 @@ import("./env.mjs");
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
+  output: "export",
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   images: {
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "avatars.githubusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "lh3.googleusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "randomuser.me",
-      },
+      }
     ],
   },
   experimental: {

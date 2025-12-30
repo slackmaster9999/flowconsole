@@ -89,7 +89,7 @@ describe('CodeDiagramWorkbench', () => {
     await act(async () => {
       await Promise.resolve();
     });
-    expect(screen.getByText('Ошибка генерации')).toBeInTheDocument();
+    expect(screen.getByText('Error')).toBeInTheDocument();
     expect(screen.getByText('Syntax error')).toBeInTheDocument();
   });
 

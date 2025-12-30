@@ -236,7 +236,7 @@ public class DslRuntime
     {
         if (!AllowedTypes.Contains(entity.TypeName))
         {
-            throw new InvalidOperationException($"Тип {entity.TypeName} не поддерживается.");
+            throw new InvalidOperationException($"Type {entity.TypeName} unsupported");
         }
 
         var name = string.IsNullOrWhiteSpace(entity.Name) ? entity.TypeName : entity.Name.Trim();

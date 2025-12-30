@@ -248,7 +248,7 @@ test.describe('FlowConsole workbench', () => {
     await editor.click();
     await page.keyboard.press('Control+A');
     await page.keyboard.type('const broken = {\n  name: "Oops"\n};\nbroken.sendsRequestTo(target, "fail");');
-    await expect(page.getByText('Ошибка генерации')).toBeVisible({ timeout: 2000 });
+    await expect(page.getByText('Error')).toBeVisible({ timeout: 2000 });
   });
 
   test('allows toggling the navigation theme control', async ({ page }) => {
@@ -309,7 +309,7 @@ test.describe('FlowConsole workbench', () => {
     await editor.click();
     await page.keyboard.press('Control+A');
     await page.keyboard.type('const broken = { name: "Oops" };\nbroken.sendsRequestTo(target, "fail");');
-    await expect(page.getByText('Ошибка генерации')).toBeVisible({ timeout: 4000 });
+    await expect(page.getByText('Error')).toBeVisible({ timeout: 4000 });
     await page.keyboard.press('Control+A');
     await page.keyboard.type('const user: User = { name: "Fixed" };');
     await expect(page.getByTestId('progress-overlay')).toBeHidden({ timeout: 10000 });

@@ -21,7 +21,7 @@ export default function PreviewLanding() {
           title="See it in action"
           subtitle="Write architecture like code. See diagrams appear instantly."
         />
-        <div className="rounded-xl md:bg-muted/30 gap-3 md:p-3.5 md:ring-1 md:ring-inset md:ring-border">
+       {/* <div className="rounded-xl md:bg-muted/30 gap-3 md:p-3.5 md:ring-1 md:ring-inset md:ring-border">
           <div className="relative aspect-video overflow-hidden rounded-xl border md:rounded-lg">
             <ThemeProvider>
               <ArchitectureDiagram
@@ -338,13 +338,13 @@ export default function PreviewLanding() {
             />
             </ThemeProvider>
           </div>
-        </div>
+        </div> */}
         <div
           className="flex justify-center space-x-2 md:space-x-4 mt-8"
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
         >
           <Link
-            href="/playground"
+            href="https://dev.flowconsole.pages.dev/"
             prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),

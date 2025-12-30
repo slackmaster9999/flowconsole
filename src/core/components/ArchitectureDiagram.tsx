@@ -21,7 +21,6 @@ import type {
 } from '../diagram/types';
 import './styles.css';
 import { FloatingConnectionLine } from '../reactflow/edges/FloatingConnectionLine';
-import '../components/navigationpanel/styles.css';
 import { buildScopedModel, scopeTrail } from '../diagram/utils/scopedModel';
 import { layoutWithGraphviz } from '../diagram/graphvizLayoutService';
 import NavigationPanel from './NavigationPanel';

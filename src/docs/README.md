@@ -1,6 +1,6 @@
 <a href="https://next-saas-stripe-starter.vercel.app">
   <img alt="Flow Console" src="public/_static/og.jpg">
-  <h1 align="center">Next SaaS Stripe Starter</h1>
+  <h1 align="center">FlowConsole - architecture as code</h1>
 </a>
 
 <p align="center">
@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <a href="https://twitter.com/miickasmt">
+  <a href="https://twitter.com/vmgolubev">
     <img src="https://img.shields.io/twitter/follow/miickasmt?style=flat&label=miickasmt&logo=twitter&color=0bf&logoColor=fff" alt="Mickasmt Twitter follower count" />
   </a>
 </p>
