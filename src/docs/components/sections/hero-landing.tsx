@@ -57,7 +57,7 @@ export default async function HeroLanding() {
             <Icons.arrowRight className="size-4" />
           </Link>
          {/* <Link
-            href="/playground"
+            href="https://dev.flowconsole.pages.dev/"
             prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),

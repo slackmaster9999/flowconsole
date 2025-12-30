@@ -344,7 +344,7 @@ export default function PreviewLanding() {
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
         >
           <Link
-            href="/playground"
+            href="https://dev.flowconsole.pages.dev/"
             prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),
