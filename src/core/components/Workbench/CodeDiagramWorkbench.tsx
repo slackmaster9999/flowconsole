@@ -155,10 +155,10 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
           <div className="code-pane__header">
             <div>
               <label>Architecture DSL</label>
-              <p>Опиши диаграмму на {activeLanguage.label}, используя fluent API.</p>
+              <p>Describe you architecture in {activeLanguage.label}, using fluent API.</p>
             </div>
             <div className="code-pane__sample-picker">
-              <span>Язык</span>
+              <span>Language</span>
               <select
                 value={activeLanguage.id}
                 onChange={(event) => handleLanguageChange(event.target.value)}
@@ -172,7 +172,7 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
               </select>
             </div>
             <div className="code-pane__sample-picker">
-              <span>Пример</span>
+              <span>Example</span>
               <select
                 value={selectedSampleId}
                 onChange={(event) => handleSampleChange(event.target.value)}
@@ -208,7 +208,7 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
           </div>
           {error ? (
             <div className="code-pane__error">
-              <strong>Ошибка генерации</strong>
+              <strong>Error</strong>
               <pre>{error}</pre>
             </div>
           ) : null}
