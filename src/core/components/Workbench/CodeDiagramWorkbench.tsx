@@ -10,7 +10,7 @@ import type { LanguageDefinition } from '../../languages/types';
 import type { ThemeControls } from '../../types/theme';
 
 type Props = {
-  resolvedScheme: 'light' | 'dark';
+  resolvedScheme?: 'light' | 'dark';
   themeControls?: ThemeControls;
 };
 

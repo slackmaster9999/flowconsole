@@ -21,10 +21,7 @@ concurrency:
 
 jobs:
   # Build job
-  build:
-    env:
-      NEXT_PUBLIC_APP_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
-      NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+  build-n-deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -77,8 +74,8 @@ jobs:
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
 
-      - name: Build with Next.js
-        run: ${{ steps.detect-package-manager.outputs.runner }} next build
+      - name: Build
+        run: ${{ steps.detect-package-manager.outputs.runner }} run build
 
       - name: Deploy to Cloudflare Pages
         uses: andykenward/github-actions-cloudflare-pages@v3.0.0
