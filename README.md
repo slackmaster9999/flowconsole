@@ -44,5 +44,5 @@
 - Community expectations: `CODE_OF_CONDUCT.md`.
 
 ## License
-- Core frontend code is distributed under Apache-2.0 (see `LICENSE`).
+- Core frontend code is distributed under AGPLv3 (see `LICENSE`).
 - Some components or auxiliary parts may be under license; check file headers and/or a nearby NOTICE for those modules.
