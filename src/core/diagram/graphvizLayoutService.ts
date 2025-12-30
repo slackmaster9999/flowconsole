@@ -5,7 +5,7 @@ import type { ArchitectureDiagramModel, ArchitectureNode, ArchitectureEdge } fro
 
 const DPI = 96;
 const PT_TO_INCH = 1 / 72;
-const GRAPH_CLUSTER_SPACE = 50.1; // px, аналог GraphClusterSpace
+const GRAPH_CLUSTER_SPACE = 50.1; // px, same as GraphClusterSpace
 const DEFAULT_NODESEP = 110;
 const DEFAULT_RANKSEP = 120;
 const DEFAULT_PAD = 15;

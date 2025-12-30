@@ -40,16 +40,16 @@ async function handleEvaluate(message: WorkerRequest) {
 
 /*function safeParseResult(raw: unknown): EvaluationResult {
   if (typeof raw !== 'string') {
-    return { ok: false, error: 'Оценка вернула некорректный ответ (ожидалась строка JSON).' };
+    return { ok: false, error: '(JSON expected).' };
   }
   try {
     const data = JSON.parse(raw) as EvaluationResult;
     if (data && typeof data === 'object' && 'ok' in data) {
       return data;
     }
-    return { ok: false, error: 'Сборка вернула неожиданный JSON-формат.' };
+    return { ok: false, error: 'Build result in unknown JSON format.' };
   } catch (error) {
-    return { ok: false, error: `Ошибка парсинга JSON: ${error instanceof Error ? error.message : String(error)}` };
+    return { ok: false, error: `JSON parse error: ${error instanceof Error ? error.message : String(error)}` };
   }
 }*/
 

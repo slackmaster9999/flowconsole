@@ -3,7 +3,7 @@ module.exports = {
     "postcss-import": {},
     tailwindcss: {},
     "postcss-prefix-selector": {
-      prefix: '.preview-landing',  // обёртка вокруг компонента
+      prefix: '.preview-landing',  // wrapper
       includeFiles: [/preview-landing\.css$/],
       excludeSelectors: [/^html$/, /^body$/, /^:root$/],
     },
