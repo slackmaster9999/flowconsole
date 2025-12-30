@@ -27,22 +27,15 @@ export function constructMetadata({
     title,
     description,
     keywords: [
-      "Next.js",
-      "React",
-      "Prisma",
-      "Neon",
-      "Auth.js",
-      "shadcn ui",
-      "Resend",
-      "React Email",
-      "Stripe",
+      "AaC",
+      "FlowConsole"
     ],
     authors: [
       {
-        name: "mickasmt",
-      },
+        name: "vmgolubev",
+      }
     ],
-    creator: "mickasmt",
+    creator: "vmgolubev",
     openGraph: {
       type: "website",
       locale: "en_US",
@@ -56,7 +49,7 @@ export function constructMetadata({
       title,
       description,
       images: [image],
-      creator: "@miickasmt",
+      creator: "@vmgolubev",
     },
     icons,
     metadataBase: new URL(siteConfig.url),
@@ -65,7 +58,7 @@ export function constructMetadata({
       robots: {
         index: false,
         follow: false,
-      },
+      }
     }),
   };
 }
