@@ -22,6 +22,8 @@ concurrency:
 jobs:
   # Build job
   build-n-deploy:
+    environment:
+      name: Cloudflare Wrangler Pages
     runs-on: ubuntu-latest
     defaults:
       run:
