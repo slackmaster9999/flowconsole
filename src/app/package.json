@@ -20,13 +20,14 @@
     "@xyflow/system": "^0.0.72",
     "d3-shape": "^3.2.0",
     "fast-equals": "^5.3.2",
+    "flowconsole": "workspace:*",
     "graphviz-wasm": "^3.0.2",
+    "posthog-js": "^1.313.0",
     "react": "19.2.1",
     "react-dom": "19.2.1",
     "react-router-dom": "^7.9.5",
     "remeda": "^2.32.0",
-    "type-fest": "^5.1.0",
-    "flowconsole": "workspace:*"
+    "type-fest": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
