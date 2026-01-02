@@ -27,7 +27,8 @@ jobs:
       NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
       NEXT_PUBLIC_POSTHOG_KEY: ${{ secrets.POSTHOG_KEY }}
       NEXT_PUBLIC_POSTHOG_HOST: ${{ secrets.POSTHOG_HOST }}
-
+    environment:
+      name: github-pages
     runs-on: ubuntu-latest
     defaults:
       run:
