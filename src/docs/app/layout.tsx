@@ -33,7 +33,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
             disableTransitionOnChange
           >
             <ModalProvider>{children}</ModalProvider>
-            <Analytics />
           </ThemeProvider>
       </body>
     </html>
