@@ -36,6 +36,34 @@
 
 <p align="center"><span style="font-size:3.5em"><a href="https://dev.flowconsole.pages.dev/?utm_source=gh-try-it" target="_blank" rel="noopener noreferrer">Go to Playground</a> </span> </p>
 
+```typescript
+
+//who is using your app
+const user: User = { name: "Customer", description: "app user" };
+
+//add components(microservices, cache, db, etc)
+const frontApp: ReactApp = {
+  name: "Customer Dashboard",
+  description: "React app"
+};
+
+const restApi: RestApi = {
+  name: "Backend",
+  description: "Java REST API"
+};
+
+const db: Postgres = {
+  name: "main_db",
+  description: "DB"
+};
+
+//Define a flow and watch it live
+user.sendsRequestTo(frontApp, "opens in browser")
+    .then(frontApp).sendsRequestTo(restApi, "GET /api/v1/dashboard/:id")
+    .then(restApi).sendsRequestTo(db,"fetch dashboard data");
+```
+
+
 ## Roadmap
 - VS Code extention
 - Jetbrains IDEA/Rider extention
