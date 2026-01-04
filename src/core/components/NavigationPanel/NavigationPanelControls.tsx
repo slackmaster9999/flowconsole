@@ -49,7 +49,7 @@ export function NavigationPanelControls({
   return (
     <div className="navpanel-controls" onClick={onToggle}>
       <Group gap={8} style={{ flexWrap: 'nowrap' }}>
-        <FlowConsoleLogo />
+        <FlowConsoleLogo color="#7c3aed" />
         <div
           className="navpanel-meta"
           onMouseEnter={onTitleHoverStart}
