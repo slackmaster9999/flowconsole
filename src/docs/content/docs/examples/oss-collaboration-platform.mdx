@@ -1,0 +1,71 @@
+---
+title: OSS Collaboration Platform Example
+---
+```typescript showLineNumbers
+const contributor: User = { name: "Contributor", description: "Sends pull requests" };
+const maintainer: User = { name: "Maintainer", description: "Reviews and deploys" };
+
+const helios: ComputerSystem = { name: "Helios OSS" };
+const gitGateway: Container = { name: "Git Gateway", system: helios };
+const ciCluster: Container = { name: "CI Cluster", system: helios };
+const observability: Container = { name: "Observability", system: helios };
+
+const webApp: ReactApp = {
+  name: "Helios Web",
+  description: "Next.js UI for issues, merge requests, pipelines",
+  belongsTo: helios
+};
+
+const gitHttp: RestApi = {
+  name: "Git HTTP",
+  description: "Clone & push over HTTPS",
+  belongsTo: gitGateway
+};
+
+const apiGateway: RestApi = {
+  name: "GraphQL API",
+  description: "Issues, projects, releases",
+  belongsTo: gitGateway
+};
+
+const ciRunner: BackgroundJob = {
+  name: "CI Runner",
+  description: "Executes pipelines from queue",
+  belongsTo: ciCluster
+};
+
+const pipelineQueue: MessageQueue = {
+  name: "Pipeline Queue",
+  description: "Jobs waiting for runners",
+  belongsTo: ciCluster
+};
+
+const eventStream: KafkaTopic = {
+  name: "Activity Stream",
+  description: "Push events, comments, deployments",
+  belongsTo: observability
+};
+
+const metricsStore: Postgres = {
+  name: "Metrics Store",
+  description: "Usage, billing, analytics",
+  belongsTo: observability
+};
+
+contributor.sendsRequestTo(webApp, "open MR")
+  .then(webApp).sendsRequestTo(apiGateway, "create merge request")
+  .sendsRequestTo(gitHttp, "push commits")
+  .then(apiGateway).sendsRequestTo(pipelineQueue, "enqueue pipeline", { kind: 'event' })
+  .sendsRequestTo(eventStream, "publish activity", { kind: 'event' });
+
+ciRunner.sendsRequestTo(pipelineQueue, "claim job", { kind: 'async' })
+  .executesRequest("run tests")
+  .sendsRequestTo(apiGateway, "update status")
+  .sendsRequestTo(eventStream, "emit pipeline events", { kind: 'event' });
+
+maintainer.sendsRequestTo(webApp, "review & deploy")
+  .then(webApp).sendsRequestTo(apiGateway, "approve merge")
+  .sendsRequestTo(metricsStore, "record deployment", { kind: 'dependency' })
+  .then(apiGateway).sendsRequestTo(eventStream, "log deployment", { kind: 'event' });
+```
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-3)

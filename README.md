@@ -65,14 +65,12 @@ user.sendsRequestTo(frontApp, "opens in browser")
 
 
 ## Roadmap
-- VS Code extention
-- Jetbrains IDEA/Rider extention
-- CLI tool for CI/CD pipeline integration
-- C#(WIP), Java, Go, Python support
-- Add llm.txt
-- Export in SVG
-- Docs for architecture json scheme
-- Docs for CLI tool
+- VS Code extension
+- Jetbrains IDEA/Rider extension
+- CLI tool for artifacts generation in your CI/CD pipeline
+- C#(WIP), Java, Go, Python support(vote your language!)
+- Publish engine architecture json scheme(so LLMs can help you)
+- Drift CLI tool to check for architecture drifts
 
 
 ## Quick start scripts

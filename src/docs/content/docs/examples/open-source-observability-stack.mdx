@@ -1,0 +1,86 @@
+---
+title: Open-Source Observability Stack Example
+---
+```typescript showLineNumbers
+const platformEngineer: User = { name: "Platform Engineer", description: "Owns monitoring" };
+const contributor: User = { name: "Community Dev", description: "Extends plugins" };
+
+const skyline: ComputerSystem = { name: "Skyline Observability" };
+const controlPlane: Container = { name: "Control Plane", system: skyline };
+const dataLake: Container = { name: "Data Lake", system: skyline };
+const dashboards: Container = { name: "Dashboards", system: skyline };
+const edgeAgents: Container = { name: "Cluster Agents", system: skyline };
+
+const kubeAgent: BackgroundJob = {
+  name: "Kube Agent",
+  description: "Collects metrics + logs",
+  belongsTo: edgeAgents,
+};
+
+const serviceMap: RestApi = {
+  name: "Service Map API",
+  description: "Topology + traces",
+  belongsTo: controlPlane,
+};
+
+const alertManager: RestApi = {
+  name: "Alert Manager",
+  description: "Rules, paging, webhooks",
+  belongsTo: controlPlane,
+};
+
+const ingestGateway: RestApi = {
+  name: "Ingest Gateway",
+  description: "OpenTelemetry collector",
+  belongsTo: controlPlane,
+};
+
+const timeseriesDb: Postgres = {
+  name: "TSDB",
+  description: "PromQL-compatible store",
+  belongsTo: dataLake,
+};
+
+const logStore: Postgres = {
+  name: "Log Store",
+  description: "Columnar logs",
+  belongsTo: dataLake,
+};
+
+const eventsTopic: KafkaTopic = {
+  name: "Events Bus",
+  description: "Alerts, deploy hooks",
+  belongsTo: controlPlane,
+};
+
+const pluginRegistry: RestApi = {
+  name: "Plugin Registry",
+  description: "Hosts visualization plugins",
+  belongsTo: dashboards,
+};
+
+const explorerUi: ReactApp = {
+  name: "Explorer UI",
+  description: "Dashboards + alerts",
+  belongsTo: dashboards,
+};
+
+platformEngineer.sendsRequestTo(explorerUi, "inspect cluster")
+  .then(explorerUi).sendsRequestTo(serviceMap, "fetch topology")
+  .sendsRequestTo(alertManager, "list alerts")
+  .sendsRequestTo(pluginRegistry, "load plugin")
+  .sendsRequestTo(eventsTopic, "audit view", { kind: 'event' });
+
+kubeAgent.sendsRequestTo(ingestGateway, "ship metrics", { kind: 'async' })
+  .sendsRequestTo(timeseriesDb, "store metrics", { kind: 'dependency' })
+  .sendsRequestTo(logStore, "store logs", { kind: 'dependency' })
+  .sendsRequestTo(eventsTopic, "emit anomalies", { kind: 'event' });
+
+serviceMap.getDataFrom(timeseriesDb, "metrics")
+  .getDataFrom(logStore, "logs")
+  .sendsRequestTo(alertManager, "fire alerts", { kind: 'event' });
+
+contributor.sendsRequestTo(pluginRegistry, "publish plugin")
+  .sendsRequestTo(eventsTopic, "announce release", { kind: 'event' });
+```
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-5)

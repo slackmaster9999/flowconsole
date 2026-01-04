@@ -2,4 +2,61 @@
 title: Tutorial
 ---
 
-TODO
+FlowConsole provides a set of API that allows you to model your architecture in code. To model your architecture we use the C4 model(only top 3 levels) as a foundation.
+We will go through a simple example of how to use FlowConsole to define a simple architecture with a user, a frontend application, a backend API, and a database.
+
+Each component is a regular Typescript object that implements specific interfaces provided by FlowConsole.
+
+There are several types of interfaces you can use, such as `ReactApp`, `RestApi`, `Postgres`, etc.
+For a complete list of available interfaces and methods, check out the [API Reference](./config/api-reference.mdx).
+## User
+To model your architecture, you start by defining a user(actor) of your system. It can be any type of user, such as a customer, an admin, or a system user
+> Separate interface for external systems that interacts with your sytem will be added later.
+```typescript
+const user: User = { name: "Customer", description: "Web app retail customer" };
+```
+## ComputerSystem
+Next, you define the system that your are building. It's an optional step, 
+but it's good to have a top-level object to group your components(in case if you are want to add multiple systems that interacts with each other).
+
+```typescript
+const system: ComputerSystem = { name: "Cloud Banking System" };
+```
+
+## Containers
+Now, you can start defining the containers of your system. Containers(or module, subsystem) are the high-level building blocks of your system that serves specific purpuse.
+
+```typescript
+const storage: Container = { name: "Data Store", system: system };
+const backend: Container = { name: "Backend", system: system };
+```
+
+## Components
+Finally, you can define the components of your system, such as applications, databases, caches, etc.
+```typescript
+const frontApp: ReactApp = {
+  name: "Banking Web App",
+  belongsTo: system // optional, only if you have defined a ComputerSystem or Container
+};
+const backendApi: RestApi = {
+  name: "Banking API",
+  belongsTo: backend
+};
+const db: Postgres = {
+  name: "Ledger DB",
+  description: "Patroni clustered Postgres DB",
+  belongsTo: storage
+};
+```
+
+## Flows
+Now that you have defined the components of your system, you can start defining the flows between them. Flows represent the interactions between components, such as requests, responses, data transfers, etc.
+```typescript
+user.sendsRequestTo(frontApp, "launch app")
+  .then(frontApp).sendsRequestTo(backendApi, "to verify account token")
+  .then(frontApp).sendsRequestTo(backendApi, "load dashboard data");
+```
+You can define multiple flows if you have more interactions between components or if you flow is more complex and you want to break it down into smaller flows.
+
+## Examples
+For a more complete example, check out the [Playground](https://dev.flowconsole.pages.dev/?utm_source=gh-pages-tutorial) where you can see live examples and play around with the code.

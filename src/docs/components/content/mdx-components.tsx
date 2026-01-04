@@ -140,7 +140,7 @@ const components = {
     <div className="group relative w-full overflow-hidden">
       <pre
         className={cn(
-          "max-h-[650px] overflow-x-auto rounded-lg border bg-zinc-900 py-4 dark:bg-zinc-900",
+          "rounded-lg border bg-zinc-900 py-4 dark:bg-zinc-900",
           className,
         )}
         {...props}

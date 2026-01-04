@@ -1,0 +1,66 @@
+---
+title: Global ERP & Supply Chain Example
+---
+
+```typescript scroll=false showLineNumbers
+const employee: User = { name: "Regional Planner", description: "Creates purchase orders" };
+const supplier: ExternalService = { name: "Supplier API", description: "Partner integration" };
+
+const atlas: ComputerSystem = { name: "Atlas ERP" };
+const portal: ReactApp = {
+  name: "Planner Portal",
+  description: "Next.js dashboard for procurement team",
+  belongsTo: atlas
+};
+
+const integrationHub: Container = {
+  name: "Integration Hub",
+  description: "Async orchestrations + adapters",
+  system: atlas
+};
+
+const planningApi: RestApi = {
+  name: "Planning Service",
+  description: "Handles demand & supply planning",
+  belongsTo: integrationHub
+};
+
+const inventoryApi: RestApi = {
+  name: "Inventory Service",
+  description: "Tracks warehouse stock",
+  belongsTo: integrationHub
+};
+
+const workflowQueue: MessageQueue = {
+  name: "Workflow Queue",
+  description: "Commands for async processing",
+  belongsTo: integrationHub
+};
+
+const reportingJob: BackgroundJob = {
+  name: "Nightly Reconciliation",
+  description: "Produces compliance extracts",
+  belongsTo: integrationHub
+};
+
+const erpDb: Postgres = {
+  name: "ERP Database",
+  description: "Orders, forecasts, contracts",
+  belongsTo: integrationHub
+};
+
+employee.sendsRequestTo(portal, "create purchase order")
+  .then(portal).sendsRequestTo(planningApi, "submit plan")
+  .sendsRequestTo(inventoryApi, "reserve stock")
+  .inParallel(
+    () => planningApi.getDataFrom(erpDb, "fetch demand"),
+    () => inventoryApi.getDataFrom(erpDb, "current stock")
+  )
+  .sendsRequestTo(workflowQueue, "publish workflow", { kind: 'async' })
+  .then(planningApi).sendsRequestTo(supplier, "send order", { kind: 'sync' });
+
+reportingJob.sendsRequestTo(erpDb, "load data", { kind: 'dependency' })
+  .executesRequest("generate nightly reports")
+  .sendsRequestTo(workflowQueue, "notify portal", { kind: 'event' });
+```
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-2)

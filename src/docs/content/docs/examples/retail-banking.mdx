@@ -1,0 +1,69 @@
+---
+title: Retail Banking Example
+---
+
+```typescript showLineNumbers
+
+const user: User = { name: "Customer", description: "Retail banking customer" };
+
+const system: ComputerSystem = { name: "Cloud Banking" };
+const storage: Container = { name: "Data Store", system: system };
+const backend: Container = { name: "Core Services", system: system };
+
+const frontApp: ReactApp = {
+  name: "Customer Dashboard",
+  description: "Browser Single-page Application",
+  belongsTo: system
+};
+const authApi: RestApi = {
+  name: "Authentication",
+  description: "Self-Hosted Authentication Service",
+  belongsTo: backend
+};
+
+const accountsApi: RestApi = {
+  name: "Accounts API",
+  description: "Java Spring service for balances and payments",
+  belongsTo: backend
+};
+
+const cache: Redis = {
+  name: "Session Cache",
+  description: "Stores customer session payloads",
+  belongsTo: storage
+};
+
+const db: Postgres = {
+  name: "Ledger DB",
+  description: "Persistent customer and transaction data",
+  belongsTo: storage
+};
+
+const auditStream: KafkaTopic = {
+  name: "Audit Events",
+  description: "Every request produces an audit record",
+  belongsTo: backend
+};
+
+const fraudService: ExternalService = {
+  name: "Fraud Guard",
+  description: "3rd-party fraud scoring",
+  belongsTo: backend
+};
+
+user.sendsRequestTo(frontApp, "launch app")
+  .then(frontApp).sendsRequestTo(authApi, "login")
+  .then(frontApp).sendsRequestTo(accountsApi, "load dashboard")
+  .inParallel(
+    () => accountsApi.getDataFrom(cache, "session context"),
+    () => accountsApi.getDataFrom(db, "account snapshot")
+  )
+  .sendsRequestTo(authApi, "validate token")
+  .then(accountsApi)
+  .inParallel(
+    () => accountsApi.sendsRequestTo(auditStream, "emit audit", { kind: 'event' }),
+    () => accountsApi.sendsRequestTo(fraudService, "score transaction", { kind: 'async' })
+  );
+```
+
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-1)

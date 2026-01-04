@@ -1,0 +1,103 @@
+---
+title: Global Media Streaming Platform Example
+---
+```typescript showLineNumbers
+const viewer: User = { name: "Subscriber", description: "Streams movies" };
+const operator: User = { name: "Ops Engineer", description: "Monitors health" };
+
+const streamly: ComputerSystem = { name: "Streamly" };
+const deviceApps: Container = { name: "Device Apps", system: streamly };
+const controlPlane: Container = { name: "Control Plane", system: streamly };
+const dataPlane: Container = { name: "Data Plane", system: streamly };
+const observability: Container = { name: "Observability", system: streamly };
+
+const tvApp: ReactApp = {
+  name: "TV App",
+  description: "Smart TV + set-top box UI",
+  belongsTo: deviceApps,
+};
+
+const mobileApp: ReactApp = {
+  name: "Mobile App",
+  description: "iOS/Android client",
+  belongsTo: deviceApps,
+};
+
+const authService: RestApi = {
+  name: "Identity",
+  description: "Login, entitlements",
+  belongsTo: controlPlane,
+};
+
+const catalogService: RestApi = {
+  name: "Catalog",
+  description: "Metadata, search, personalization",
+  belongsTo: controlPlane,
+};
+
+const playbackService: RestApi = {
+  name: "Playback Service",
+  description: "Session tokens, DRM",
+  belongsTo: controlPlane,
+};
+
+const ingestPipeline: BackgroundJob = {
+  name: "Content Ingest",
+  description: "Transcodes uploads",
+  belongsTo: dataPlane,
+};
+
+const edgeCache: ExternalService = {
+  name: "Global CDN",
+  description: "Edge delivery network",
+  belongsTo: dataPlane,
+};
+
+const profilesStore: Postgres = {
+  name: "Profiles DB",
+  description: "Viewer profiles, settings",
+  belongsTo: controlPlane,
+};
+
+const recommendationService: RestApi = {
+  name: "Recommendations",
+  description: "ML ranking service",
+  belongsTo: controlPlane,
+};
+
+const watchEvents: KafkaTopic = {
+  name: "Watch Events",
+  description: "View, pause, seek telemetry",
+  belongsTo: observability,
+};
+
+const metricsApi: RestApi = {
+  name: "Metrics API",
+  description: "Real-time health",
+  belongsTo: observability,
+};
+
+viewer.sendsRequestTo(tvApp, "open app")
+  .then(tvApp).sendsRequestTo(authService, "login")
+  .then(tvApp).sendsRequestTo(catalogService, "browse catalog")
+  .sendsRequestTo(recommendationService, "personal picks")
+  .sendsRequestTo(playbackService, "start playback")
+  .inParallel(
+    () => playbackService.getDataFrom(profilesStore, "profile rights"),
+    () => playbackService.sendsRequestTo(edgeCache, "issue token", { kind: 'sync' })
+  )
+  .sendsRequestTo(watchEvents, "emit play", { kind: 'event' });
+
+mobileApp.sendsRequestTo(playbackService, "resume session")
+  .inParallel(
+    () => playbackService.getDataFrom(profilesStore, "device list"),
+    () => playbackService.sendsRequestTo(edgeCache, "refresh CDN token", { kind: 'async' })
+  );
+
+ingestPipeline.sendsRequestTo(edgeCache, "push renditions", { kind: 'async' })
+  .sendsRequestTo(watchEvents, "publish ingest status", { kind: 'event' });
+
+operator.sendsRequestTo(metricsApi, "check SLOs")
+  .sendsRequestTo(watchEvents, "trace anomalies", { kind: 'dependency' });
+```
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-4)
