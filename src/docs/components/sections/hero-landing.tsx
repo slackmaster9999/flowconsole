@@ -26,9 +26,6 @@ export default async function HeroLanding() {
   return (
     <section className="space-y-6 py-12 sm:py-20 lg:py-20">
       <div className="container flex max-w-5xl flex-col items-center gap-5 text-center">
-          <a href="https://www.producthunt.com/products/flowconsole?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-flowconsole-alpha" target="_blank" rel="noopener noreferrer">
-            <img alt="FlowConsole(alpha) - Define your architecture in code and watch it come to life | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1057758&amp;theme=light&amp;t=1767601979449" />
-          </a>
         <h1 className="text-balance font-urban text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl lg:text-[66px]">
           <span className="text-gradient_indigo-purple font-extrabold">
             FlowConsole {" "}
