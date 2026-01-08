@@ -1,0 +1,57 @@
+{
+  "name": "@flowconsole/sdk",
+  "version": "0.0.1",
+  "description": "FlowConsole SDK",
+  "main": "sdk/flowconsole-sdk.js",
+  "scripts": {
+    "build": "jsii",
+    "build:watch": "jsii --watch",
+    "package": "jsii-pacmak",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Vladimir Golubev",
+    "email": "v@flowconsole.tech"
+  },
+  "repository": {
+    "url": "https://github.com/slackmaster9999/flowconsole.git",
+    "directory": "src/sdk"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@10.19.0",
+  "stability": "stable",
+  "types": "flowconsole-sdk.d.ts",
+  "jsii": {
+    "versionFormat": "full",
+    "targets": {
+      "java": {
+        "package": "flowconsole.sdk",
+        "maven": {
+          "groupId": "flowconsole",
+          "artifactId": "sdk"
+        }
+      },
+      "python": {
+        "distName": "flowconsole-sdk",
+        "module": "flowconsole"
+      },
+      "dotnet": {
+        "namespace": "FlowConsole",
+        "packageId": "FlowConsole.Sdk",
+        "iconUrl": "https://raw.githubusercontent.com/slackmaster9999/flowconsole/main/src/docs/public/_static/favicons/android-chrome-512x512.png"
+      },
+      "go": {
+        "packageName": "flowconsole",
+        "moduleName": "github.com/slackmaster9999/flowconsole"
+      }
+    },
+    "tsc": {
+      "outDir": "dist"
+    }
+  },
+  "devDependencies": {
+    "jsii": "^5.9.22",
+    "jsii-pacmak": "^1.125.0"
+  }
+}
