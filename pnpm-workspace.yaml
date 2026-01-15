@@ -2,3 +2,6 @@ packages:
   - src/app
   - src/core
   - src/docs
+
+onlyBuiltDependencies:
+  - '@ast-grep/lang-csharp'

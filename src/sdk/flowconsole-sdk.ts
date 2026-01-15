@@ -1,6 +1,6 @@
 export type ConnectionKind = 'sync' | 'async' | 'event' | 'dependency';
 
-export type ConnectionOptions = {
+export class ConnectionOptions {
   detail?: string;
   kind?: ConnectionKind;
   icon?: string;
@@ -9,62 +9,83 @@ export type ConnectionOptions = {
 
 export type ParentContainer = Container | ComputerSystem;
 
-export interface Component {
+export class Component {
+
   id?: string;
-  name: string;
+  name?: string;
   description?: string;
   belongsTo?: ParentContainer;
-  system?: ParentContainer;
+  root?: ParentContainer;
   tags?: string[];
   badge?: string;
   tone?: 'primary' | 'muted' | 'success' | 'warning' | 'danger';
-  sendsRequestTo?(target: Component, label: string, options?: ConnectionOptions): Component;
-  getDataFrom?(target: Component, label: string, options?: ConnectionOptions): Component;
-  executesRequest?(action: string, options?: ConnectionOptions): Component;
+  
+  public sendsRequest(target: Component, label: string, options?: ConnectionOptions): Component{
+    return target;
+  }
+
+  public then(target: Component): Component
+  {
+    return target
+  }
+  
+  public getDataFrom(target: Component, label: string, options?: ConnectionOptions): Component
+  {
+    return target;
+  };
+
+  executesRequest?(action: string): Component
+  {
+    return this;
+  }
 }
 
-export interface User extends Component {
-  persona?: string;
+export class User extends Component {
+  role?: string;
+
+  constructor(name?: string, role?: string) {
+    super();
+  }
 }
 
-export interface ComputerSystem extends Component {
+export class ComputerSystem extends Component {
   domain?: string;
 }
 
-export interface Container extends Component {
+export class Container extends Component {
   technology?: string;
 }
 
-export interface ReactApp extends Component {
+export class ReactApp extends Component {
   framework?: string;
   url?: string;
 }
 
-export interface RestApi extends Component {
+export class RestApi extends Component {
   method?: string;
   endpoint?: string;
 }
 
-export interface Redis extends Component {
+export class Redis extends Component {
   cluster?: string;
 }
 
-export interface IPostgres extends Component {
+export class Postgres extends Component {
   schema?: string;
 }
 
-export interface IKafkaTopic extends Component {
+export class KafkaTopic extends Component {
   partitionCount?: number;
 }
 
-export interface IMessageQueue extends Component {
+export class MessageQueue extends Component {
   throughput?: string;
 }
 
-export interface IExternalService extends Component {
+export class ExternalService extends Component {
   vendor?: string;
 }
 
-export interface IBackgroundJob extends Component {
+export class BackgroundJob extends Component {
   schedule?: string;
 }

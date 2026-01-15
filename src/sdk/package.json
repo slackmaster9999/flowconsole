@@ -1,12 +1,12 @@
 {
   "name": "@flowconsole/sdk",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "FlowConsole SDK",
-  "main": "sdk/flowconsole-sdk.js",
+  "main": "dist/flowconsole-sdk.js",
   "scripts": {
     "build": "jsii",
     "build:watch": "jsii --watch",
-    "package": "jsii-pacmak",
+    "package": "jsii-pacmak --clean --target dotnet --verbose",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -21,8 +21,9 @@
   "license": "MIT",
   "packageManager": "pnpm@10.19.0",
   "stability": "stable",
-  "types": "flowconsole-sdk.d.ts",
+  "types": "dist/flowconsole-sdk.d.ts",
   "jsii": {
+    "outdir": "dist",
     "versionFormat": "full",
     "targets": {
       "java": {
@@ -46,8 +47,11 @@
         "moduleName": "github.com/slackmaster9999/flowconsole"
       }
     },
+    "tsconfig": "tsconfig.json",
+    "validateTsconfig": "minimal",
     "tsc": {
-      "outDir": "dist"
+      "outDir": "dist",
+      "rootDir": "."
     }
   },
   "devDependencies": {
