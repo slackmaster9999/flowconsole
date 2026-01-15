@@ -21,6 +21,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": false,
     "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
