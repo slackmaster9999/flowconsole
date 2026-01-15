@@ -16,5 +16,9 @@
     "@ast-grep/napi": "^0.40.5",
     "lang-{name}": "link:@ast-grep/lang-{name}",
     "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
