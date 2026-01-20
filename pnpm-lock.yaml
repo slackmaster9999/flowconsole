@@ -159,19 +159,31 @@ importers:
       '@ast-grep/lang-csharp':
         specifier: ^0.0.5
         version: 0.0.5
+      '@ast-grep/lang-go':
+        specifier: ^0.0.5
+        version: 0.0.5
+      '@ast-grep/lang-java':
+        specifier: ^0.0.6
+        version: 0.0.6
+      '@ast-grep/lang-python':
+        specifier: ^0.0.5
+        version: 0.0.5
       '@ast-grep/napi':
         specifier: ^0.40.5
         version: 0.40.5
-      lang-{name}:
-        specifier: link:@ast-grep/lang-{name}
-        version: link:@ast-grep/lang-{name}
       yargs:
         specifier: ^18.0.0
         version: 18.0.0
     devDependencies:
+      '@types/node':
+        specifier: ^22.0.0
+        version: 22.19.7
+      '@types/yargs':
+        specifier: ^17.0.33
+        version: 17.0.35
       ts-node:
         specifier: ^10.9.2
-        version: 10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@24.10.2)(typescript@5.9.3)
+        version: 10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@22.19.7)(typescript@5.9.3)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -478,7 +490,7 @@ importers:
         version: 19.2.3(react@19.2.3)
       react-email:
         specifier: 2.1.5
-        version: 2.1.5(@opentelemetry/api@1.9.0)(@swc/helpers@0.5.15)(eslint@8.57.1)
+        version: 2.1.5(@opentelemetry/api@1.9.0)(@swc/helpers@0.5.15)(eslint@8.57.1)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3))
       react-hook-form:
         specifier: ^7.52.1
         version: 7.69.0(react@19.2.3)
@@ -637,6 +649,30 @@ packages:
 
   '@ast-grep/lang-csharp@0.0.5':
     resolution: {integrity: sha512-qEOvcOJy+FhbQ/Zz2hsBXaN4BHK0sJFnp06YPBxRttWG+JGHDS/FlAlLCgCMoSmYKHx5nWtB6a7hqiApTZo6pQ==}
+    peerDependencies:
+      tree-sitter-cli: 0.25.8
+    peerDependenciesMeta:
+      tree-sitter-cli:
+        optional: true
+
+  '@ast-grep/lang-go@0.0.5':
+    resolution: {integrity: sha512-rPrTHtT2wDmyAi8tXe3xb3T94GrdXUwynt97l2AIULviQjEjzrewscUO3n0WkwQBuiKU78CDx+27PsmsykUlPQ==}
+    peerDependencies:
+      tree-sitter-cli: 0.25.8
+    peerDependenciesMeta:
+      tree-sitter-cli:
+        optional: true
+
+  '@ast-grep/lang-java@0.0.6':
+    resolution: {integrity: sha512-OOxKk6RvMOC+fL+6sItWQmwPMvcQPtZM1/x6dA2WeHtRqqP+NZV3qmSaApXB6ZfP+tmuLFYu7sr7tIVWcI0IlA==}
+    peerDependencies:
+      tree-sitter-cli: 0.25.8
+    peerDependenciesMeta:
+      tree-sitter-cli:
+        optional: true
+
+  '@ast-grep/lang-python@0.0.5':
+    resolution: {integrity: sha512-gbNwaCPvuyZFEG4y6zwylLRLsh1DWiOeLeZ/aWOlYRR0nxoXimuMPank6psT88rijnD6esBLWhFq6kkFhndzjQ==}
     peerDependencies:
       tree-sitter-cli: 0.25.8
     peerDependenciesMeta:
@@ -3652,6 +3688,9 @@ packages:
   '@types/node@20.19.27':
     resolution: {integrity: sha512-N2clP5pJhB2YnZJ3PIHFk5RkygRX5WO/5f0WC08tp0wd+sv0rsJk3MqWn3CbNmT2J505a5336jaQj4ph1AdMug==}
 
+  '@types/node@22.19.7':
+    resolution: {integrity: sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw==}
+
   '@types/node@24.10.2':
     resolution: {integrity: sha512-WOhQTZ4G8xZ1tjJTvKOpyEVSGgOTvJAfDK3FNFgELyaTpzhdgHVHeqW8V+UJvzF5BT+/B54T/1S2K6gd9c7bbA==}
 
@@ -3695,6 +3734,12 @@ packages:
 
   '@types/webpack@5.28.5':
     resolution: {integrity: sha512-wR87cgvxj3p6D0Crt1r5avwqffqPXUkNlnQ1mjU93G7gCuFjufZR4I6j8cz5g1F1tTYpfOOFvly+cmIQwL9wvw==}
+
+  '@types/yargs-parser@21.0.3':
+    resolution: {integrity: sha512-I4q9QU9MQv4oEOz4tAHJtNz1cwuLxn2F3xcc2iV5WdqLPpUnj30aUuxt1mAxYTG+oe8CZMV/+6rU4S4gRDzqtQ==}
+
+  '@types/yargs@17.0.35':
+    resolution: {integrity: sha512-qUHkeCyQFxMXg79wQfTtfndEC+N9ZZg76HJftDJp+qH2tV7Gj4OJi7l+PiWwJ+pWtW8GwSmqsDj/oymhrTWXjg==}
 
   '@typescript-eslint/eslint-plugin@8.49.0':
     resolution: {integrity: sha512-JXij0vzIaTtCwu6SxTh8qBc66kmf1xs7pI4UOiMDFVct6q86G0Zs7KRcEoJgY3Cav3x5Tq0MF5jwgpgLqgKG3A==}
@@ -8063,6 +8108,18 @@ snapshots:
     dependencies:
       '@ast-grep/setup-lang': 0.0.6
 
+  '@ast-grep/lang-go@0.0.5':
+    dependencies:
+      '@ast-grep/setup-lang': 0.0.6
+
+  '@ast-grep/lang-java@0.0.6':
+    dependencies:
+      '@ast-grep/setup-lang': 0.0.6
+
+  '@ast-grep/lang-python@0.0.5':
+    dependencies:
+      '@ast-grep/setup-lang': 0.0.6
+
   '@ast-grep/napi-darwin-arm64@0.40.5':
     optional: true
 
@@ -10988,6 +11045,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/node@22.19.7':
+    dependencies:
+      undici-types: 6.21.0
+
   '@types/node@24.10.2':
     dependencies:
       undici-types: 7.16.0
@@ -11031,12 +11092,18 @@ snapshots:
     dependencies:
       '@types/node': 20.19.27
       tapable: 2.3.0
-      webpack: 5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.19.11)
+      webpack: 5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.25.12)
     transitivePeerDependencies:
       - '@swc/core'
       - esbuild
       - uglify-js
       - webpack-cli
+
+  '@types/yargs-parser@21.0.3': {}
+
+  '@types/yargs@17.0.35':
+    dependencies:
+      '@types/yargs-parser': 21.0.3
 
   '@typescript-eslint/eslint-plugin@8.49.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.5.3))(eslint@8.57.1)(typescript@5.5.3)':
     dependencies:
@@ -14602,12 +14669,13 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.5.6
 
-  postcss-load-config@4.0.2(postcss@8.5.6):
+  postcss-load-config@4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3)):
     dependencies:
       lilconfig: 3.1.3
       yaml: 2.8.2
     optionalDependencies:
       postcss: 8.5.6
+      ts-node: 10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3)
 
   postcss-load-config@6.0.1(jiti@1.21.7)(postcss@8.5.6)(yaml@2.8.2):
     dependencies:
@@ -14804,7 +14872,7 @@ snapshots:
       react: 19.2.3
       scheduler: 0.27.0
 
-  react-email@2.1.5(@opentelemetry/api@1.9.0)(@swc/helpers@0.5.15)(eslint@8.57.1):
+  react-email@2.1.5(@opentelemetry/api@1.9.0)(@swc/helpers@0.5.15)(eslint@8.57.1)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3)):
     dependencies:
       '@babel/core': 7.24.5
       '@babel/parser': 7.24.5
@@ -14844,7 +14912,7 @@ snapshots:
       source-map-js: 1.0.2
       stacktrace-parser: 0.1.10
       tailwind-merge: 2.2.0
-      tailwindcss: 3.4.0
+      tailwindcss: 3.4.0(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3))
       typescript: 5.1.6
     transitivePeerDependencies:
       - '@opentelemetry/api'
@@ -15805,7 +15873,7 @@ snapshots:
     dependencies:
       tailwindcss: 3.4.19(yaml@2.8.2)
 
-  tailwindcss@3.4.0:
+  tailwindcss@3.4.0(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -15824,7 +15892,7 @@ snapshots:
       postcss: 8.5.6
       postcss-import: 15.1.0(postcss@8.5.6)
       postcss-js: 4.1.0(postcss@8.5.6)
-      postcss-load-config: 4.0.2(postcss@8.5.6)
+      postcss-load-config: 4.0.2(postcss@8.5.6)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3))
       postcss-nested: 6.2.0(postcss@8.5.6)
       postcss-selector-parser: 6.1.2
       resolve: 1.22.11
@@ -15869,7 +15937,7 @@ snapshots:
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.19.11)
+      webpack: 5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.25.12)
     optionalDependencies:
       '@swc/core': 1.3.101(@swc/helpers@0.5.15)
       esbuild: 0.19.11
@@ -15960,14 +16028,35 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@24.10.2)(typescript@5.9.3):
+  ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@20.19.27)(typescript@5.5.3):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.12
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 24.10.2
+      '@types/node': 20.19.27
+      acorn: 8.15.0
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.5.3
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.3.101(@swc/helpers@0.5.15)
+    optional: true
+
+  ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.15))(@types/node@22.19.7)(typescript@5.9.3):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.12
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 22.19.7
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -16362,7 +16451,7 @@ snapshots:
 
   webpack-sources@3.3.3: {}
 
-  webpack@5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.19.11):
+  webpack@5.104.1(@swc/core@1.3.101(@swc/helpers@0.5.15))(esbuild@0.25.12):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
