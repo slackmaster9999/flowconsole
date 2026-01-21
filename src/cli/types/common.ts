@@ -1,18 +1,30 @@
+export type ConnectionKind = 'sync' | 'async' | 'event' | 'dependency';
+
 export type NodeInfo = {
+  id: string;
   name: string;
   className: string;
+  description?: string;
+  parentId?: string;
+  tags?: string[];
+  badge?: string;
+  icon?: string;
 };
 
-export type Flow = {
-  from: string;
-  method: string | null;
-  to: string[];
+export type FlowStep = {
+  id: string;
+  sourceId: string;
+  targetId: string;
+  label: string | null;
+  detail?: string;
+  kind: ConnectionKind;
+  icon?: string;
   text: string;
 };
 
 export type ParseResult = {
   nodes: NodeInfo[];
-  flows: Flow[];
+  flows: FlowStep[];
 };
 
 export type SupportedLanguage =

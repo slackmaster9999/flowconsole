@@ -4,7 +4,7 @@ import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interfa
 
 export class TypeScriptParser extends BaseParser {
   constructor() {
-    super('TypeScript');
+    super('typescript', '$');
   }
 
   getLanguage(): SupportedLanguage {

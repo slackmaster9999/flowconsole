@@ -1,13 +1,16 @@
 import { parse } from '@ast-grep/napi';
 import type { SgNode } from '@ast-grep/napi';
+import { uuidv7 } from 'uuidv7';
 import type { LanguageParser, LanguagePatterns } from '../core/parser-interface';
-import type { ParseResult, NodeInfo, Flow, SupportedLanguage } from '../types/common';
+import type { ParseResult, NodeInfo, FlowStep, SupportedLanguage, ConnectionKind } from '../types/common';
 
 export abstract class BaseParser implements LanguageParser {
   protected langName: string;
+  protected metaVarChar: string;
 
-  constructor(langName: string) {
+  constructor(langName: string, metaVarChar = '$') {
     this.langName = langName;
+    this.metaVarChar = metaVarChar;
   }
 
   abstract getLanguage(): SupportedLanguage;
@@ -28,7 +31,7 @@ export abstract class BaseParser implements LanguageParser {
   }
 
   collectObjects(root: SgNode): Map<string, NodeInfo> {
-    const patterns = this.getPatterns().objectInstantiation;
+    const patterns = this.getPatterns().objectInstantiation.map((pattern) => this.patternForLang(pattern));
     const objects = new Map<string, NodeInfo>();
 
     for (const pattern of patterns) {
@@ -37,7 +40,11 @@ export abstract class BaseParser implements LanguageParser {
         const className = this.extractClassName(node);
 
         if (name && className) {
-          objects.set(name, { name, className });
+          objects.set(name, {
+            id: uuidv7(),
+            name,
+            className,
+          });
         }
       });
     }
@@ -45,9 +52,9 @@ export abstract class BaseParser implements LanguageParser {
     return objects;
   }
 
-  collectFlows(root: SgNode, objects: Map<string, NodeInfo>): Flow[] {
-    const flows: Flow[] = [];
-    const methodPattern = this.getPatterns().methodCall;
+  collectFlows(root: SgNode, objects: Map<string, NodeInfo>): FlowStep[] {
+    const flows: FlowStep[] = [];
+    const methodPattern = this.patternForLang(this.getPatterns().methodCall);
 
     root.findAll(methodPattern).forEach((callNode) => {
       const { base, method } = this.getBaseAndMethod(callNode);
@@ -55,31 +62,82 @@ export abstract class BaseParser implements LanguageParser {
 
       const argIds = this.collectIdentifierArgs(callNode);
       const targets = argIds.filter((id) => objects.has(id));
+      const text = callNode.text();
+      const kind = this.inferConnectionKind(method);
+      const sourceNode = objects.get(base);
 
-      flows.push({
-        from: base,
-        method,
-        to: targets,
-        text: callNode.text(),
-      });
+      for (const targetName of targets) {
+        const targetNode = objects.get(targetName);
+        if (!sourceNode || !targetNode) continue;
+
+        flows.push({
+          id: uuidv7(),
+          sourceId: sourceNode.id,
+          targetId: targetNode.id,
+          label: method,
+          kind,
+          text,
+        });
+      }
     });
 
     return flows;
   }
 
+  protected inferConnectionKind(method: string | null): ConnectionKind {
+    if (!method) return 'sync';
+
+    const lowerMethod = method.toLowerCase();
+
+    if (lowerMethod.includes('event') || lowerMethod.includes('publish') || lowerMethod.includes('emit')) {
+      return 'event';
+    }
+    if (lowerMethod.includes('async') || lowerMethod.includes('queue') || lowerMethod.includes('send')) {
+      return 'async';
+    }
+    if (lowerMethod.includes('get') || lowerMethod.includes('fetch') || lowerMethod.includes('read') || lowerMethod.includes('data')) {
+      return 'dependency';
+    }
+
+    return 'sync';
+  }
+
+  protected patternForLang(pattern: string): string {
+    if (this.metaVarChar === '$') return pattern;
+    return pattern.replaceAll('$', this.metaVarChar);
+  }
+
   protected getBaseAndMethod(callNode: SgNode): { base: string | null; method: string | null } {
+    if (callNode.is && callNode.is('method_invocation')) {
+      const baseNode = callNode.field('object');
+      const nameNode = callNode.field('name');
+      return {
+        base: baseNode ? baseNode.text() : null,
+        method: nameNode ? nameNode.text() : null,
+      };
+    }
+
     let func = callNode.field('function');
     let method: string | null = null;
 
     while (func) {
-      if (func.is('member_expression') || func.is('attribute')) {
-        const prop = func.field('property') || func.field('attribute');
+      if (
+        func.is('member_expression') ||
+        func.is('attribute') ||
+        func.is('selector_expression') ||
+        func.is('field_access')
+      ) {
+        const prop =
+          func.field('property') ||
+          func.field('attribute') ||
+          func.field('field') ||
+          func.field('name');
         if (!method && prop) method = prop.text();
-        func = func.field('object') || func.field('value');
+        func = func.field('object') || func.field('value') || func.field('operand');
         continue;
       }
-      if (func.is('call_expression')) {
-        func = func.field('function');
+      if (func.is('call_expression') || func.is('method_invocation')) {
+        func = func.field('function') || func.field('object');
         continue;
       }
       if (func.is('identifier')) {

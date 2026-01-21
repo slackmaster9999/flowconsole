@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +18,14 @@
     "@ast-grep/lang-java": "^0.0.6",
     "@ast-grep/lang-python": "^0.0.5",
     "@ast-grep/napi": "^0.40.5",
+    "uuidv7": "^1.1.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/yargs": "^17.0.33",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17"
   }
 }

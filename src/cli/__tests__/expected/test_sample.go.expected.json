@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    { "name": "user", "className": "User" },
+    { "name": "app", "className": "ReactApp" }
+  ],
+  "flows": [
+    {
+      "label": "SendsRequest",
+      "kind": "async",
+      "text": "user.SendsRequest(app)",
+      "sourceName": "user",
+      "targetName": "app"
+    }
+  ]
+}

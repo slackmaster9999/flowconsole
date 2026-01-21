@@ -4,7 +4,7 @@ import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interfa
 
 export class PythonParser extends BaseParser {
   constructor() {
-    super('python');
+    super('python', 'µ');
   }
 
   getLanguage(): SupportedLanguage {

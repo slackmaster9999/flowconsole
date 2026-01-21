@@ -4,7 +4,7 @@ import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interfa
 
 export class CSharpParser extends BaseParser {
   constructor() {
-    super('csharp');
+    super('csharp', 'µ');
   }
 
   getLanguage(): SupportedLanguage {

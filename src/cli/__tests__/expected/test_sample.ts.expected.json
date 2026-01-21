@@ -1,0 +1,15 @@
+{
+  "nodes": [
+    { "name": "user", "className": "User" },
+    { "name": "app", "className": "User" }
+  ],
+  "flows": [
+    {
+      "label": "sendsRequest",
+      "kind": "async",
+      "text": "user.sendsRequest(app, \"Load App\")",
+      "sourceName": "user",
+      "targetName": "app"
+    }
+  ]
+}
