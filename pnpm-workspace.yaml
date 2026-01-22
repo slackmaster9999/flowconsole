@@ -3,6 +3,7 @@ packages:
   - src/web
   - src/docs
   - src/cli
+  - src/core
   - src/sdk
 
 onlyBuiltDependencies:

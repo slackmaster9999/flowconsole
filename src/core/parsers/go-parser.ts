@@ -1,30 +1,32 @@
 import type { SgNode } from '@ast-grep/napi';
 import { BaseParser } from './base-parser';
-import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interface';
+import type { SupportedLanguage, LanguagePatterns } from '../infra/parser-interface';
 import { NodeInfo } from '../types/common';
 
-export class PythonParser extends BaseParser {
+export class GoParser extends BaseParser {
   protected extractObjectDetails(node: SgNode): NodeInfo {
     throw new Error('Method not implemented.');
   }
   constructor() {
-    super('python', 'µ');
+    super('go');
   }
 
   getLanguage(): SupportedLanguage {
-    return 'python';
+    return 'go';
   }
 
   getPatterns(): LanguagePatterns {
     return {
       objectInstantiation: [
-        '$NAME = $CLASS($$$ARGS)',
+        '$NAME := $PACKAGE.New$CLASS($$$ARGS)',
+        '$NAME := New$CLASS($$$ARGS)',
       ],
       methodCall: '$CALLEE($$$ARGS)',
     };
   }
 
   protected extractClassName(node: SgNode): string | null {
-    return node.getMatch('CLASS')?.text() || null;
+    const classMatch = node.getMatch('CLASS')?.text();
+    return classMatch || null;
   }
 }

@@ -1,7 +1,7 @@
 import { parse } from '@ast-grep/napi';
 import type { SgNode } from '@ast-grep/napi';
 import { uuidv7 } from 'uuidv7';
-import type { LanguageParser, LanguagePatterns } from '../core/parser-interface';
+import type { LanguageParser, LanguagePatterns } from '../infra/parser-interface';
 import type { ParseResult, NodeInfo, FlowStep, SupportedLanguage, ConnectionKind } from '../types/common';
 
 export abstract class BaseParser implements LanguageParser {

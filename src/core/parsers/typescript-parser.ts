@@ -1,6 +1,6 @@
 import type { SgNode } from '@ast-grep/napi';
 import { BaseParser } from './base-parser';
-import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interface';
+import type { SupportedLanguage, LanguagePatterns } from '../infra/parser-interface';
 import { NodeInfo } from '../types/common';
 import { uuidv7 } from 'uuidv7';
 

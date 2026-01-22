@@ -1,24 +1,24 @@
 import type { SgNode } from '@ast-grep/napi';
 import { BaseParser } from './base-parser';
-import type { SupportedLanguage, LanguagePatterns } from '../core/parser-interface';
+import type { SupportedLanguage, LanguagePatterns } from '../infra/parser-interface';
 import { NodeInfo } from '../types/common';
 
-export class JavaParser extends BaseParser {
+export class PythonParser extends BaseParser {
   protected extractObjectDetails(node: SgNode): NodeInfo {
     throw new Error('Method not implemented.');
   }
   constructor() {
-    super('java');
+    super('python', 'µ');
   }
 
   getLanguage(): SupportedLanguage {
-    return 'java';
+    return 'python';
   }
 
   getPatterns(): LanguagePatterns {
     return {
       objectInstantiation: [
-        '$TYPE $NAME = new $CLASS($$$ARGS)',
+        '$NAME = $CLASS($$$ARGS)',
       ],
       methodCall: '$CALLEE($$$ARGS)',
     };
