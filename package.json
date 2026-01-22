@@ -2,6 +2,14 @@
   "name": "oss",
   "private": true,
   "scripts": {
+    "build": "pnpm run build:workspace",
+    "build:workspace": "pnpm -r build",
+    "build:app": "pnpm --dir src/app build",
+    "build:web": "pnpm --dir src/web build",
+    "build:core": "pnpm --dir src/core build",
+    "build:docs": "pnpm --dir src/docs build",
+    "build:cli": "pnpm --dir src/cli build",
+    "build:sdk": "pnpm --dir src/sdk build",
     "test": "pnpm run test:unit && pnpm run test:e2e",
     "test:unit": "pnpm --filter flowconsole test:unit",
     "test:e2e": "pnpm --filter flowconsole test:e2e"
