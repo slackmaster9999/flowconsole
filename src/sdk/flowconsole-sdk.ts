@@ -1,4 +1,5 @@
 export type ConnectionKind = 'sync' | 'async' | 'event' | 'dependency';
+export type ComponentTone = 'primary' | 'muted' | 'success' | 'warning' | 'danger';
 
 export class ConnectionOptions {
   detail?: string;
@@ -9,6 +10,20 @@ export class ConnectionOptions {
 
 export type ParentContainer = Container | ComputerSystem;
 
+export interface ComponentArgs {
+  readonly id?: string, 
+  readonly name?: string, 
+  readonly description?: string, 
+  readonly belongsTo?: ParentContainer, 
+  readonly tags?: string[], 
+  readonly badge?: string, 
+  readonly tone?: ComponentTone
+}
+
+export interface UserArgs extends ComponentArgs {
+  readonly role?: string;
+}
+
 export class Component {
 
   id?: string;
@@ -18,7 +33,17 @@ export class Component {
   root?: ParentContainer;
   tags?: string[];
   badge?: string;
-  tone?: 'primary' | 'muted' | 'success' | 'warning' | 'danger';
+  tone?: ComponentTone;
+
+  constructor(args: ComponentArgs) {
+    this.id = args.id;
+    this.name = args.name;
+    this.description = args.description;
+    this.belongsTo = args.belongsTo;
+    this.tags = args.tags;
+    this.badge = args.badge;
+    this.tone = args.tone;
+  }
   
   public sendsRequest(target: Component, label: string, options?: ConnectionOptions): Component{
     return target;
@@ -43,8 +68,9 @@ export class Component {
 export class User extends Component {
   role?: string;
 
-  constructor(name?: string, role?: string) {
-    super();
+  constructor(args: UserArgs) {
+    super(args);
+    this.role = args.role;
   }
 }
 

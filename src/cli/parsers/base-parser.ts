@@ -15,6 +15,8 @@ export abstract class BaseParser implements LanguageParser {
 
   abstract getLanguage(): SupportedLanguage;
   abstract getPatterns(): LanguagePatterns;
+
+  protected abstract extractObjectDetails(node: SgNode): NodeInfo;
   protected abstract extractClassName(node: SgNode): string | null;
 
   parse(source: string): ParseResult {
@@ -30,6 +32,20 @@ export abstract class BaseParser implements LanguageParser {
     };
   }
 
+  findArgValue<T extends string | string[]>(args: SgNode | null, argName: string, removeQuotes = true)
+  : T {
+    var argValue = args?.children().find(c => c.field("key")?.text() === argName)
+      ?.field("value");
+
+    switch (argValue?.kind()) {
+      case 'string': return removeQuotes ? argValue.text().replace(/^['"`](.*)['"`]$/, '$1') as T : argValue.text() as T;
+      case 'array': {
+        return argValue?.children().filter(c => c.is('string')).map(c => c.text().replace(/^['"`](.*)['"`]$/, '$1')) as T;
+      }
+      default: return argValue?.text() as T;
+    }
+  }
+
   collectObjects(root: SgNode): Map<string, NodeInfo> {
     const patterns = this.getPatterns().objectInstantiation.map((pattern) => this.patternForLang(pattern));
     const objects = new Map<string, NodeInfo>();
@@ -40,11 +56,8 @@ export abstract class BaseParser implements LanguageParser {
         const className = this.extractClassName(node);
 
         if (name && className) {
-          objects.set(name, {
-            id: uuidv7(),
-            name,
-            className,
-          });
+          const obj = this.extractObjectDetails(node);
+          objects.set(name, obj);
         }
       });
     }

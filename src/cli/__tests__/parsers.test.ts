@@ -8,6 +8,7 @@ import { JavaParser } from '../parsers/java-parser';
 import { GoParser } from '../parsers/go-parser';
 import { registerDynamicLanguage } from '@ast-grep/napi';
 import type { ParseResult } from '../types/common';
+import { pathToFileURL } from 'node:url';
 
 // Register dynamic languages for non-TS/JS
 const csharp = require('@ast-grep/lang-csharp');
@@ -48,7 +49,7 @@ const testCases: Array<{
     name: 'TypeScript',
     parser: () => new TypeScriptParser(),
     inputFile: 'test_sample.ts',
-    expectedFile: 'test_sample.ts.expected.json',
+    expectedFile: 'test_sample.ts.expected.js',
   },
   {
     name: 'Python',
@@ -76,13 +77,14 @@ const testCases: Array<{
   },
 ];
 
-describe('Parser tests', () => {
-  it.each(testCases)('$name parser should correctly parse test_sample', ({ parser, inputFile, expectedFile }) => {
+describe('Parser tests', async () => {
+  it.each(testCases)('$name parser should correctly parse test_sample', async ({ parser, inputFile, expectedFile }) => {
     const inputPath = path.join(fixturesDir, inputFile);
     const expectedPath = path.join(expectedDir, expectedFile);
 
     const source = fs.readFileSync(inputPath, 'utf8');
-    const expected = JSON.parse(fs.readFileSync(expectedPath, 'utf8'));
+
+    const expected = (await import(pathToFileURL(expectedPath).href)).default;
 
     const p = parser();
     const result = p.parse(source);
