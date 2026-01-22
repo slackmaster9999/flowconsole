@@ -20,7 +20,7 @@
     "@ast-grep/napi": "^0.40.5",
     "uuidv7": "^1.1.0",
     "yargs": "^18.0.0",
-    "@flowconsole/core": "workspace:^1.0.0"
+    "@flowconsole/core": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -28,6 +28,6 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.17",
-    "@flowconsole/sdk": "workspace:^0.0.2"
+    "@flowconsole/sdk": "workspace:*"
   }
 }

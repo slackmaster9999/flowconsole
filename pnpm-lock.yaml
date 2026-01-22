@@ -172,7 +172,7 @@ importers:
         specifier: ^0.40.5
         version: 0.40.5
       '@flowconsole/core':
-        specifier: workspace:^1.0.0
+        specifier: workspace:*
         version: link:../core
       uuidv7:
         specifier: ^1.1.0
@@ -182,7 +182,7 @@ importers:
         version: 18.0.0
     devDependencies:
       '@flowconsole/sdk':
-        specifier: workspace:^0.0.2
+        specifier: workspace:*
         version: link:../sdk
       '@types/node':
         specifier: ^22.0.0
@@ -222,7 +222,7 @@ importers:
         version: 1.1.0
     devDependencies:
       '@flowconsole/sdk':
-        specifier: workspace:^0.0.2
+        specifier: workspace:*
         version: link:../sdk
       '@types/node':
         specifier: ^22.0.0
