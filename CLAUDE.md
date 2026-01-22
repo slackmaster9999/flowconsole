@@ -42,18 +42,18 @@ pnpm --filter flowconsole vitest run --config ../../vitest.config.ts tests/unit/
 
 ## Architecture
 
-### DSL and Runtime (`src/core/languages/typescript/`)
+### DSL and Runtime (`src/web/languages/typescript/`)
 - `dsl.ts` - TypeScript type declarations injected into the Monaco editor for autocompletion
 - `diagramRuntime.ts` - `DiagramRuntime` class that tracks entities and connections; `FlowBuilder` handles chained flow definitions
 - `evaluateDiagramCode.ts` - Evaluates user code with runtime injection to produce `DiagramIntermediateModel`
 - `modelToReactflowMapper.ts` - Converts intermediate model to ReactFlow nodes/edges
 
-### Core Components (`src/core/components/`)
+### Core Components (`src/web/components/`)
 - `Workbench/CodeDiagramWorkbench` - Monaco editor with live preview, debounced code evaluation
 - `ArchitectureDiagram.tsx` - ReactFlow-based renderer with graphviz-wasm auto-layout
 - `NavigationPanel/` - Flow and scope navigation controls for rendered diagrams
 
-### Diagram Infrastructure (`src/core/diagram/`, `src/core/reactflow/`)
+### Diagram Infrastructure (`src/web/diagram/`, `src/web/reactflow/`)
 - Layout engine uses graphviz-wasm for automatic node positioning
 - Custom ReactFlow nodes and edges with animation support
 

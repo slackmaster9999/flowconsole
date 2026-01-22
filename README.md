@@ -96,10 +96,10 @@ user.sendsRequestTo(frontApp, "opens in browser")
 - `pnpm test:e2e` — to run tests.
 
 ## Architecture
-- `src/core/components/Workbench/CodeDiagramWorkbench`: Monaco-based editor + model preview, debounced evaluation.
-- `src/core/components/ArchitectureDiagram`: Reactflow renderer with autolayout navigation panel.
-- `src/core/languages/typescript`: DSL declarations, evaluator, and samples that compile authored code into architecture models.
-- `src/core/components/NavigationPanel`: flow and scope navigation for rendered models.
+- `src/web/components/Workbench/CodeDiagramWorkbench`: Monaco-based editor + model preview, debounced evaluation.
+- `src/web/components/ArchitectureDiagram`: Reactflow renderer with autolayout navigation panel.
+- `src/web/languages/typescript`: DSL declarations, evaluator, and samples that compile authored code into architecture models.
+- `src/web/components/NavigationPanel`: flow and scope navigation for rendered models.
 
 ## Contributing
 - Contributions are welcome!

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { VerticalSplit } from '../../src/core/components/VerticalSplit';
+import { VerticalSplit } from '../../src/web/components/VerticalSplit';
 
 
 beforeAll(() => {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, act } from '@testing-library/react';
-import { CodeDiagramWorkbench } from '../../src/core/components/Workbench/CodeDiagramWorkbench';
+import { CodeDiagramWorkbench } from '../../src/web/components/Workbench/CodeDiagramWorkbench';
 import React from 'react';
 import { ThemeProvider } from '../../src/theme/ThemeProvider';
 
@@ -29,17 +29,17 @@ vi.mock('@monaco-editor/react', () => ({
 }));
 
 const mockEvaluate = vi.fn();
-vi.mock('../../src/core/languages/typescript/evaluateDiagramCode', () => ({
+vi.mock('../../src/web/languages/typescript/evaluateDiagramCode', () => ({
   evaluateDiagramCode: (...args: unknown[]) => mockEvaluate(...args),
 }));
 
-vi.mock('../../src/core/components/ArchitectureDiagram', () => ({
+vi.mock('../../src/web/components/ArchitectureDiagram', () => ({
   ArchitectureDiagram: ({ model }: { model: { nodes: unknown[] } }) => (
     <div data-testid="diagram">nodes:{model.nodes.length}</div>
   ),
 })); 
 
-vi.mock('../../src/core/components/VerticalSplit', () => {
+vi.mock('../../src/web/components/VerticalSplit', () => {
   const Pane = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
   const Split = ({ children }: { children: React.ReactNode }) => <div>{children}</div>;
   Split.Pane = Pane;

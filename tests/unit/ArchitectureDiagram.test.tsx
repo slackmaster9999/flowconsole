@@ -1,8 +1,8 @@
 import React from 'react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, act } from '@testing-library/react';
-import { ArchitectureDiagram } from '../../src/core/components/ArchitectureDiagram';
-import { ArchitectureDiagramModel } from '../../src/core/diagram/types';
+import { ArchitectureDiagram } from '../../src/web/components/ArchitectureDiagram';
+import { ArchitectureDiagramModel } from '../../src/web/diagram/types';
 
 let nodesState: any[] = [];
 let edgesState: any[] = [];
@@ -41,7 +41,7 @@ vi.mock('@xyflow/react', () => {
   };
 });
 
-vi.mock('../../src/core/diagram/graphvizLayoutService', () => ({
+vi.mock('../../src/web/diagram/graphvizLayoutService', () => ({
   layoutWithGraphviz: vi.fn(async (model) => model),
 }));
 
@@ -49,17 +49,17 @@ vi.mock('../../src/theme/ThemeProvider', () => ({
   useTheme: () => ({ resolvedScheme: 'light' }),
 }));
 
-vi.mock('../../src/core/diagram/utils/scopedModel', () => ({
+vi.mock('../../src/web/diagram/utils/scopedModel', () => ({
   buildScopedModel: (model: ArchitectureDiagramModel) => model,
   scopeTrail: (model: ArchitectureDiagramModel, scopeId: string | undefined) =>
     scopeId ? [{ id: scopeId, data: { title: 'Child' } }] : [],
 }));
 
-vi.mock('../../src/core/diagram/reactflow/edges/FloatingConnectionLine', () => ({
+vi.mock('../../src/web/diagram/reactflow/edges/FloatingConnectionLine', () => ({
   FloatingConnectionLine: () => null,
 }));
 
-vi.mock('../../src/core/components/NavigationPanel', () => ({
+vi.mock('../../src/web/components/NavigationPanel', () => ({
   __esModule: true,
   default: (props: any) => {
     navProps = props;
@@ -127,7 +127,7 @@ describe('ArchitectureDiagram', () => {
   });
 
   it('uses graphviz layout when autoLayout is true', async () => {
-    const { layoutWithGraphviz } = await import('../../src/core/diagram/graphvizLayoutService');
+    const { layoutWithGraphviz } = await import('../../src/web/diagram/graphvizLayoutService');
     (layoutWithGraphviz as any).mockResolvedValue({
       nodes: [{ id: 'x', data: { title: 'X' }, position: { x: 1, y: 1 } }],
       edges: [{ id: 'e2', source: 'x', target: 'x', data: {} }],

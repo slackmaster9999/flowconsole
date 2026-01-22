@@ -1,5 +1,5 @@
 import type { Monaco } from '@monaco-editor/react';
-import type { ArchitectureDiagramModel } from '../../core/diagram/types';
+import type { ArchitectureDiagramModel } from '../diagram/types';
 
 export type CodeSample = {
   id: string;

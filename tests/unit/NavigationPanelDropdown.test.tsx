@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { ThemeProvider } from '../../src/theme/ThemeProvider';
-import { NavigationItem } from '../../src/core/components/NavigationPanel';
-import NavigationPanelDropdown from '../../src/core/components/NavigationPanel/NavigationPanelDropdown';
+import { NavigationItem } from '../../src/web/components/NavigationPanel';
+import NavigationPanelDropdown from '../../src/web/components/NavigationPanel/NavigationPanelDropdown';
 
 const tree: NavigationItem[] = [
   {
