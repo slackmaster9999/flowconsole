@@ -9,6 +9,7 @@ export type NodeInfo = {
   tags?: string[];
   badge?: string;
   icon?: string;
+  text: string;
 };
 
 export type FlowStep = {

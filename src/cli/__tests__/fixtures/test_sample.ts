@@ -1,6 +1,6 @@
-import type { User, ReactApp } from "../../../sdk/flowconsole-sdk";
+import { ReactApp, User } from "@flowconsole/sdk";
 
-const user: User = { name: 'Alice' };
-const app: ReactApp = { name: 'ReactApp' };
+const user = new User('Alice', "admin");
+const app = new ReactApp();
 
 user.sendsRequest(app, "Load App");

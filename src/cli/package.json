@@ -26,6 +26,7 @@
     "@types/yargs": "^17.0.33",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3",
-    "vitest": "^4.0.17"
+    "vitest": "^4.0.17",
+    "@flowconsole/sdk": "workspace:^0.0.2"
   }
 }

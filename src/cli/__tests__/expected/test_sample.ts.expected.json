@@ -1,7 +1,7 @@
 {
   "nodes": [
     { "name": "user", "className": "User" },
-    { "name": "app", "className": "User" }
+    { "name": "app", "className": "ReactApp" }
   ],
   "flows": [
     {
