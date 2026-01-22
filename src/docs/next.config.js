@@ -5,7 +5,6 @@ import("./env.mjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   output: "export",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   images: {
@@ -17,10 +16,9 @@ const nextConfig = {
       }
     ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["@prisma/client"],
-  },
-  transpilePackages: ["flowconsole"]
+  serverExternalPackages: ["@prisma/client"],
+  outputFileTracingRoot: process.cwd(),
+  transpilePackages: ["@flowconsole/web"]
 };
 
 module.exports = withContentlayer(nextConfig);

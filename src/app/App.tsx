@@ -1,7 +1,6 @@
 import '@mantine/core/styles.css';
 import '@xyflow/react/dist/style.css';
-import { CodeDiagramWorkbench } from 'flowconsole/components/Workbench/CodeDiagramWorkbench';
-import { useTheme } from 'flowconsole/theme/ThemeProvider';
+import { CodeDiagramWorkbench, useTheme } from '@flowconsole/web';
 
 
 export default function App() { 

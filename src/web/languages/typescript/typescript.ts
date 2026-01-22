@@ -7,7 +7,7 @@ export const typescriptLanguage: LanguageDefinition = {
   id: 'typescript',
   label: 'TypeScript',
   monacoLanguage: 'typescript',
-  monacoSetup: (monaco) => {
+  monacoSetup: (monaco: any) => {
     monaco.languages.typescript.typescriptDefaults.addExtraLib(
       DSL_DECLARATIONS,
       'ts:diagram-dsl.d.ts'
