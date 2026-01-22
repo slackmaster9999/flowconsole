@@ -19,7 +19,8 @@
     "@ast-grep/lang-python": "^0.0.5",
     "@ast-grep/napi": "^0.40.5",
     "uuidv7": "^1.1.0",
-    "yargs": "^18.0.0"
+    "yargs": "^18.0.0",
+    "@flowconsole/core": "workspace:^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
