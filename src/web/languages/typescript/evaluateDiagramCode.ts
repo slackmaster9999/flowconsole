@@ -1,15 +1,15 @@
 import * as ts from 'typescript';
-import { DSL_DECLARATIONS } from './dsl';
+
 import { DiagramRuntime, ENTITY_TYPE_NAMES, type EntityTypeName } from './diagramRuntime';
 import { buildReactFlowModel } from './modelToReactflowMapper';
 import type { EvaluationResult } from '../types';
 
 const ENTITY_TYPE_SET = new Set<EntityTypeName>(ENTITY_TYPE_NAMES);
-const DSL_LINE_OFFSET = DSL_DECLARATIONS.split('\n').length;
+const DSL_LINE_OFFSET = 1; //DSL_DECLARATIONS.split('\n').length;
 
 export async function evaluateDiagramCode(source: string): Promise<EvaluationResult> {
   const runtime = new DiagramRuntime();
-  const programSource = `${DSL_DECLARATIONS}\n${source}`;
+  const programSource = `$${source}`;
 
   const transpiled = ts.transpileModule(programSource, {
     fileName: 'diagram-dsl.ts',

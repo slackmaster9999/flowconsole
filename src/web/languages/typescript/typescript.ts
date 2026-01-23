@@ -1,10 +1,10 @@
+import sdkSource from '@flowconsole/sdk/flowconsole-sdk.ts?raw';
 import { evaluateDiagramCode } from './evaluateDiagramCode';
 import { codeSamples, defaultSampleId } from './samples';
 import type { LanguageDefinition } from '../types';
-import { DSL_DECLARATIONS } from './dsl';
 
-const SDK_MODULE_URI = 'file:///node_modules/@flowconsole/sdk/index.d.ts';
-const SDK_DECLARATIONS = `declare module '@flowconsole/sdk' {\n${DSL_DECLARATIONS}\n}`;
+const SDK_MODULE_URI = 'file:///node_modules/@flowconsole/sdk/index.ts';
+const SDK_MODULE_SOURCE = sdkSource;
 
 export const typescriptLanguage: LanguageDefinition = {
   id: 'typescript',
@@ -21,8 +21,8 @@ export const typescriptLanguage: LanguageDefinition = {
     monaco.languages.typescript.typescriptDefaults.setCompilerOptions(tsCompilerOptions);
     monaco.languages.typescript.javascriptDefaults.setCompilerOptions(tsCompilerOptions);
 
-    monaco.languages.typescript.typescriptDefaults.addExtraLib(SDK_DECLARATIONS, SDK_MODULE_URI);
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(SDK_DECLARATIONS, SDK_MODULE_URI);
+    monaco.languages.typescript.typescriptDefaults.addExtraLib(SDK_MODULE_SOURCE, SDK_MODULE_URI);
+    monaco.languages.typescript.javascriptDefaults.addExtraLib(SDK_MODULE_SOURCE, SDK_MODULE_URI);
   },
   samples: codeSamples,
   defaultSampleId,
