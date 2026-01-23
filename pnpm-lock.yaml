@@ -32,6 +32,9 @@ importers:
 
   src/app:
     dependencies:
+      '@flowconsole/core':
+        specifier: workspace:*
+        version: link:../core
       '@flowconsole/web':
         specifier: workspace:*
         version: link:../web
@@ -564,6 +567,9 @@ importers:
 
   src/web:
     dependencies:
+      '@flowconsole/core':
+        specifier: workspace:*
+        version: link:../core
       '@flowconsole/sdk':
         specifier: workspace:*
         version: link:../sdk

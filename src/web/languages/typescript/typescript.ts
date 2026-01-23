@@ -1,7 +1,8 @@
 import sdkSource from '@flowconsole/sdk/flowconsole-sdk.ts?raw';
-import { evaluateDiagramCode } from './evaluateDiagramCode';
 import { codeSamples, defaultSampleId } from './samples';
 import type { LanguageDefinition } from '../types';
+import { TypeScriptPlaygroundRuntime } from '../runtime';
+import type { SupportedLanguage } from '@flowconsole/core';
 
 const SDK_MODULE_URI = 'file:///node_modules/@flowconsole/sdk/index.ts';
 const SDK_MODULE_SOURCE = sdkSource;
@@ -26,5 +27,8 @@ export const typescriptLanguage: LanguageDefinition = {
   },
   samples: codeSamples,
   defaultSampleId,
-  evaluate: evaluateDiagramCode,
+  evaluate: (source: string , language: SupportedLanguage) => new Promise(() => {
+    const runtime = new TypeScriptPlaygroundRuntime();
+    return runtime.ParseDiagrammingCode(source, language);
+  })
 };

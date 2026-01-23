@@ -21,6 +21,7 @@
     "d3-shape": "^3.2.0",
     "fast-equals": "^5.3.2",
     "@flowconsole/web": "workspace:*",
+    "@flowconsole/core": "workspace:*",
     "graphviz-wasm": "^3.0.2",
     "posthog-js": "^1.313.0",
     "react": "19.2.1",

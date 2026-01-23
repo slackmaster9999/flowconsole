@@ -1,8 +1,6 @@
 import type { SgNode } from '@ast-grep/napi';
 import type { ParseResult, NodeInfo, FlowStep, SupportedLanguage } from '../types/common';
 
-export type { SupportedLanguage };
-
 export interface LanguagePatterns {
   objectInstantiation: string[];
   methodCall: string;
