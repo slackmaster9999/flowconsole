@@ -402,6 +402,7 @@ export function ArchitectureDiagram({
       minZoom={0.1}
       maxZoom={2}
       connectionLineComponent={FloatingConnectionLine}
+      panActivationKeyCode={'Shift'}
     >
       <MiniMap
         pannable
