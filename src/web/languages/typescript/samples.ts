@@ -2,6 +2,32 @@ import type { CodeSample } from '../types';
 
 export const codeSamples: CodeSample[] = [
   {
+    id: 'test-sample',
+    title: 'SDK Test Sample',
+    description:
+      'Test sample from unit tests',
+    code: `
+import { ReactApp, User } from "@flowconsole/sdk";
+
+const user = new User({
+  name: "Alice",
+  role: "admin",
+  description: "Administrator user",
+  tags: ["admin", "user"],
+  badge: "gold",
+  tone: "muted",
+});
+
+const app = new ReactApp({});
+
+user.sendsRequest(app, "Load App");
+
+    `
+  }
+];
+
+export const codeSamplesOld: CodeSample[] = [
+  {
     id: 'retail-banking',
     title: 'Retail Banking Platform',
     description:
@@ -399,4 +425,4 @@ contributor.sendsRequestTo(pluginRegistry, "publish plugin")
   },
 ];
 
-export const defaultSampleId = codeSamples[0]?.id ?? 'retail-banking';
+export const defaultSampleId = codeSamples[0]?.id ?? 'test-sample';

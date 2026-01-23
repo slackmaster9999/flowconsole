@@ -1,82 +1,118 @@
-export const DSL_DECLARATIONS = `
-type ConnectionKind = 'sync' | 'async' | 'event' | 'dependency';
+export const DSL_DECLARATIONS = `type ConnectionKind = 'sync' | 'async' | 'event' | 'dependency';
+type ComponentTone = 'primary' | 'muted' | 'success' | 'warning' | 'danger';
 
-type ConnectionOptions = {
+class ConnectionOptions {
   detail?: string;
   kind?: ConnectionKind;
   icon?: string;
   muted?: boolean;
 };
 
-interface FlowSegment {
-  then?(entity: DiagramEntity): FlowSegment;
-  sendsRequestTo?(target: DiagramEntity, label: string, options?: ConnectionOptions): FlowSegment;
-  getDataFrom?(target: DiagramEntity, label: string, options?: ConnectionOptions): FlowSegment;
-  executesRequest?(action: string, options?: ConnectionOptions): FlowSegment;
-  inParallel?(...branches: Array<() => FlowSegment | void>): FlowSegment;
-}
-
 type ParentContainer = Container | ComputerSystem;
 
-interface DiagramEntity {
+interface ComponentArgs {
+  readonly id?: string, 
+  readonly name?: string, 
+  readonly description?: string, 
+  readonly belongsTo?: ParentContainer, 
+  readonly tags?: string[], 
+  readonly badge?: string, 
+  readonly tone?: ComponentTone
+}
+
+interface UserArgs extends ComponentArgs {
+  readonly role?: string;
+}
+
+class Component {
+
   id?: string;
-  name: string;
+  name?: string;
   description?: string;
   belongsTo?: ParentContainer;
-  system?: ParentContainer;
+  root?: ParentContainer;
   tags?: string[];
   badge?: string;
-  tone?: 'primary' | 'muted' | 'success' | 'warning' | 'danger';
-  sendsRequestTo?(target: DiagramEntity, label: string, options?: ConnectionOptions): FlowSegment;
-  getDataFrom?(target: DiagramEntity, label: string, options?: ConnectionOptions): FlowSegment;
-  executesRequest?(action: string, options?: ConnectionOptions): FlowSegment;
+  tone?: ComponentTone;
+
+  constructor(args: ComponentArgs) {
+    this.id = args.id;
+    this.name = args.name;
+    this.description = args.description;
+    this.belongsTo = args.belongsTo;
+    this.tags = args.tags;
+    this.badge = args.badge;
+    this.tone = args.tone;
+  }
+  
+  public sendsRequest(target: Component, label: string, options?: ConnectionOptions): Component{
+    return target;
+  }
+
+  public then(target: Component): Component
+  {
+    return target
+  }
+  
+  public getDataFrom(target: Component, label: string, options?: ConnectionOptions): Component
+  {
+    return target;
+  };
+
+  executesRequest?(action: string): Component
+  {
+    return this;
+  }
 }
 
-interface User extends DiagramEntity {
-  persona?: string;
+class User extends Component {
+  role?: string;
+
+  constructor(args: UserArgs) {
+    super(args);
+    this.role = args.role;
+  }
 }
 
-interface ComputerSystem extends DiagramEntity {
+class ComputerSystem extends Component {
   domain?: string;
 }
 
-interface Container extends DiagramEntity {
+class Container extends Component {
   technology?: string;
 }
 
-interface ReactApp extends DiagramEntity {
+class ReactApp extends Component {
   framework?: string;
   url?: string;
 }
 
-interface RestApi extends DiagramEntity {
+class RestApi extends Component {
   method?: string;
   endpoint?: string;
 }
 
-interface Redis extends DiagramEntity {
+class Redis extends Component {
   cluster?: string;
 }
 
-interface Postgres extends DiagramEntity {
+class Postgres extends Component {
   schema?: string;
 }
 
-interface KafkaTopic extends DiagramEntity {
+class KafkaTopic extends Component {
   partitionCount?: number;
 }
 
-interface MessageQueue extends DiagramEntity {
+class MessageQueue extends Component {
   throughput?: string;
 }
 
-interface ExternalService extends DiagramEntity {
+class ExternalService extends Component {
   vendor?: string;
 }
 
-interface BackgroundJob extends DiagramEntity {
+class BackgroundJob extends Component {
   schedule?: string;
 }
-
-declare function __createEntity<T>(type: string, value: T): T;
 `;
