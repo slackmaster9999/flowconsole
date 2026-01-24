@@ -1,5 +1,3 @@
-import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 type Scheme = 'light' | 'dark' | 'auto';
@@ -12,6 +10,7 @@ type ThemeContextValue = {
 };
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+const STORAGE_KEY = 'FlowConsole-theme';
 
 export function useTheme() {
   const ctx = useContext(ThemeContext);
@@ -27,11 +26,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   };
   const [systemScheme, setSystemScheme] = useState<'light' | 'dark'>(getSystemScheme);
-  const [scheme, setScheme] = useLocalStorage<Scheme>({
-    key: 'FlowConsole-theme',
-    defaultValue: 'auto',
-    getInitialValueInEffect: true,
-  });
+  const [scheme, setScheme] = useState<Scheme>('auto');
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') {
+      setScheme(stored);
+    }
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
@@ -48,8 +51,15 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const resolvedScheme: 'light' | 'dark' = scheme === 'auto' ? systemScheme : scheme;
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
     document.documentElement.dataset.theme = resolvedScheme;
+    document.documentElement.style.colorScheme = resolvedScheme;
   }, [resolvedScheme]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem(STORAGE_KEY, scheme);
+  }, [scheme]);
 
   const value = useMemo<ThemeContextValue>(
     () => ({
@@ -72,14 +82,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <ThemeContext.Provider value={value}>
-      <ColorSchemeScript defaultColorScheme="auto" />
-      <MantineProvider
-        defaultColorScheme="auto"
-        forceColorScheme={resolvedScheme}
-      >
-        {children}
-      </MantineProvider>
-    </ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
 }

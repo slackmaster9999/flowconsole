@@ -15,8 +15,6 @@ export default defineConfig({
         'react',
         'react-dom',
         '@monaco-editor/react',
-        '@mantine/core',
-        '@mantine/hooks',
         '@xyflow/react',
         '@xyflow/system',
         'react-router-dom',

@@ -1,5 +1,5 @@
 import { useMemo, type JSX, type RefObject } from 'react';
-import { ActionIcon, Badge, Group, ScrollArea, TextInput, Tooltip } from '@mantine/core';
+import { ActionIcon, Badge, Group, ScrollArea, TextInput, Tooltip } from '../ui';
 import {
   IconChevronDown,
   IconChevronRight,

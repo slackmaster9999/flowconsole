@@ -1,4 +1,4 @@
-import { Badge, Group, Input, Modal, ScrollArea, Text } from '@mantine/core';
+import { Badge, Group, Input, Modal, ScrollArea, Text } from '../ui';
 import { IconChevronDown, IconChevronRight, IconDatabase, IconLayoutGrid, IconSearch, IconServer, IconSquareRounded, IconUser } from '@tabler/icons-react';
 import { useEffect, useMemo, useRef, useState, type JSX } from 'react';
 import type { NavigationItem } from './NavigationPanel';

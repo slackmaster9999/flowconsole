@@ -1,3 +1,5 @@
+@import "../ui/styles.css";
+
 :root {
   --navpanel-bg: rgba(8, 15, 23, 0.6);
   --navpanel-border: rgba(255, 255, 255, 0.05);
@@ -42,6 +44,7 @@
   box-shadow: 0 10px 26px rgba(3, 7, 11, 0.45);
   border: 1px solid var(--navpanel-border);
   cursor: pointer;
+  color: var(--navpanel-text-strong);
 }
 .navpanel-controls svg {
   flex-shrink: 0;
@@ -80,6 +83,9 @@
   color: #dbeafe;
   box-shadow: var(--navpanel-shadow);
 }
+:root[data-theme='light'] .navpanel-dropdown {
+  color: #0f172a;
+}
 .navpanel-dropdown__inner {
   padding: 12px;
   width: 494px;
@@ -89,14 +95,30 @@
 .navpanel-dropdown__scroll {
   width: 100%;
 }
-.navpanel-dropdown__scroll .mantine-ScrollArea-viewport {
+.navpanel-dropdown__scroll {
   max-height: 428px;
-  overflow-y: auto;
 }
-.navpanel-dropdown .mantine-TextInput-root input {
+.navpanel-dropdown .fc-input {
   background: rgba(255,255,255,0.02);
   color: #e6eef8;
   border-color: rgba(255,255,255,0.06);
+}
+.navpanel-dropdown .fc-input__field {
+  color: #e6eef8;
+}
+.navpanel-dropdown .fc-input__field::placeholder {
+  color: rgba(148, 163, 184, 0.75);
+}
+:root[data-theme='light'] .navpanel-dropdown .fc-input {
+  background: rgba(15, 23, 42, 0.04);
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.12);
+}
+:root[data-theme='light'] .navpanel-dropdown .fc-input__field {
+  color: #0f172a;
+}
+:root[data-theme='light'] .navpanel-dropdown .fc-input__field::placeholder {
+  color: rgba(71, 85, 105, 0.6);
 }
 .navpanel-tree {
   display: flex;
@@ -120,6 +142,18 @@
 .navpanel-item__icon { width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; color: #9fb3d6; }
 .navpanel-item__left { display: inline-flex; align-items: center; justify-content: center; width: 28px; }
 .navpanel-empty { color: #9fb3d6; font-size: 13px; padding: 10px 4px; text-align: center; }
+:root[data-theme='light'] .navpanel-item__desc {
+  color: #475569;
+}
+:root[data-theme='light'] .navpanel-item__icon {
+  color: #64748b;
+}
+:root[data-theme='light'] .navpanel-empty {
+  color: #64748b;
+}
+:root[data-theme='light'] .navpanel-children {
+  border-left-color: rgba(15, 23, 42, 0.12);
+}
 
 @media (max-width: 640px) {
   .navigation-panel { top: 8px; left: 8px; }

@@ -1,4 +1,4 @@
-import { Popover } from '@mantine/core';
+import { Popover } from '../ui';
 import { useReactFlow } from '@xyflow/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { NavigationPanelControls } from './NavigationPanelControls';

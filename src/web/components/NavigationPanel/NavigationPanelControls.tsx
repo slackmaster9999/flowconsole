@@ -1,4 +1,4 @@
-import { ActionIcon, Group, Text, Tooltip } from '@mantine/core';
+import { ActionIcon, Group, Text, Tooltip } from '../ui';
 import { IconArrowLeft, IconArrowRight, IconChevronRight, IconGitBranch, IconMoonStars, IconSearch, IconSunHigh } from '@tabler/icons-react';
 import { isMacOs } from '@xyflow/system';
 import type { ThemeControls } from '../../types/theme';

@@ -100,7 +100,7 @@ export const VerticalSplit: VerticalSplitComponent = ({
         style={{
           width: '6px',
           cursor: 'col-resize',
-          background: 'var(--mantine-color-gray-5, #2f2f2f)',
+          background: 'var(--diagram-border-strong, #2f2f2f)',
           flexShrink: 0,
         }}
       />
