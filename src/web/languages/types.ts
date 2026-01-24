@@ -1,6 +1,5 @@
 import type { Monaco } from '@monaco-editor/react';
 import type { ArchitectureDiagramModel } from '../diagram/types';
-import type { SupportedLanguage } from '@flowconsole/core';
 
 export type CodeSample = {
   id: string;
@@ -13,6 +12,8 @@ export type EvaluationResult =
   | { ok: true; model: ArchitectureDiagramModel }
   | { ok: false; error: string };
 
+export type SupportedLanguage = 'typescript' | 'python' | 'csharp' | 'java' | 'go';
+
 export type LanguageDefinition = {
   id: string;
   label: string;
@@ -20,5 +21,5 @@ export type LanguageDefinition = {
   monacoSetup?: (monaco: Monaco) => void;
   samples: CodeSample[];
   defaultSampleId?: string;
-  evaluate: (source: string, language: SupportedLanguage) => Promise<EvaluationResult>;
+  evaluate: (source: string) => Promise<EvaluationResult>;
 };

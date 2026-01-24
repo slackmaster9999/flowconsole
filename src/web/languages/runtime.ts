@@ -1,28 +1,45 @@
-import { type SupportedLanguage, ParserRegistry, TypeScriptParser } from '@flowconsole/core';
-import type { EvaluationResult } from './types';
+import type { EvaluationResult, SupportedLanguage } from './types';
+import { mapParseResultToDiagramModel, type ParseResult } from './parseResultMapper';
 
+const DEFAULT_API_PATH = '/api/diagram/parse';
+
+function resolveApiPath() {
+  const apiUrl = import.meta.env.VITE_FLOWCONSOLE_API_URL;
+  if(!apiUrl) {
+    throw new Error('FLOWCONSOLE_API_URL is not defined');
+  }
+  return `${apiUrl}${DEFAULT_API_PATH}`;
+}
+
+type ParseApiResponse =
+  | { ok: true; result: ParseResult }
+  | { ok: false; error: string };
 
 export class TypeScriptPlaygroundRuntime {
-    protected registry: ParserRegistry;
+  async ParseDiagrammingCode(source: string, language: SupportedLanguage): Promise<EvaluationResult> {
+    const apiPath = resolveApiPath();
+    const response = await fetch(apiPath, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ source, lang: language }),
+    });
 
-    constructor() {
-        this.registry = new ParserRegistry();
-        this.registry.register(new TypeScriptParser());
+    let payload: ParseApiResponse | null = null;
+    try {
+      payload = (await response.json()) as ParseApiResponse;
+    } catch {
+      payload = null;
     }
 
-    async ParseDiagrammingCode(source: string, language: SupportedLanguage): Promise<EvaluationResult> {
-        const parser = this.registry.getParser(language);
-        if (!parser) {
-            return { ok: false, error: `${language} is not registered` };
-        }
-
-        const result = await parser.parse(source);
-
-        if (result) {
-            console.log(result);
-            return { ok: true, model: { nodes: [], flows: [], edges: [] } };
-        }
-
-        throw new Error('Parsing failed', { cause: result });
+    if (!response.ok || !payload || !payload.ok) {
+      const error =
+        payload && 'error' in payload
+          ? payload.error
+          : `Request failed with status ${response.status}`;
+      return { ok: false, error };
     }
+
+    const model = mapParseResultToDiagramModel(payload.result);
+    return { ok: true, model };
+  }
 }

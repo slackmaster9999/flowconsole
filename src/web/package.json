@@ -37,8 +37,7 @@
     "react-router-dom": "^7.9.5",
     "remeda": "^2.32.0",
     "type-fest": "^5.1.0",
-    "@flowconsole/sdk": "workspace:*",
-    "@flowconsole/core": "workspace:*"
+    "@flowconsole/sdk": "workspace:*"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

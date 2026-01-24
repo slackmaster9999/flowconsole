@@ -120,6 +120,9 @@ importers:
       '@vitest/coverage-v8':
         specifier: ^4.0.10
         version: 4.0.15(vitest@4.0.15(@opentelemetry/api@1.9.0)(@types/node@24.10.2)(jiti@2.6.1)(jsdom@27.3.0(postcss@8.5.6))(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.1)(yaml@2.8.2))
+      concurrently:
+        specifier: ^8.2.2
+        version: 8.2.2
       eslint:
         specifier: ^9.36.0
         version: 9.39.1(jiti@2.6.1)
@@ -242,9 +245,27 @@ importers:
 
   src/docs:
     dependencies:
+      '@ast-grep/lang-csharp':
+        specifier: ^0.0.5
+        version: 0.0.5
+      '@ast-grep/lang-go':
+        specifier: ^0.0.5
+        version: 0.0.5
+      '@ast-grep/lang-java':
+        specifier: ^0.0.6
+        version: 0.0.6
+      '@ast-grep/lang-python':
+        specifier: ^0.0.5
+        version: 0.0.5
+      '@ast-grep/napi':
+        specifier: ^0.40.5
+        version: 0.40.5
       '@auth/prisma-adapter':
         specifier: ^2.4.1
         version: 2.11.1(@prisma/client@5.22.0(prisma@5.22.0))
+      '@flowconsole/core':
+        specifier: workspace:*
+        version: link:../core
       '@flowconsole/web':
         specifier: workspace:*
         version: link:../web
@@ -567,9 +588,6 @@ importers:
 
   src/web:
     dependencies:
-      '@flowconsole/core':
-        specifier: workspace:*
-        version: link:../core
       '@flowconsole/sdk':
         specifier: workspace:*
         version: link:../sdk
