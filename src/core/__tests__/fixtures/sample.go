@@ -1,10 +1,21 @@
 package main
 
-import "github.com/slackmaster9999/flowconsole"
+import . "github.com/slackmaster9999/flowconsole"
 
-user := flowconsole.NewUser(jsii.String("Alice"), jsii.String("admin"))
-app := flowconsole.NewReactApp()
-api := flowconsole.NewRestApi()
+user := NewUser(&UserArgs{
+    Name:        "user",
+    Description: "Administrator user",
+    Tags:        []string{"admin", "user"},
+    Badge:       "gold",
+})
 
-user.SendsRequest(app, jsii.String("Load App"))
-app.Then(api).GetDataFrom(api, jsii.String("Fetch data"))
+app := NewReactApp(&ReactAppArgs{
+    Name: "app",
+})
+
+api := NewRestApi(&RestApiArgs{
+    Name: "api",
+})
+
+user.SendsRequest(app, "Load App")
+app.Then(api)

@@ -73,7 +73,7 @@ const testCases: Array<{
     name: 'Go',
     parser: () => new GoParser(),
     inputFile: 'sample.go',
-    expectedFile: 'sample.go.expected.json',
+    expectedFile: 'sample.go.expected.js',
   },
 ];
 

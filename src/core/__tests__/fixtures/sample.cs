@@ -5,4 +5,4 @@ var app = new ReactApp();
 var api = new RestApi();
 
 user.SendsRequest(app, "Load App");
-app.Then(api).GetDataFrom(api, "Fetch data");
+app.GetDataFrom(api, "Fetch data");
