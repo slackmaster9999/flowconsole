@@ -5,7 +5,6 @@ import("./env.mjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  output: "export",
   basePath: process.env.NEXT_PUBLIC_BASE_PATH || "",
   images: {
     unoptimized: true,
@@ -16,7 +15,14 @@ const nextConfig = {
       }
     ],
   },
-  serverExternalPackages: ["@prisma/client"],
+  serverExternalPackages: [
+    "@prisma/client",
+    "@ast-grep/napi",
+    "@ast-grep/lang-csharp",
+    "@ast-grep/lang-go",
+    "@ast-grep/lang-java",
+    "@ast-grep/lang-python",
+  ],
   outputFileTracingRoot: process.cwd(),
   transpilePackages: ["@flowconsole/web"]
 };
