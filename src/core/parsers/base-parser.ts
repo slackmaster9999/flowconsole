@@ -136,6 +136,7 @@ export abstract class BaseParser implements LanguageParser {
     while (func) {
       if (
         func.is('member_expression') ||
+        func.is('member_access_expression') ||
         func.is('attribute') ||
         func.is('selector_expression') ||
         func.is('field_access')
@@ -146,7 +147,7 @@ export abstract class BaseParser implements LanguageParser {
           func.field('field') ||
           func.field('name');
         if (!method && prop) method = prop.text();
-        func = func.field('object') || func.field('value') || func.field('operand');
+        func = func.field('object') || func.field('value') || func.field('operand') || func.field('expression');
         continue;
       }
       if (func.is('call_expression') || func.is('method_invocation')) {

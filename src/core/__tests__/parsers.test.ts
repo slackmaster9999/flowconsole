@@ -61,7 +61,7 @@ const testCases: Array<{
     name: 'C#',
     parser: () => new CSharpParser(),
     inputFile: 'sample.cs',
-    expectedFile: 'sample.cs.expected.json',
+    expectedFile: 'sample.cs.expected.js',
   },
   {
     name: 'Java',
