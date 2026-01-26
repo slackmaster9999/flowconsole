@@ -1,7 +1,7 @@
 import type { SgNode } from '@ast-grep/napi';
 import { BaseParser } from './base-parser';
-import type { SupportedLanguage, LanguagePatterns } from '../infra/parser-interface';
-import { NodeInfo } from '../types/common';
+import type { LanguagePatterns } from '../infra/parser-interface';
+import { NodeInfo, SupportedLanguage } from '../types/common';
 
 export class JavaParser extends BaseParser {
   protected extractObjectDetails(node: SgNode): NodeInfo {

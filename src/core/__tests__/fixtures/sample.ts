@@ -1,8 +1,14 @@
-import { User, ReactApp, RestApi } from '@flowconsole/sdk';
+import { ReactApp, User } from "@flowconsole/sdk";
 
-const user = new User('Alice', 'admin');
-const app = new ReactApp();
-const api = new RestApi();
+const user = new User({
+  name: "Alice",
+  role: "admin",
+  description: "Administrator user",
+  tags: ["admin", "user"],
+  badge: "gold",
+  tone: "muted",
+});
 
-user.sendsRequest(app, 'Load App');
-app.then(api).getDataFrom(api, 'Fetch data');
+const app = new ReactApp({});
+
+user.sendsRequest(app, "Load App");

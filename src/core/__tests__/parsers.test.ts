@@ -48,37 +48,37 @@ const testCases: Array<{
   {
     name: 'TypeScript',
     parser: () => new TypeScriptParser(),
-    inputFile: 'test_sample.ts',
-    expectedFile: 'test_sample.ts.expected.js',
+    inputFile: 'sample.ts',
+    expectedFile: 'sample.ts.expected.js',
   },
   {
     name: 'Python',
     parser: () => new PythonParser(),
-    inputFile: 'test_sample.py',
-    expectedFile: 'test_sample.py.expected.json',
+    inputFile: 'sample.py',
+    expectedFile: 'sample.py.expected.js',
   },
   {
     name: 'C#',
     parser: () => new CSharpParser(),
-    inputFile: 'test_sample.cs',
-    expectedFile: 'test_sample.cs.expected.json',
+    inputFile: 'sample.cs',
+    expectedFile: 'sample.cs.expected.json',
   },
   {
     name: 'Java',
     parser: () => new JavaParser(),
-    inputFile: 'test_sample.java',
-    expectedFile: 'test_sample.java.expected.json',
+    inputFile: 'sample.java',
+    expectedFile: 'sample.java.expected.json',
   },
   {
     name: 'Go',
     parser: () => new GoParser(),
-    inputFile: 'test_sample.go',
-    expectedFile: 'test_sample.go.expected.json',
+    inputFile: 'sample.go',
+    expectedFile: 'sample.go.expected.json',
   },
 ];
 
 describe('Parser tests', async () => {
-  it.each(testCases)('$name parser should correctly parse test_sample', async ({ parser, inputFile, expectedFile }) => {
+  it.each(testCases)('$name parser should correctly parse sample', async ({ parser, inputFile, expectedFile }) => {
     const inputPath = path.join(fixturesDir, inputFile);
     const expectedPath = path.join(expectedDir, expectedFile);
 
@@ -86,7 +86,7 @@ describe('Parser tests', async () => {
 
     const expected = (await import(pathToFileURL(expectedPath).href)).default;
 
-    const p = parser();
+    const p = parser(); 
     const result = p.parse(source);
     const stripped = stripIds(result);
 
