@@ -105,7 +105,7 @@ export abstract class BaseParser implements LanguageParser {
     if (lowerMethod.includes('event') || lowerMethod.includes('publish') || lowerMethod.includes('emit')) {
       return 'event';
     }
-    if (lowerMethod.includes('async') || lowerMethod.includes('queue') || lowerMethod.includes('send')) {
+    if (lowerMethod.includes('async') || lowerMethod.includes('queue')) {
       return 'async';
     }
     if (lowerMethod.includes('get') || lowerMethod.includes('fetch') || lowerMethod.includes('read') || lowerMethod.includes('data')) {

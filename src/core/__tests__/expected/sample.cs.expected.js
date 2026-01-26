@@ -34,7 +34,7 @@ export default {
   "flows": [
     {
       "label": "SendsRequest",
-      "kind": "async",
+      "kind": "sync",
       "text": "user.SendsRequest(app, \"Load App\")",
       "sourceName": "user",
       "targetName": "app"
