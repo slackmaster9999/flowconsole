@@ -67,7 +67,7 @@ const testCases: Array<{
     name: 'Java',
     parser: () => new JavaParser(),
     inputFile: 'sample.java',
-    expectedFile: 'sample.java.expected.json',
+    expectedFile: 'sample.java.expected.js',
   },
   {
     name: 'Go',
