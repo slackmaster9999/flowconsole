@@ -1,60 +1,55 @@
-import type { LanguageDefinition, EvaluationResult } from "../types";
-
+import type { Monaco } from '@monaco-editor/react';
+import type { LanguageDefinition } from "../types";
+import { TypeScriptPlaygroundRuntime } from "../runtime";
 
 const csharpSamples = [
   {
-    id: 'retail-banking-cs',
-    title: 'Retail Banking (C#)',
-    description: 'The same sample as in the main demo, but in C#',
-    code: `var customer = new User { Name = "Customer", Description = "Retail banking customer" };
-var platform = new ComputerSystem { Name = "Cloud Banking" };
-var backend = new Container { Name = "Core Services", System = platform };
-var api = new RestApi { Name = "Accounts API", Description = "Loads balances", BelongsTo = backend };
+    id: 'unit-test-csharp',
+    title: 'Unit Test Sample (C#)',
+    description: 'Sample from core parser tests.',
+    code: `using FlowConsole;
 
-customer.SendsRequestTo(api, "load dashboard");`,
+var user = new User(new UserArgs {
+  Name = "user",
+  Description = "Administrator user",
+  Tags = new [] { "admin", "user" },
+  Badge = "gold",
+});
+
+var app = new ReactApp(new ComponentArgs {
+  Name = "app",
+});
+
+var api = new RestApi(new ComponentArgs {
+  Name = "api",
+  BelongsTo = app,
+  Icon = "api-icon",
+});
+
+user.SendsRequest(app, "Load App");
+app.Then(api);
+`,
   },
 ] satisfies LanguageDefinition['samples'];
 
-type WorkerRequest = { id: number; type: 'evaluate'; source: string };
-type WorkerResponse = { id: number; result: EvaluationResult };
-
-let workerCounter = 0;
-let workerInstance: Worker | null = null;
-const pending = new Map<number, (value: EvaluationResult) => void>();
-
-function ensureWorker(): Worker {
-  if (workerInstance) return workerInstance;
-  workerInstance = new Worker(new URL('./csharpWorker.ts', import.meta.url), { type: 'module' });
-  workerInstance.onmessage = (event: MessageEvent<WorkerResponse>) => {
-    const { id, result } = event.data;
-    const resolve = pending.get(id);
-    if (resolve) {
-      pending.delete(id);
-      resolve(result);
-    }
-  };
-  workerInstance.onerror = (error) => {
-    pending.forEach((resolve) => resolve({ ok: false, error: String(error.message ?? error) }));
-    pending.clear();
-  };
-  return workerInstance;
-}
-
-async function evaluateCSharpDiagram(source: string): Promise<EvaluationResult> {
-  const worker = ensureWorker();
-  const id = ++workerCounter;
-  const request: WorkerRequest = { id, type: 'evaluate', source };
-  return new Promise<EvaluationResult>((resolve) => {
-    pending.set(id, resolve);
-    worker.postMessage(request);
-  });
-}
+const runtime = new TypeScriptPlaygroundRuntime();
+const CSHARP_LANGUAGE_ID = 'csharp';
 
 export const csharpLanguage: LanguageDefinition = {
   id: 'csharp',
   label: 'C#',
-  monacoLanguage: 'csharp',
+  monacoLanguage: CSHARP_LANGUAGE_ID,
+  monacoSetup: (monaco: Monaco) => {
+    const exists = monaco.languages.getLanguages().some((lang) => lang.id === CSHARP_LANGUAGE_ID);
+    if (!exists) {
+      monaco.languages.register({ id: CSHARP_LANGUAGE_ID });
+    }
+    void import('monaco-editor/esm/vs/basic-languages/csharp/csharp').then((mod) => {
+      monaco.languages.setMonarchTokensProvider(CSHARP_LANGUAGE_ID, mod.language);
+      monaco.languages.setLanguageConfiguration(CSHARP_LANGUAGE_ID, mod.conf);
+    });
+  },
   samples: csharpSamples,
   defaultSampleId: csharpSamples[0]?.id,
-  evaluate: (source: string) => evaluateCSharpDiagram(source),
+  evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'csharp'),
 };
