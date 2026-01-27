@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "pnpm run build:workspace",
-    "build:workspace": "pnpm -r build",
+    "build:workspace": "pnpm -r --filter '!flowconsole-docs' build",
     "build:app": "pnpm --dir src/app build",
     "build:web": "pnpm --dir src/web build",
     "build:core": "pnpm --dir src/core build",
