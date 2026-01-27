@@ -1,4 +1,3 @@
-import type { Monaco } from '@monaco-editor/react';
 import type { LanguageDefinition } from '../types';
 import { TypeScriptPlaygroundRuntime } from '../runtime';
 
@@ -34,22 +33,12 @@ app.then(api);
 ] satisfies LanguageDefinition['samples'];
 
 const runtime = new TypeScriptPlaygroundRuntime();
-const JAVA_LANGUAGE_ID = 'java';
 
 export const javaLanguage: LanguageDefinition = {
   id: 'java',
   label: 'Java',
-  monacoLanguage: JAVA_LANGUAGE_ID,
-  monacoSetup: (monaco: Monaco) => {
-    const exists = monaco.languages.getLanguages().some((lang) => lang.id === JAVA_LANGUAGE_ID);
-    if (!exists) {
-      monaco.languages.register({ id: JAVA_LANGUAGE_ID });
-    }
-    void import('monaco-editor/esm/vs/basic-languages/java/java').then((mod) => {
-      monaco.languages.setMonarchTokensProvider(JAVA_LANGUAGE_ID, mod.language);
-      monaco.languages.setLanguageConfiguration(JAVA_LANGUAGE_ID, mod.conf);
-    });
-  },
+  monacoLanguage: 'java',
+  monacoSetup: () => import('monaco-editor/esm/vs/basic-languages/java/java.contribution'),
   samples: javaSamples,
   defaultSampleId: javaSamples[0]?.id,
   evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'java'),

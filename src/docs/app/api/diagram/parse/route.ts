@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { registerDynamicLanguage, LangRegistration } from '@ast-grep/napi';
+import { registerDynamicLanguage } from '@ast-grep/napi';
 import csharpLang from '@ast-grep/lang-csharp';
 import pythonLang from '@ast-grep/lang-python';
 import javaLang from '@ast-grep/lang-java';
@@ -13,6 +13,7 @@ import {
   GoParser,
   type SupportedLanguage,
 } from '@flowconsole/core';
+import { LangRegistration } from '@ast-grep/napi/types/registerDynamicLang';
 
 export const runtime = 'nodejs';
 
@@ -56,7 +57,7 @@ function jsonResponse(req: NextRequest, payload: ParseResponse, status = 200) {
 }
 
 function loadLang(mod: unknown): LangRegistration {
-  const candidate = mod as { default?: unknown };
+  const candidate = mod as { default?: any };
   return candidate?.default ?? mod;
 }
 

@@ -1,4 +1,3 @@
-import type { Monaco } from '@monaco-editor/react';
 import type { LanguageDefinition } from '../types';
 import { TypeScriptPlaygroundRuntime } from '../runtime';
 
@@ -33,22 +32,12 @@ app.Then(api)
 ] satisfies LanguageDefinition['samples'];
 
 const runtime = new TypeScriptPlaygroundRuntime();
-const GO_LANGUAGE_ID = 'go';
 
 export const goLanguage: LanguageDefinition = {
   id: 'go',
   label: 'Go',
-  monacoLanguage: GO_LANGUAGE_ID,
-  monacoSetup: (monaco: Monaco) => {
-    const exists = monaco.languages.getLanguages().some((lang) => lang.id === GO_LANGUAGE_ID);
-    if (!exists) {
-      monaco.languages.register({ id: GO_LANGUAGE_ID });
-    }
-    void import('monaco-editor/esm/vs/basic-languages/go/go').then((mod) => {
-      monaco.languages.setMonarchTokensProvider(GO_LANGUAGE_ID, mod.language);
-      monaco.languages.setLanguageConfiguration(GO_LANGUAGE_ID, mod.conf);
-    });
-  },
+  monacoLanguage: 'go',
+  monacoSetup: () => import('monaco-editor/esm/vs/basic-languages/go/go.contribution'),
   samples: goSamples,
   defaultSampleId: goSamples[0]?.id,
   evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'go'),

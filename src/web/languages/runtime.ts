@@ -4,7 +4,11 @@ import { mapParseResultToDiagramModel, type ParseResult } from './parseResultMap
 const DEFAULT_API_PATH = '/api/diagram/parse';
 
 function resolveApiPath() {
-  const apiUrl = import.meta.env.VITE_FLOWCONSOLE_API_URL;
+  const apiUrl =
+    (import.meta as any)?.env?.VITE_FLOWCONSOLE_API_URL ??
+    (typeof process !== 'undefined'
+      ? process.env.NEXT_PUBLIC_FLOWCONSOLE_API_URL ?? process.env.VITE_FLOWCONSOLE_API_URL
+      : undefined);
   if(!apiUrl) {
     throw new Error('FLOWCONSOLE_API_URL is not defined');
   }

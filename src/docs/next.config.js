@@ -24,7 +24,14 @@ const nextConfig = {
     "@ast-grep/lang-python",
   ],
   outputFileTracingRoot: process.cwd(),
-  transpilePackages: ["@flowconsole/web"]
+  transpilePackages: ["@flowconsole/web"],
+  webpack: (config) => {
+    config.module.rules.push({
+      resourceQuery: /raw/,
+      type: "asset/source",
+    });
+    return config;
+  },
 };
 
 module.exports = withContentlayer(nextConfig);

@@ -1,3 +1,4 @@
+/// <reference path="./monaco-langs.d.ts" />
 import { typescriptLanguage } from './typescript/typescript';
 import { pythonLanguage } from './python/python';
 import { csharpLanguage } from './csharp/csharp';

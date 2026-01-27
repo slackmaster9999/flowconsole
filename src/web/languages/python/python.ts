@@ -1,4 +1,3 @@
-import type { Monaco } from '@monaco-editor/react';
 import type { LanguageDefinition } from '../types';
 import { TypeScriptPlaygroundRuntime } from '../runtime';
 
@@ -20,23 +19,14 @@ app.then(api)
 ] satisfies LanguageDefinition['samples'];
 
 const runtime = new TypeScriptPlaygroundRuntime();
-const PYTHON_LANGUAGE_ID = 'python';
 
 export const pythonLanguage: LanguageDefinition = {
   id: 'python',
   label: 'Python',
-  monacoLanguage: PYTHON_LANGUAGE_ID,
-  monacoSetup: (monaco: Monaco) => {
-    const exists = monaco.languages.getLanguages().some((lang: any) => lang.id === PYTHON_LANGUAGE_ID);
-    if (!exists) {
-      monaco.languages.register({ id: PYTHON_LANGUAGE_ID });
-    }
-    void import('monaco-editor/esm/vs/basic-languages/python/python').then((mod) => {
-      monaco.languages.setMonarchTokensProvider(PYTHON_LANGUAGE_ID, mod.language);
-      monaco.languages.setLanguageConfiguration(PYTHON_LANGUAGE_ID, mod.conf);
-    });
-  },
+  monacoLanguage: 'python',
+  monacoSetup: () => import('monaco-editor/esm/vs/basic-languages/python/python.contribution'),
   samples: pythonSamples,
   defaultSampleId: pythonSamples[0]?.id,
   evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'python'),
 };
+
