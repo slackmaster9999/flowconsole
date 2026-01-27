@@ -2,7 +2,7 @@ name: Release Preview
 
 on:
   push:
-    branches: [dev]
+    branches: [feature/**]
 
 concurrency:
   group: release-${{ github.ref }}
