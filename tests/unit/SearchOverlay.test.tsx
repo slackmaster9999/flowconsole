@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from '../../src/theme/ThemeProvider';
-import { NavigationItem } from '../../src/core/components/NavigationPanel';
-import SearchOverlay from '../../src/core/components/NavigationPanel/SearchOverlay';
+import { NavigationItem } from '../../src/web/components/NavigationPanel';
+import SearchOverlay from '../../src/web/components/NavigationPanel/SearchOverlay';
 
 const items: NavigationItem[] = [
   {

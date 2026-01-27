@@ -1,0 +1,47 @@
+{
+  "name": "@flowconsole/cli",
+  "version": "0.0.1",
+  "description": "FlowConsole CLI for building your architecture",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "flowconsole": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.d.ts",
+    "!dist/**/*.tsbuildinfo",
+    "!dist/vitest.config.*",
+    "!dist/test_sample.*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run --config vitest.config.ts",
+    "test:watch": "vitest --config vitest.config.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "packageManager": "pnpm@10.19.0",
+  "dependencies": {
+    "@ast-grep/lang-csharp": "^0.0.5",
+    "@ast-grep/lang-go": "^0.0.5",
+    "@ast-grep/lang-java": "^0.0.6",
+    "@ast-grep/lang-python": "^0.0.5",
+    "@ast-grep/napi": "^0.40.5",
+    "uuidv7": "^1.1.0",
+    "yargs": "^18.0.0",
+    "@flowconsole/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/yargs": "^17.0.33",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.17",
+    "@flowconsole/sdk": "workspace:*"
+  }
+}

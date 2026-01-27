@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { evaluateDiagramCode } from '../../src/core/languages/typescript/evaluateDiagramCode';
+import { evaluateDiagramCode } from '../../src/web/languages/typescript/evaluateDiagramCode';
 
 
 const validProgram = `const user: User = { name: "Analyst" };

@@ -5,9 +5,9 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { Icons } from "../shared/icons";
 import { cn } from "@/lib/utils";
-import { ArchitectureDiagram } from "flowconsole/components/ArchitectureDiagram";
-import { ThemeProvider } from "flowconsole/theme/ThemeProvider";
-import { architectureNodeTypes, architectureEdgeTypes } from "flowconsole/diagram/registry";
+import { ArchitectureDiagram } from "@flowconsole/web";
+import { ThemeProvider } from "@flowconsole/web";
+import { ArchitectureNodeTypes, ArchitectureEdgeTypes } from "@flowconsole/web";
 import { useTheme } from "next-themes";
 import "@/styles/preview-landing.css";
 

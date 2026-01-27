@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { ArchitectureDiagramModel } from '../../src/core/diagram/types';
-import { buildScopedModel, scopeTrail } from '../../src/core/diagram/utils/scopedModel';
+import { ArchitectureDiagramModel } from '../../src/web/diagram/types';
+import { buildScopedModel, scopeTrail } from '../../src/web/diagram/utils/scopedModel';
 
 const baseModel: ArchitectureDiagramModel = {
   nodes: [

@@ -1,0 +1,94 @@
+{
+  "name": "@flowconsole/web",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "license": "Apache-2.0",
+  "description": "FlowConsole React components for architecture diagrams",
+  "main": "dist/flowconsole-web.umd.cjs",
+  "module": "dist/flowconsole-web.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/flowconsole-web.js",
+      "require": "./dist/flowconsole-web.umd.cjs"
+    },
+    "./style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "pnpm run build:web",
+    "build:web": "tsc -b && vite build",
+    "build:wasm": "bash scripts/dotnet-wasm/build.sh",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "preview": "vite preview",
+    "test": "vitest run --config ../../vitest.config.ts",
+    "test:watch": "vitest --config ../../vitest.config.ts",
+    "test:unit": "vitest run --config ../../vitest.config.ts",
+    "test:coverage": "vitest run --config ../../vitest.config.ts --coverage",
+    "test:e2e": "pnpm --dir ../app build && playwright test --config ../../playwright.config.ts",
+    "wasm:setup": "bash scripts/dotnet-wasm/install.sh",
+    "wasm:clean": "bash scripts/dotnet-wasm/clean.sh"
+  },
+  "dependencies": {
+    "@flowconsole/sdk": "workspace:*",
+    "@react-hookz/web": "^25.1.1",
+    "@tabler/icons-react": "^3.35.0",
+    "d3-shape": "^3.2.0",
+    "fast-equals": "^5.3.2",
+    "graphviz-wasm": "^3.0.2",
+    "monaco-editor": "^0.55.1",
+    "remeda": "^2.32.0",
+    "type-fest": "^5.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0",
+    "@xyflow/react": ">=12.0.0",
+    "@xyflow/system": ">=0.0.50",
+    "@monaco-editor/react": ">=4.0.0",
+    "react-router-dom": ">=7.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.36.0",
+    "@monaco-editor/react": "^4.7.0",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/d3-shape": "^3.1.7",
+    "@types/node": "^24.6.0",
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "@vitest/coverage-v8": "^4.0.10",
+    "@xyflow/react": "^12.9.2",
+    "@xyflow/system": "^0.0.72",
+    "eslint": "^9.36.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "globals": "^16.4.0",
+    "jsdom": "^27.2.0",
+    "postcss": "^8.5.6",
+    "postcss-simple-vars": "^7.0.1",
+    "react": "19.2.1",
+    "react-dom": "19.2.1",
+    "react-router-dom": "^7.9.5",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.45.0",
+    "vite": "^7.1.7",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^4.0.10"
+  }
+}

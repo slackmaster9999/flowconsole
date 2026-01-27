@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { getBezierPath, Position, useInternalNode, useReactFlow } from '@xyflow/react';
-import { RelationshipEdge } from '../../src/core/reactflow/edges/RelationshipEdge';
+import { RelationshipEdge } from '../../src/web/reactflow/edges/RelationshipEdge';
 
 vi.mock('@xyflow/react', () => {
   const reactFlowInstance = {

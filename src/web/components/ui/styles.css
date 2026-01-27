@@ -1,0 +1,212 @@
+.fc-action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+.fc-action-icon:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.fc-action-icon--sm {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+}
+.fc-action-icon--light {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--navpanel-border, rgba(255, 255, 255, 0.08));
+}
+.fc-action-icon--subtle {
+  background: transparent;
+  border-color: transparent;
+}
+.fc-action-icon--filled {
+  background: #2563eb;
+  border-color: rgba(37, 99, 235, 0.55);
+  color: #fff;
+}
+.fc-action-icon--blue {
+  background: #2563eb;
+  border-color: rgba(37, 99, 235, 0.55);
+  color: #fff;
+}
+
+.fc-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(148, 163, 184, 0.12);
+  color: inherit;
+}
+.fc-badge--light {
+  background: rgba(148, 163, 184, 0.12);
+}
+.fc-badge--sm {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+.fc-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  width: 100%;
+}
+.fc-input--sm {
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.fc-input__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.7;
+}
+.fc-input__field {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: inherit;
+  font-size: 14px;
+  min-width: 0;
+}
+.fc-input__field::placeholder {
+  color: rgba(148, 163, 184, 0.8);
+}
+
+.fc-scroll-area {
+  overflow: auto;
+}
+.fc-scroll-area::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.fc-scroll-area::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 999px;
+}
+.fc-scroll-area::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fc-modal__overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+}
+.fc-modal__content {
+  position: relative;
+  z-index: 1;
+  width: min(960px, 92vw);
+  max-height: 92vh;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(3, 7, 18, 0.5);
+  display: flex;
+  flex-direction: column;
+}
+.fc-modal__content.is-fullscreen {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+}
+.fc-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.fc-modal__title {
+  font-size: 16px;
+  font-weight: 700;
+}
+.fc-modal__body {
+  flex: 1;
+  padding: 16px 20px;
+  overflow: hidden;
+}
+.fc-modal__close {
+  background: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.fc-popover {
+  position: relative;
+  display: inline-flex;
+}
+.fc-popover__dropdown {
+  position: absolute;
+  z-index: 9999;
+  top: calc(100% + 4px);
+  left: 0;
+}
+.fc-tooltip {
+  display: inline-flex;
+  align-items: center;
+}
+
+:root[data-theme='light'] .fc-action-icon:not(.fc-action-icon--filled):not(.fc-action-icon--blue) {
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+}
+:root[data-theme='light'] .fc-action-icon--subtle {
+  background: transparent;
+  border-color: transparent;
+}
+:root[data-theme='light'] .fc-badge {
+  background: rgba(15, 23, 42, 0.06);
+  border-color: rgba(15, 23, 42, 0.14);
+  color: #1e293b;
+}
+:root[data-theme='light'] .fc-input {
+  background: rgba(15, 23, 42, 0.04);
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+:root[data-theme='light'] .fc-input__field::placeholder {
+  color: rgba(71, 85, 105, 0.6);
+}
+:root[data-theme='light'] .fc-modal__content {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2);
+}

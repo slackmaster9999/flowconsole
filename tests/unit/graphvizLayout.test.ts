@@ -21,7 +21,7 @@ const makeJson = (objects: any[], edges: any[], bb = '0,0,0,0') =>
   JSON.stringify({ objects, edges, bb });
 
 async function getLayoutWithGraphviz() {
-  const mod = await import('../../src/core/diagram/graphvizLayoutService');
+  const mod = await import('../../src/web/diagram/graphvizLayoutService');
   return mod.layoutWithGraphviz;
 }
 

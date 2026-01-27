@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import { useHoverPopover, useNavigationHistory } from '../../src/core/hooks/hooks';
+import { useHoverPopover, useNavigationHistory } from '../../src/web/hooks/hooks';
 
 describe('useHoverPopover', () => {
   beforeEach(() => {

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { FlowConsoleLogo } from "flowconsole/components/FlowConsoleLogo";
+import { FlowConsoleLogo } from "@flowconsole/web";
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
