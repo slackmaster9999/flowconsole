@@ -48,8 +48,11 @@ jobs:
         run: |
           pnpm --filter @flowconsole/core test
 
-      - name: Version packages (snapshot beta)
-        run: pnpm changeset version --snapshot beta
+      - name: Enter prerelease mode
+        run: pnpm changeset pre enter beta
+
+      - name: Version packages (beta)
+        run: pnpm changeset version
 
       - name: Publish preview packages (beta tag)
         run: pnpm -r publish --tag beta --no-git-checks
