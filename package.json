@@ -12,9 +12,13 @@
     "build:sdk": "pnpm --dir src/sdk build",
     "test": "pnpm run test:unit && pnpm run test:e2e",
     "test:unit": "pnpm --filter flowconsole test:unit",
-    "test:e2e": "pnpm --filter flowconsole test:e2e"
+    "test:e2e": "pnpm --filter flowconsole test:e2e",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm -r build && pnpm -r publish --no-git-checks"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",

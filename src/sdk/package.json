@@ -1,6 +1,6 @@
 {
   "name": "@flowconsole/sdk",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "FlowConsole SDK",
   "main": "dist/flowconsole-sdk.js",
   "scripts": {
@@ -19,6 +19,24 @@
     "directory": "src/sdk"
   },
   "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/flowconsole-sdk.d.ts",
+      "require": "./dist/flowconsole-sdk.js"
+    },
+    "./flowconsole-sdk.ts": "./flowconsole-sdk.ts",
+    "./*": "./*"
+  },
+  "files": [
+    "dist/flowconsole-sdk.js",
+    "dist/flowconsole-sdk.d.ts",
+    ".jsii",
+    ".jsii.gz",
+    "flowconsole-sdk.ts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "pnpm@10.19.0",
   "stability": "stable",
   "types": "dist/flowconsole-sdk.d.ts",
