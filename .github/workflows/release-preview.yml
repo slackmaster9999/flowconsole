@@ -133,6 +133,7 @@ jobs:
             <groupId>io.github.slackmaster9999</groupId>
             <artifactId>flowconsole-sdk-publish</artifactId>
             <version>1.0.0</version>
+            <packaging>pom</packaging>
           </project>
           EOF
           echo "Using temporary POM: $PUBLISH_POM"
