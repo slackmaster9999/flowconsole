@@ -41,16 +41,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Set preview versions (beta + short sha)
+        run: |
+          bash ./set-preview-versions.sh
+
       - name: Build all packages
         run: pnpm build
 
       - name: Run tests
         run: |
           pnpm --filter @flowconsole/core test
-
-      - name: Set preview versions (beta + short sha)
-        run: |
-          bash ./set-preview-versions.sh
 
       - name: Build SDK artifacts (jsii + pacmak)
         run: |

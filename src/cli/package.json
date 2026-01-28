@@ -1,7 +1,7 @@
 {
   "name": "@flowconsole/cli",
   "version": "1.0.0",
-  "description": "FlowConsole CLI for building your architecture",
+  "description": "FlowConsole CLI for generating your architecture diagrams",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
