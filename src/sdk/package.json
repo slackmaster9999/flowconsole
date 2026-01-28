@@ -47,8 +47,8 @@
       "java": {
         "package": "flowconsole.sdk",
         "maven": {
-          "groupId": "flowconsole",
-          "artifactId": "sdk"
+          "groupId": "io.github.slackmaster9999",
+          "artifactId": "flowconsole-sdk"
         }
       },
       "python": {

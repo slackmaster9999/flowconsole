@@ -85,6 +85,62 @@ jobs:
           packages-dir: src/sdk/dist/python/
           password: ${{ secrets.PYPI_API_TOKEN }}
 
+      - name: Check Java SDK artifacts
+        id: java_artifacts
+        run: |
+          if find dist/java -type f -path "*/flowconsole-sdk/*/*.pom" -name "flowconsole-sdk-*.pom" | grep -q .; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No Java artifacts found in src/sdk/dist/java; skipping publish."
+          fi
+        working-directory: src/sdk
+
+      - name: Setup Java
+        if: steps.java_artifacts.outputs.found == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          server-id: central
+          server-username: CENTRAL_TOKEN_USERNAME
+          server-password: CENTRAL_TOKEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+        env:
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish Maven packages (beta)
+        if: steps.java_artifacts.outputs.found == 'true'
+        env:
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        working-directory: src/sdk
+        run: |
+          ARTIFACT_ID=flowconsole-sdk
+          VERSION_DIR=$(find dist/java -type d -path "*/$ARTIFACT_ID/*" | sort | tail -n1)
+          if [ -z "$VERSION_DIR" ]; then
+            echo "No Java version directory found; skipping publish."
+            exit 0
+          fi
+          VERSION=$(basename "$VERSION_DIR")
+          ART_DIR="$VERSION_DIR"
+          JAR="$ART_DIR/$ARTIFACT_ID-$VERSION.jar"
+          POM="$ART_DIR/$ARTIFACT_ID-$VERSION.pom"
+          SOURCES="$ART_DIR/$ARTIFACT_ID-$VERSION-sources.jar"
+          JAVADOC="$ART_DIR/$ARTIFACT_ID-$VERSION-javadoc.jar"
+          if [ ! -f "$JAR" ] || [ ! -f "$POM" ]; then
+            echo "Missing Maven artifacts; skipping publish."
+            exit 0
+          fi
+          mvn -B -ntp -f "$POM" \
+            -Dgpg.passphrase="$GPG_PASSPHRASE" \
+            -DskipTests \
+            org.sonatype.central:central-publishing-maven-plugin:0.5.0:publish
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
