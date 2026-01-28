@@ -74,11 +74,7 @@ jobs:
             echo "No Go SDK artifacts found in dist/go/flowconsole; skipping publish."
             exit 0
           fi
-          VERSION="$(cat dist/go/flowconsole/version)"
-          if [ -z "$VERSION" ]; then
-            echo "Missing Go SDK version; skipping publish."
-            exit 0
-          fi
+          TAG="v0.0.0-preview"
           TMP="$(mktemp -d)"
           git clone "https://x-access-token:${GO_SDK_PUSH_TOKEN}@github.com/slackmaster9999/go-flowconsole.git" "$TMP"
           git -C "$TMP" config user.name "github-actions[bot]"
@@ -90,14 +86,11 @@ jobs:
           if git -C "$TMP" diff --cached --quiet; then
             echo "No Go SDK changes to publish."
           else
-            git -C "$TMP" commit -m "chore: publish go sdk v${VERSION}"
+            git -C "$TMP" commit -m "chore: publish go sdk preview"
           fi
-          if git -C "$TMP" rev-parse "v${VERSION}" >/dev/null 2>&1; then
-            echo "Tag v${VERSION} already exists."
-          else
-            git -C "$TMP" tag "v${VERSION}"
-          fi
-          git -C "$TMP" push origin HEAD:main --tags
+          git -C "$TMP" tag -f "$TAG"
+          git -C "$TMP" push origin HEAD:main
+          git -C "$TMP" push origin "$TAG" --force
 
       - name: Check Python SDK artifacts
         id: python_artifacts
@@ -160,19 +153,47 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         working-directory: src/sdk
         run: |
+          set -euo pipefail
+
+          # 1. Locate POM and extract coordinates from dist path
           POM_PATH="${{ steps.java_artifacts.outputs.pom_path }}"
           if [ -z "$POM_PATH" ] || [ ! -f "$POM_PATH" ]; then
             echo "Missing jsii-generated POM; skipping publish."
             exit 0
           fi
-          POM_DIR="$(dirname "$POM_PATH")"
-          echo "Using jsii-generated POM: $POM_PATH"
-          echo "Using publishing directory: $POM_DIR"
-          mvn -B -ntp \
-            -f "$POM_PATH" \
-            -DpublishingDirectory="$POM_DIR" \
-            -Dgpg.passphrase="$GPG_PASSPHRASE" \
-            org.sonatype.central:central-publishing-maven-plugin:0.5.0:publish
+          ARTIFACT_DIR="$(dirname "$POM_PATH")"
+          VERSION="$(basename "$ARTIFACT_DIR")"
+          ARTIFACT_ID="$(basename "$(dirname "$ARTIFACT_DIR")")"
+          echo "Publishing: $ARTIFACT_ID $VERSION from $ARTIFACT_DIR"
+
+          # 2. GPG sign all JARs and POM
+          for FILE in "$ARTIFACT_DIR"/*.jar "$ARTIFACT_DIR"/*.pom; do
+            [ -f "$FILE" ] || continue
+            echo "Signing: $(basename "$FILE")"
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$GPG_PASSPHRASE" \
+              --armor --detach-sign "$FILE"
+          done
+
+          # 3. Create deployment bundle with Maven repo layout
+          BUNDLE_DIR="$(mktemp -d)"
+          GROUP_PATH="$(echo "$ARTIFACT_DIR" | sed 's|.*dist/java/||')"
+          mkdir -p "$BUNDLE_DIR/$GROUP_PATH"
+          cp "$ARTIFACT_DIR"/* "$BUNDLE_DIR/$GROUP_PATH/"
+          echo "--- Bundle contents ---"
+          find "$BUNDLE_DIR" -type f | sort
+
+          BUNDLE_ZIP="$(mktemp).zip"
+          (cd "$BUNDLE_DIR" && zip -r "$BUNDLE_ZIP" .)
+
+          # 4. Upload to Central Portal REST API
+          AUTH_TOKEN=$(printf '%s:%s' "$CENTRAL_TOKEN_USERNAME" "$CENTRAL_TOKEN_PASSWORD" | base64 -w0)
+          RESPONSE=$(curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer $AUTH_TOKEN" \
+            --form "bundle=@${BUNDLE_ZIP};type=application/octet-stream" \
+            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC&name=${ARTIFACT_ID}-${VERSION}")
+          echo "Upload successful. Deployment ID: $RESPONSE"
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
