@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${GITHUB_SHA:?GITHUB_SHA is required in CI}"
-SHORT_SHA="${GITHUB_SHA:0:7}"
+TIMESTAMP="$(date -u +%Y%m%d%H%M%S)"
+export TIMESTAMP
 export SHORT_SHA
 
 pnpm -r exec node <<'NODE'
@@ -12,6 +12,6 @@ const path = "package.json";
 const pkg = JSON.parse(fs.readFileSync(path, "utf8"));
 const base = pkg.version.split("-")[0];
 
-pkg.version = `${base}-beta.${process.env.SHORT_SHA}`;
+pkg.version = `${base}-beta.${process.env.TIMESTAMP}`;
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
 NODE
