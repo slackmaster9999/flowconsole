@@ -61,6 +61,44 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Publish Go SDK (beta)
+        env:
+          GO_SDK_PUSH_TOKEN: ${{ secrets.GO_SDK_PUSH_TOKEN }}
+        working-directory: src/sdk
+        run: |
+          if [ -z "$GO_SDK_PUSH_TOKEN" ]; then
+            echo "GO_SDK_PUSH_TOKEN is not set; skipping Go publish."
+            exit 0
+          fi
+          if [ ! -f dist/go/flowconsole/go.mod ]; then
+            echo "No Go SDK artifacts found in dist/go/flowconsole; skipping publish."
+            exit 0
+          fi
+          VERSION="$(cat dist/go/flowconsole/version)"
+          if [ -z "$VERSION" ]; then
+            echo "Missing Go SDK version; skipping publish."
+            exit 0
+          fi
+          TMP="$(mktemp -d)"
+          git clone "https://x-access-token:${GO_SDK_PUSH_TOKEN}@github.com/slackmaster9999/go-flowconsole.git" "$TMP"
+          git -C "$TMP" config user.name "github-actions[bot]"
+          git -C "$TMP" config user.email "github-actions[bot]@users.noreply.github.com"
+          git -C "$TMP" reset --hard
+          git -C "$TMP" clean -fdx
+          cp -a dist/go/flowconsole/. "$TMP"/
+          git -C "$TMP" add -A
+          if git -C "$TMP" diff --cached --quiet; then
+            echo "No Go SDK changes to publish."
+          else
+            git -C "$TMP" commit -m "chore: publish go sdk v${VERSION}"
+          fi
+          if git -C "$TMP" rev-parse "v${VERSION}" >/dev/null 2>&1; then
+            echo "Tag v${VERSION} already exists."
+          else
+            git -C "$TMP" tag "v${VERSION}"
+          fi
+          git -C "$TMP" push origin HEAD:main --tags
+
       - name: Check Python SDK artifacts
         id: python_artifacts
         run: |
@@ -127,10 +165,12 @@ jobs:
             echo "Missing jsii-generated POM; skipping publish."
             exit 0
           fi
+          POM_DIR="$(dirname "$POM_PATH")"
           echo "Using jsii-generated POM: $POM_PATH"
+          echo "Using publishing directory: $POM_DIR"
           mvn -B -ntp \
             -f "$POM_PATH" \
-            -DpublishingDirectory=dist/java \
+            -DpublishingDirectory="$POM_DIR" \
             -Dgpg.passphrase="$GPG_PASSPHRASE" \
             org.sonatype.central:central-publishing-maven-plugin:0.5.0:publish
 

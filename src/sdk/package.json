@@ -62,7 +62,7 @@
       },
       "go": {
         "packageName": "flowconsole",
-        "moduleName": "github.com/slackmaster9999/flowconsole"
+        "moduleName": "github.com/slackmaster9999/go-flowconsole"
       }
     },
     "tsconfig": "tsconfig.json",
