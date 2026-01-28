@@ -12,6 +12,10 @@ const path = "package.json";
 const pkg = JSON.parse(fs.readFileSync(path, "utf8"));
 const base = pkg.version.split("-")[0];
 
-pkg.version = `${base}-beta.${process.env.TIMESTAMP}`;
+const next = `${base}-beta.${process.env.TIMESTAMP}`;
+const name = pkg.name || path;
+
+pkg.version = next;
 fs.writeFileSync(path, JSON.stringify(pkg, null, 2) + "\n");
+console.log(`set-preview-version: ${name} -> ${next}`);
 NODE
