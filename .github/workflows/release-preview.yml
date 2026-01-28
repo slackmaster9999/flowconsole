@@ -48,8 +48,9 @@ jobs:
         run: |
           pnpm --filter @flowconsole/core test
 
-      - name: Version packages (snapshot beta)
-        run: pnpm changeset version --snapshot beta
+      - name: Set preview versions (beta + short sha)
+        run: |
+          bash ./set-preview-versions.sh
 
       - name: Build SDK artifacts (jsii + pacmak)
         run: |
