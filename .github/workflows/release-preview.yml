@@ -48,25 +48,12 @@ jobs:
         run: |
           pnpm --filter @flowconsole/core test
 
-      - name: Enter prerelease mode
-        run: pnpm changeset pre enter beta
+      - name: Version packages (snapshot beta)
+        run: pnpm changeset version --snapshot beta
 
-      - name: Add preview changeset
+      - name: Show preview versions
         run: |
-          PREVIEW_CHANGESET=".changeset/preview-${GITHUB_RUN_ID}.md"
-          cat <<'EOF' > "$PREVIEW_CHANGESET"
-          ---
-          "@flowconsole/core": patch
-          "@flowconsole/cli": patch
-          "@flowconsole/sdk": patch
-          "@flowconsole/web": patch
-          ---
-
-          Preview release from CI.
-          EOF
-
-      - name: Version packages (beta)
-        run: pnpm changeset version
+          node -e "const fs=require('fs');const pkgs=['package.json','src/core/package.json','src/cli/package.json','src/sdk/package.json','src/web/package.json'];for(const p of pkgs){const j=JSON.parse(fs.readFileSync(p,'utf8'));console.log(`${j.name}@${j.version}`)}"
 
       - name: Publish preview packages (beta tag)
         run: pnpm -r publish --tag beta --no-git-checks
