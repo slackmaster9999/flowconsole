@@ -51,10 +51,6 @@ jobs:
       - name: Version packages (snapshot beta)
         run: pnpm changeset version --snapshot beta
 
-      - name: Show preview versions
-        run: |
-          node -e "const fs=require('fs');const pkgs=['package.json','src/core/package.json','src/cli/package.json','src/sdk/package.json','src/web/package.json'];for(const p of pkgs){const j=JSON.parse(fs.readFileSync(p,'utf8'));console.log(`${j.name}@${j.version}`)}"
-
       - name: Publish preview packages (beta tag)
         run: pnpm -r publish --tag beta --no-git-checks
         env:
