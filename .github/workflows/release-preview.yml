@@ -78,12 +78,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Publish PyPI packages (beta)
-        if: steps.python_artifacts.outputs.found == 'true'
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: src/sdk/dist/python/
-          password: ${{ secrets.PYPI_API_TOKEN }}
+      #- name: Publish PyPI packages (beta)
+      #  if: steps.python_artifacts.outputs.found == 'true'
+      #  uses: pypa/gh-action-pypi-publish@release/v1
+      #  with:
+      #    packages-dir: src/sdk/dist/python/
+      #    password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Check Java SDK artifacts
         id: java_artifacts
@@ -124,7 +124,20 @@ jobs:
             echo "Missing Maven artifacts; skipping publish."
             exit 0
           fi
+          PUBLISH_POM=$(mktemp)
+          cat > "$PUBLISH_POM" <<'EOF'
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>io.github.slackmaster9999</groupId>
+            <artifactId>flowconsole-sdk-publish</artifactId>
+            <version>1.0.0</version>
+          </project>
+          EOF
+          echo "Using temporary POM: $PUBLISH_POM"
           mvn -B -ntp \
+            -f "$PUBLISH_POM" \
             -DpublishingDirectory=dist/java \
             -Dgpg.passphrase="$GPG_PASSPHRASE" \
             org.sonatype.central:central-publishing-maven-plugin:0.5.0:publish
