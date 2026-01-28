@@ -109,12 +109,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      #- name: Publish PyPI packages (beta)
-      #  if: steps.python_artifacts.outputs.found == 'true'
-      #  uses: pypa/gh-action-pypi-publish@release/v1
-      #  with:
-      #    packages-dir: src/sdk/dist/python/
-      #    password: ${{ secrets.PYPI_API_TOKEN }}
+      - name: Publish PyPI packages (beta)
+        if: steps.python_artifacts.outputs.found == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: src/sdk/dist/python/
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
       - name: Check Java SDK artifacts
         id: java_artifacts
