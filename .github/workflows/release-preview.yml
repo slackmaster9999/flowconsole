@@ -61,6 +61,31 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Check Python SDK artifacts
+        id: python_artifacts
+        run: |
+          if ls dist/python/*.whl >/dev/null 2>&1 || ls dist/python/*.tar.gz >/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No Python artifacts found in dist/python; skipping publish."
+          fi
+        working-directory: src/sdk
+
+      - name: Setup Python
+        if: steps.python_artifacts.outputs.found == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Publish PyPI packages (beta)
+        if: steps.python_artifacts.outputs.found == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: dist/python/
+          password: ${{ secrets.PYPI_API_TOKEN }}
+        working-directory: src/sdk
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
