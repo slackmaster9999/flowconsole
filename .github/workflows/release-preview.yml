@@ -51,6 +51,20 @@ jobs:
       - name: Enter prerelease mode
         run: pnpm changeset pre enter beta
 
+      - name: Add preview changeset
+        run: |
+          PREVIEW_CHANGESET=".changeset/preview-${GITHUB_RUN_ID}.md"
+          cat <<'EOF' > "$PREVIEW_CHANGESET"
+          ---
+          "@flowconsole/core": patch
+          "@flowconsole/cli": patch
+          "@flowconsole/sdk": patch
+          "@flowconsole/web": patch
+          ---
+
+          Preview release from CI.
+          EOF
+
       - name: Version packages (beta)
         run: pnpm changeset version
 
