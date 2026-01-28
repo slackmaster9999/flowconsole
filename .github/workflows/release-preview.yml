@@ -145,6 +145,17 @@ jobs:
           CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
+      - name: Publish GPG public key to keyserver
+        if: steps.java_artifacts.outputs.found == 'true'
+        run: |
+          KEY_ID=$(gpg --list-keys --keyid-format long --with-colons | awk -F: '/^pub/{print $5}' | head -1)
+          if [ -z "$KEY_ID" ]; then
+            echo "No GPG key found; skipping keyserver upload."
+            exit 0
+          fi
+          echo "Publishing GPG key $KEY_ID to keyserver.ubuntu.com"
+          gpg --keyserver keyserver.ubuntu.com --send-keys "$KEY_ID"
+
       - name: Publish Maven packages (beta)
         if: steps.java_artifacts.outputs.found == 'true'
         env:
