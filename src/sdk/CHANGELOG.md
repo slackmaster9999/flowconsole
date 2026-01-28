@@ -1,5 +1,11 @@
 # @flowconsole/sdk
 
+## 1.0.2
+
+### Patch Changes
+
+- Bump SDK patch version.
+
 ## 1.0.1
 
 ### Patch Changes
