@@ -51,6 +51,10 @@ jobs:
       - name: Version packages (snapshot beta)
         run: pnpm changeset version --snapshot beta
 
+      - name: Build SDK artifacts (jsii + pacmak)
+        run: |
+          pnpm --dir src/sdk package
+
       - name: Publish preview packages (beta tag)
         run: pnpm -r publish --tag beta --no-git-checks
         env:
@@ -66,6 +70,10 @@ jobs:
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
         run: |
+          if ! ls src/sdk/dist/dotnet/**/*.nupkg > /dev/null 2>&1; then
+            echo "No NuGet packages found in src/sdk/dist/dotnet; skipping publish."
+            exit 0
+          fi
           dotnet nuget push src/sdk/dist/dotnet/**/*.nupkg \
             --api-key "$NUGET_API_KEY" \
             --source https://api.nuget.org/v3/index.json \
