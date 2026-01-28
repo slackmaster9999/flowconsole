@@ -69,12 +69,14 @@ jobs:
       - name: Publish NuGet packages (beta)
         env:
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        working-directory: src/sdk
         run: |
-          if ! ls src/sdk/dist/dotnet/**/*.nupkg > /dev/null 2>&1; then
-            echo "No NuGet packages found in src/sdk/dist/dotnet; skipping publish."
+          NUGET_PACKAGES=$(find dist/dotnet -type f -name "*.nupkg")
+          if [ -z "$NUGET_PACKAGES" ]; then
+            echo "No NuGet packages found in dist/dotnet; skipping publish."
             exit 0
           fi
-          dotnet nuget push src/sdk/dist/dotnet/**/*.nupkg \
+          dotnet nuget push $NUGET_PACKAGES \
             --api-key "$NUGET_API_KEY" \
             --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
