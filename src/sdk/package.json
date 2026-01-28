@@ -1,6 +1,6 @@
 {
   "name": "@flowconsole/sdk",
-  "version": "0.0.1",
+  "version": "1.0.1",
   "description": "FlowConsole SDK",
   "main": "dist/flowconsole-sdk.js",
   "scripts": {

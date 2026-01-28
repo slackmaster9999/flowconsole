@@ -1,6 +1,6 @@
 {
   "name": "@flowconsole/core",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "FlowConsole core parser library for architecture-as-code",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
