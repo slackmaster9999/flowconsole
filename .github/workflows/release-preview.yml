@@ -120,25 +120,13 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         working-directory: src/sdk
         run: |
-          ARTIFACT_ID=flowconsole-sdk
-          VERSION_DIR=$(find dist/java -type d -path "*/$ARTIFACT_ID/*" | sort | tail -n1)
-          if [ -z "$VERSION_DIR" ]; then
-            echo "No Java version directory found; skipping publish."
-            exit 0
-          fi
-          VERSION=$(basename "$VERSION_DIR")
-          ART_DIR="$VERSION_DIR"
-          JAR="$ART_DIR/$ARTIFACT_ID-$VERSION.jar"
-          POM="$ART_DIR/$ARTIFACT_ID-$VERSION.pom"
-          SOURCES="$ART_DIR/$ARTIFACT_ID-$VERSION-sources.jar"
-          JAVADOC="$ART_DIR/$ARTIFACT_ID-$VERSION-javadoc.jar"
-          if [ ! -f "$JAR" ] || [ ! -f "$POM" ]; then
+          if ! find dist/java -type f -name "flowconsole-sdk-*.pom" | grep -q .; then
             echo "Missing Maven artifacts; skipping publish."
             exit 0
           fi
-          mvn -B -ntp -f "$POM" \
+          mvn -B -ntp \
+            -DpublishingDirectory=dist/java \
             -Dgpg.passphrase="$GPG_PASSPHRASE" \
-            -DskipTests \
             org.sonatype.central:central-publishing-maven-plugin:0.5.0:publish
 
       - name: Setup .NET
