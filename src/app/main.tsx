@@ -1,6 +1,8 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
+import './index.css';
+import '@flowconsole/web/style.css';
 import { ThemeProvider } from '@flowconsole/web';
 import { PostHogProvider } from 'posthog-js/react';
 

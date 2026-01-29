@@ -14,7 +14,7 @@
       "import": "./dist/flowconsole-web.js",
       "require": "./dist/flowconsole-web.umd.cjs"
     },
-    "./style.css": "./dist/style.css"
+    "./style.css": "./dist/flowconsole-web.css"
   },
   "files": [
     "dist"
