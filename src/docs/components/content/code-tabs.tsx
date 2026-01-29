@@ -24,13 +24,42 @@ export function CodeTabs({
   children,
   ...props
 }: CodeTabsProps) {
+  const hasValueProp = (props: unknown): props is { value: string } =>
+    typeof (props as { value?: unknown })?.value === "string";
+
   const items = React.Children.toArray(children).filter(
-    (child): child is React.ReactElement<CodeTabProps> =>
-      React.isValidElement(child) &&
-      (child.type === CodeTab ||
-        (typeof child.type === "function" &&
-          (child.type as { displayName?: string }).displayName ===
-            CodeTab.displayName)),
+    (child): child is React.ReactElement<CodeTabProps> => {
+      if (!React.isValidElement(child)) return false;
+
+      const type = child.type as {
+        displayName?: string;
+        name?: string;
+      };
+      const mdxType = (child.props as { mdxType?: string }).mdxType;
+      const originalType = (child.props as { originalType?: unknown })
+        .originalType as { displayName?: string } | string | undefined;
+
+      if (child.type === CodeTab) return true;
+      if (
+        typeof child.type === "function" &&
+        type.displayName === CodeTab.displayName
+      ) {
+        return true;
+      }
+      if (mdxType === CodeTab.displayName) return true;
+      if (originalType === CodeTab) return true;
+      if (typeof originalType === "string") {
+        return originalType === CodeTab.displayName;
+      }
+      if (
+        typeof originalType === "object" &&
+        originalType?.displayName === CodeTab.displayName
+      ) {
+        return true;
+      }
+
+      return hasValueProp(child.props);
+    },
   );
 
   const initialValue = defaultValue ?? items[0]?.props.value;
