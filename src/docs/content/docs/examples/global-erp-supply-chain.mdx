@@ -2,6 +2,9 @@
 title: Global ERP & Supply Chain Example
 ---
 
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
 ```typescript scroll=false showLineNumbers
 import {
   User,
@@ -75,6 +78,9 @@ reportingJob
   .executesRequest("generate nightly reports")
   .sendsRequest(workflowQueue, "notify portal");
 ```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
 
 ```python scroll=false showLineNumbers
 from flowconsole import (
@@ -152,6 +158,9 @@ erp_db = Postgres(
 )
 ```
 
+</CodeTab>
+<CodeTab value="go" label="Go">
+
 ```go scroll=false showLineNumbers
 package main
 
@@ -228,6 +237,9 @@ func main() {
 }
 ```
 
+
+</CodeTab>
+<CodeTab value="java" label="Java">
 
 ```java scroll=false showLineNumbers
 import flowconsole.sdk.*;
@@ -307,6 +319,9 @@ public class GlobalErpExample {
 }
 ```
 
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
 ```csharp scroll=false showLineNumbers
 using FlowConsole;
 
@@ -378,5 +393,8 @@ reportingJob
     .ExecutesRequest("generate nightly reports")
     .SendsRequest(workflowQueue, "notify portal");
 ```
+
+</CodeTab>
+</CodeTabs>
 
 Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-2)

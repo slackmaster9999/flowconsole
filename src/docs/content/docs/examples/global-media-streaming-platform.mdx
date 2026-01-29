@@ -2,6 +2,9 @@
 title: Global Media Streaming Platform Example
 ---
 
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
 ```typescript scroll=false showLineNumbers
 import {
   User,
@@ -113,6 +116,9 @@ operator
   .sendsRequest(metricsApi, "check SLOs")
   .sendsRequest(watchEvents, "trace anomalies");
 ```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
 
 ```python scroll=false showLineNumbers
 from flowconsole import (
@@ -229,6 +235,9 @@ metrics_api = RestApi(
     .sends_request(watch_events, "trace anomalies")
 )
 ```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
 
 ```go scroll=false showLineNumbers
 package main
@@ -354,6 +363,9 @@ func main() {
 }
 ```
 
+
+</CodeTab>
+<CodeTab value="java" label="Java">
 
 ```java scroll=false showLineNumbers
 import flowconsole.sdk.*;
@@ -486,6 +498,9 @@ public class GlobalMediaExample {
 }
 ```
 
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
 ```csharp scroll=false showLineNumbers
 using FlowConsole;
 
@@ -594,5 +609,8 @@ operator
     .SendsRequest(metricsApi, "check SLOs")
     .SendsRequest(watchEvents, "trace anomalies");
 ```
+
+</CodeTab>
+</CodeTabs>
 
 Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-4)

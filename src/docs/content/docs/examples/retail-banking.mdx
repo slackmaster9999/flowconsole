@@ -2,6 +2,9 @@
 title: Retail Banking Example
 ---
 
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
 ```typescript scroll=false showLineNumbers
 import {
   User,
@@ -73,6 +76,9 @@ user
   .then(accountsApi).sendsRequest(auditStream, "emit audit")
   .then(accountsApi).sendsRequest(fraudService, "score transaction");
 ```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
 
 ```python scroll=false showLineNumbers
 from flowconsole import (
@@ -146,6 +152,9 @@ fraud_service = ExternalService(
     .then(accounts_api).sends_request(fraud_service, "score transaction")
 )
 ```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
 
 ```go scroll=false showLineNumbers
 package main
@@ -224,6 +233,9 @@ func main() {
         Then(accountsApi).SendsRequest(fraudService, &[]string{"score transaction"}[0], nil)
 }
 ```
+
+</CodeTab>
+<CodeTab value="java" label="Java">
 
 ```java scroll=false showLineNumbers
 import flowconsole.sdk.*;
@@ -304,6 +316,9 @@ public class RetailBankingExample {
 }
 ```
 
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
 ```csharp scroll=false showLineNumbers
 using FlowConsole;
 
@@ -368,5 +383,8 @@ user
     .Then(accountsApi).SendsRequest(auditStream, "emit audit")
     .Then(accountsApi).SendsRequest(fraudService, "score transaction");
 ```
+
+</CodeTab>
+</CodeTabs>
 
 Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-1)
