@@ -24,31 +24,30 @@ import {
 
 ## Core node properties
 
-All nodes has the same base properties:
+All nodes share the same base properties (from `ComponentArgs`):
 
-- `name` (string, required) — display name on the diagram.
-- `description` (string) — short description for tooltips.
-- `belongsTo` (`Container | ComputerSystem`) — parent grouping.
-- `tags` (`string[]`) — categorization tags.
-- `badge` (string) — small label shown with the node.
-- `tone` (`'primary' | 'muted' | 'success' | 'warning' | 'danger'`) — accent color.
-- `id` (string) — stable identifier (auto-generated if omitted).
-- `role` (string) — user role/persona (for `User`).
-- `domain` (string) — domain name (for `ComputerSystem`).
-- `technology` (string) — tech stack label (for `Container`).
+- `name?: string` — display name on the diagram (recommended).
+- `description?: string` — short description for tooltips.
+- `belongsTo?: Container | ComputerSystem` — parent grouping.
+- `tags?: string[]` — categorization tags.
+- `badge?: string` — small label shown with the node.
+- `tone?: 'primary' | 'muted' | 'success' | 'warning' | 'danger'` — accent color.
+- `id?: string` — stable identifier.
 
 ### Specialized nodes
 
-- `User` — [C1 level] end users or system actors; `role?: string`;
-- `ComputerSystem` — [C1 level] top-level product/domain; `domain?: string`;
-- `Container` — [C2 level] subsystem/module boundary; `technology?: string`;
-- `ReactApp` — [C3 level] client apps (SPA/mobile shell); `framework?: string`, `url?: string`;
-- `RestApi` — [C3 level] HTTP API services; `method?: string`, `endpoint?: string`;
-- `Redis` — [C3 level] Redis instance/cluster for cache or sessions; `cluster?: string`;
-- `Postgres` — [C3 level] PostgreSQL database; `schema?: string`;
-- `KafkaTopic` — [C3 level] Kafka topic for events/telemetry; `partitionCount?: number`;
-- `MessageQueue` — [C3 level] async queue (e.g., SQS/RabbitMQ); `throughput?: string`;
-- `ExternalService` — [C3 level]  third-party/SaaS dependency; `vendor?: string`;
+Each specialized node adds optional fields on top of `ComponentArgs`:
+
+- `User` — [C1 level] end users or system actors; `role?: string`.
+- `ComputerSystem` — [C1 level] top-level product/domain; `domain?: string`.
+- `Container` — [C2 level] subsystem/module boundary; `technology?: string`.
+- `ReactApp` — [C3 level] client apps (SPA/mobile shell); `framework?: string`, `url?: string`.
+- `RestApi` — [C3 level] HTTP API services; `method?: string`, `endpoint?: string`.
+- `Redis` — [C3 level] Redis instance/cluster for cache or sessions; `cluster?: string`.
+- `Postgres` — [C3 level] PostgreSQL database; `schema?: string`.
+- `KafkaTopic` — [C3 level] Kafka topic for events/telemetry; `partitionCount?: number`.
+- `MessageQueue` — [C3 level] async queue (e.g., SQS/RabbitMQ); `throughput?: string`.
+- `ExternalService` — [C3 level] third-party/SaaS dependency; `vendor?: string`.
 - `BackgroundJob` — [C3 level] scheduled job/pipeline/worker; `schedule?: string`.
 
 ## Fluent API
@@ -62,7 +61,7 @@ Every node can initiate or receive flows. Flows are chainable.
 
 `options` (`ConnectionOptions`):
 
-- `kind?: 'sync' | 'async' | 'event' | 'dependency'` — interaction type (default: 'sync');
+- `kind?: 'sync' | 'async' | 'event' | 'dependency'` — interaction type;
 - `detail?: string` — additional info for tooltips;
 - `icon?: string` — custom icon URL for the flow arrow;
 - `muted?: boolean` — visually de-emphasize the flow.
