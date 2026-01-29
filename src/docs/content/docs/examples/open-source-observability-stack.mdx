@@ -1,86 +1,531 @@
 ---
 title: Open-Source Observability Stack Example
 ---
-```typescript showLineNumbers
-const platformEngineer: User = { name: "Platform Engineer", description: "Owns monitoring" };
-const contributor: User = { name: "Community Dev", description: "Extends plugins" };
 
-const skyline: ComputerSystem = { name: "Skyline Observability" };
-const controlPlane: Container = { name: "Control Plane", system: skyline };
-const dataLake: Container = { name: "Data Lake", system: skyline };
-const dashboards: Container = { name: "Dashboards", system: skyline };
-const edgeAgents: Container = { name: "Cluster Agents", system: skyline };
+```typescript scroll=false showLineNumbers
+import {
+  User,
+  ComputerSystem,
+  Container,
+  BackgroundJob,
+  RestApi,
+  Postgres,
+  KafkaTopic,
+  ReactApp
+} from "@flowconsole/sdk";
 
-const kubeAgent: BackgroundJob = {
+const platformEngineer = new User({ name: "Platform Engineer", description: "Owns monitoring" });
+const contributor = new User({ name: "Community Dev", description: "Extends plugins" });
+
+const skyline = new ComputerSystem({ name: "Skyline Observability" });
+const controlPlane = new Container({ name: "Control Plane", belongsTo: skyline });
+const dataLake = new Container({ name: "Data Lake", belongsTo: skyline });
+const dashboards = new Container({ name: "Dashboards", belongsTo: skyline });
+const edgeAgents = new Container({ name: "Cluster Agents", belongsTo: skyline });
+
+const kubeAgent = new BackgroundJob({
   name: "Kube Agent",
   description: "Collects metrics + logs",
-  belongsTo: edgeAgents,
-};
+  belongsTo: edgeAgents
+});
 
-const serviceMap: RestApi = {
+const serviceMap = new RestApi({
   name: "Service Map API",
   description: "Topology + traces",
-  belongsTo: controlPlane,
-};
+  belongsTo: controlPlane
+});
 
-const alertManager: RestApi = {
+const alertManager = new RestApi({
   name: "Alert Manager",
   description: "Rules, paging, webhooks",
-  belongsTo: controlPlane,
-};
+  belongsTo: controlPlane
+});
 
-const ingestGateway: RestApi = {
+const ingestGateway = new RestApi({
   name: "Ingest Gateway",
   description: "OpenTelemetry collector",
-  belongsTo: controlPlane,
-};
+  belongsTo: controlPlane
+});
 
-const timeseriesDb: Postgres = {
+const timeseriesDb = new Postgres({
   name: "TSDB",
   description: "PromQL-compatible store",
-  belongsTo: dataLake,
-};
+  belongsTo: dataLake
+});
 
-const logStore: Postgres = {
+const logStore = new Postgres({
   name: "Log Store",
   description: "Columnar logs",
-  belongsTo: dataLake,
-};
+  belongsTo: dataLake
+});
 
-const eventsTopic: KafkaTopic = {
+const eventsTopic = new KafkaTopic({
   name: "Events Bus",
   description: "Alerts, deploy hooks",
-  belongsTo: controlPlane,
-};
+  belongsTo: controlPlane
+});
 
-const pluginRegistry: RestApi = {
+const pluginRegistry = new RestApi({
   name: "Plugin Registry",
   description: "Hosts visualization plugins",
-  belongsTo: dashboards,
-};
+  belongsTo: dashboards
+});
 
-const explorerUi: ReactApp = {
+const explorerUi = new ReactApp({
   name: "Explorer UI",
   description: "Dashboards + alerts",
-  belongsTo: dashboards,
-};
+  belongsTo: dashboards
+});
 
-platformEngineer.sendsRequestTo(explorerUi, "inspect cluster")
-  .then(explorerUi).sendsRequestTo(serviceMap, "fetch topology")
-  .sendsRequestTo(alertManager, "list alerts")
-  .sendsRequestTo(pluginRegistry, "load plugin")
-  .sendsRequestTo(eventsTopic, "audit view", { kind: 'event' });
+platformEngineer
+  .sendsRequest(explorerUi, "inspect cluster")
+  .then(explorerUi).sendsRequest(serviceMap, "fetch topology")
+  .sendsRequest(alertManager, "list alerts")
+  .sendsRequest(pluginRegistry, "load plugin")
+  .sendsRequest(eventsTopic, "audit view");
 
-kubeAgent.sendsRequestTo(ingestGateway, "ship metrics", { kind: 'async' })
-  .sendsRequestTo(timeseriesDb, "store metrics", { kind: 'dependency' })
-  .sendsRequestTo(logStore, "store logs", { kind: 'dependency' })
-  .sendsRequestTo(eventsTopic, "emit anomalies", { kind: 'event' });
+kubeAgent
+  .sendsRequest(ingestGateway, "ship metrics")
+  .sendsRequest(timeseriesDb, "store metrics")
+  .sendsRequest(logStore, "store logs")
+  .sendsRequest(eventsTopic, "emit anomalies");
 
-serviceMap.getDataFrom(timeseriesDb, "metrics")
+serviceMap
+  .getDataFrom(timeseriesDb, "metrics")
   .getDataFrom(logStore, "logs")
-  .sendsRequestTo(alertManager, "fire alerts", { kind: 'event' });
+  .sendsRequest(alertManager, "fire alerts");
 
-contributor.sendsRequestTo(pluginRegistry, "publish plugin")
-  .sendsRequestTo(eventsTopic, "announce release", { kind: 'event' });
+contributor
+  .sendsRequest(pluginRegistry, "publish plugin")
+  .sendsRequest(eventsTopic, "announce release");
 ```
+
+```python scroll=false showLineNumbers
+from flowconsole import (
+    User,
+    ComputerSystem,
+    Container,
+    BackgroundJob,
+    RestApi,
+    Postgres,
+    KafkaTopic,
+    ReactApp,
+)
+
+platform_engineer = User(name="Platform Engineer", description="Owns monitoring")
+contributor = User(name="Community Dev", description="Extends plugins")
+
+skyline = ComputerSystem(name="Skyline Observability")
+control_plane = Container(name="Control Plane", belongs_to=skyline)
+data_lake = Container(name="Data Lake", belongs_to=skyline)
+dashboards = Container(name="Dashboards", belongs_to=skyline)
+edge_agents = Container(name="Cluster Agents", belongs_to=skyline)
+
+kube_agent = BackgroundJob(
+    name="Kube Agent",
+    description="Collects metrics + logs",
+    belongs_to=edge_agents,
+)
+
+service_map = RestApi(
+    name="Service Map API",
+    description="Topology + traces",
+    belongs_to=control_plane,
+)
+
+alert_manager = RestApi(
+    name="Alert Manager",
+    description="Rules, paging, webhooks",
+    belongs_to=control_plane,
+)
+
+ingest_gateway = RestApi(
+    name="Ingest Gateway",
+    description="OpenTelemetry collector",
+    belongs_to=control_plane,
+)
+
+timeseries_db = Postgres(
+    name="TSDB",
+    description="PromQL-compatible store",
+    belongs_to=data_lake,
+)
+
+log_store = Postgres(
+    name="Log Store",
+    description="Columnar logs",
+    belongs_to=data_lake,
+)
+
+events_topic = KafkaTopic(
+    name="Events Bus",
+    description="Alerts, deploy hooks",
+    belongs_to=control_plane,
+)
+
+plugin_registry = RestApi(
+    name="Plugin Registry",
+    description="Hosts visualization plugins",
+    belongs_to=dashboards,
+)
+
+explorer_ui = ReactApp(
+    name="Explorer UI",
+    description="Dashboards + alerts",
+    belongs_to=dashboards,
+)
+
+(
+    platform_engineer.sends_request(explorer_ui, "inspect cluster")
+    .then(explorer_ui).sends_request(service_map, "fetch topology")
+    .sends_request(alert_manager, "list alerts")
+    .sends_request(plugin_registry, "load plugin")
+    .sends_request(events_topic, "audit view")
+)
+
+(
+    kube_agent.sends_request(ingest_gateway, "ship metrics")
+    .sends_request(timeseries_db, "store metrics")
+    .sends_request(log_store, "store logs")
+    .sends_request(events_topic, "emit anomalies")
+)
+
+(
+    service_map.get_data_from(timeseries_db, "metrics")
+    .get_data_from(log_store, "logs")
+    .sends_request(alert_manager, "fire alerts")
+)
+
+(
+    contributor.sends_request(plugin_registry, "publish plugin")
+    .sends_request(events_topic, "announce release")
+)
+```
+
+```go scroll=false showLineNumbers
+package main
+
+import (
+    . "github.com/slackmaster9999/go-flowconsole"
+)
+
+func main() {
+    platformEngineer := NewUser(&UserArgs{
+        Name:        &[]string{"Platform Engineer"}[0],
+        Description: &[]string{"Owns monitoring"}[0],
+    })
+    contributor := NewUser(&UserArgs{
+        Name:        &[]string{"Community Dev"}[0],
+        Description: &[]string{"Extends plugins"}[0],
+    })
+
+    skyline := NewComputerSystem(&ComponentArgs{
+        Name: &[]string{"Skyline Observability"}[0],
+    })
+    controlPlane := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Control Plane"}[0],
+        BelongsTo: skyline,
+    })
+    dataLake := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Data Lake"}[0],
+        BelongsTo: skyline,
+    })
+    dashboards := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Dashboards"}[0],
+        BelongsTo: skyline,
+    })
+    edgeAgents := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Cluster Agents"}[0],
+        BelongsTo: skyline,
+    })
+
+    kubeAgent := NewBackgroundJob(&ComponentArgs{
+        Name:        &[]string{"Kube Agent"}[0],
+        Description: &[]string{"Collects metrics + logs"}[0],
+        BelongsTo:   edgeAgents,
+    })
+
+    serviceMap := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Service Map API"}[0],
+        Description: &[]string{"Topology + traces"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    alertManager := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Alert Manager"}[0],
+        Description: &[]string{"Rules, paging, webhooks"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    ingestGateway := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Ingest Gateway"}[0],
+        Description: &[]string{"OpenTelemetry collector"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    timeseriesDb := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"TSDB"}[0],
+        Description: &[]string{"PromQL-compatible store"}[0],
+        BelongsTo:   dataLake,
+    })
+
+    logStore := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"Log Store"}[0],
+        Description: &[]string{"Columnar logs"}[0],
+        BelongsTo:   dataLake,
+    })
+
+    eventsTopic := NewKafkaTopic(&ComponentArgs{
+        Name:        &[]string{"Events Bus"}[0],
+        Description: &[]string{"Alerts, deploy hooks"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    pluginRegistry := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Plugin Registry"}[0],
+        Description: &[]string{"Hosts visualization plugins"}[0],
+        BelongsTo:   dashboards,
+    })
+
+    explorerUi := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"Explorer UI"}[0],
+        Description: &[]string{"Dashboards + alerts"}[0],
+        BelongsTo:   dashboards,
+    })
+
+    platformEngineer.SendsRequest(explorerUi, &[]string{"inspect cluster"}[0], nil).
+        Then(explorerUi).SendsRequest(serviceMap, &[]string{"fetch topology"}[0], nil).
+        SendsRequest(alertManager, &[]string{"list alerts"}[0], nil).
+        SendsRequest(pluginRegistry, &[]string{"load plugin"}[0], nil).
+        SendsRequest(eventsTopic, &[]string{"audit view"}[0], nil)
+
+    kubeAgent.SendsRequest(ingestGateway, &[]string{"ship metrics"}[0], nil).
+        SendsRequest(timeseriesDb, &[]string{"store metrics"}[0], nil).
+        SendsRequest(logStore, &[]string{"store logs"}[0], nil).
+        SendsRequest(eventsTopic, &[]string{"emit anomalies"}[0], nil)
+
+    serviceMap.GetDataFrom(timeseriesDb, &[]string{"metrics"}[0], nil).
+        GetDataFrom(logStore, &[]string{"logs"}[0], nil).
+        SendsRequest(alertManager, &[]string{"fire alerts"}[0], nil)
+
+    contributor.SendsRequest(pluginRegistry, &[]string{"publish plugin"}[0], nil).
+        SendsRequest(eventsTopic, &[]string{"announce release"}[0], nil)
+}
+```
+
+
+```java scroll=false showLineNumbers
+import flowconsole.sdk.*;
+
+public class ObservabilityExample {
+  public static void main(String[] args) {
+    User platformEngineer = User.Builder.create()
+      .name("Platform Engineer")
+      .description("Owns monitoring")
+      .build();
+
+    User contributor = User.Builder.create()
+      .name("Community Dev")
+      .description("Extends plugins")
+      .build();
+
+    ComputerSystem skyline = ComputerSystem.Builder.create()
+      .name("Skyline Observability")
+      .build();
+
+    Container controlPlane = Container.Builder.create()
+      .name("Control Plane")
+      .belongsTo(skyline)
+      .build();
+
+    Container dataLake = Container.Builder.create()
+      .name("Data Lake")
+      .belongsTo(skyline)
+      .build();
+
+    Container dashboards = Container.Builder.create()
+      .name("Dashboards")
+      .belongsTo(skyline)
+      .build();
+
+    Container edgeAgents = Container.Builder.create()
+      .name("Cluster Agents")
+      .belongsTo(skyline)
+      .build();
+
+    BackgroundJob kubeAgent = BackgroundJob.Builder.create()
+      .name("Kube Agent")
+      .description("Collects metrics + logs")
+      .belongsTo(edgeAgents)
+      .build();
+
+    RestApi serviceMap = RestApi.Builder.create()
+      .name("Service Map API")
+      .description("Topology + traces")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi alertManager = RestApi.Builder.create()
+      .name("Alert Manager")
+      .description("Rules, paging, webhooks")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi ingestGateway = RestApi.Builder.create()
+      .name("Ingest Gateway")
+      .description("OpenTelemetry collector")
+      .belongsTo(controlPlane)
+      .build();
+
+    Postgres timeseriesDb = Postgres.Builder.create()
+      .name("TSDB")
+      .description("PromQL-compatible store")
+      .belongsTo(dataLake)
+      .build();
+
+    Postgres logStore = Postgres.Builder.create()
+      .name("Log Store")
+      .description("Columnar logs")
+      .belongsTo(dataLake)
+      .build();
+
+    KafkaTopic eventsTopic = KafkaTopic.Builder.create()
+      .name("Events Bus")
+      .description("Alerts, deploy hooks")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi pluginRegistry = RestApi.Builder.create()
+      .name("Plugin Registry")
+      .description("Hosts visualization plugins")
+      .belongsTo(dashboards)
+      .build();
+
+    ReactApp explorerUi = ReactApp.Builder.create()
+      .name("Explorer UI")
+      .description("Dashboards + alerts")
+      .belongsTo(dashboards)
+      .build();
+
+    platformEngineer
+      .sendsRequest(explorerUi, "inspect cluster")
+      .then(explorerUi).sendsRequest(serviceMap, "fetch topology")
+      .sendsRequest(alertManager, "list alerts")
+      .sendsRequest(pluginRegistry, "load plugin")
+      .sendsRequest(eventsTopic, "audit view");
+
+    kubeAgent
+      .sendsRequest(ingestGateway, "ship metrics")
+      .sendsRequest(timeseriesDb, "store metrics")
+      .sendsRequest(logStore, "store logs")
+      .sendsRequest(eventsTopic, "emit anomalies");
+
+    serviceMap
+      .getDataFrom(timeseriesDb, "metrics")
+      .getDataFrom(logStore, "logs")
+      .sendsRequest(alertManager, "fire alerts");
+
+    contributor
+      .sendsRequest(pluginRegistry, "publish plugin")
+      .sendsRequest(eventsTopic, "announce release");
+  }
+}
+```
+
+```csharp scroll=false showLineNumbers
+using FlowConsole;
+
+var platformEngineer = new User(new UserArgs {
+    Name = "Platform Engineer",
+    Description = "Owns monitoring"
+});
+
+var contributor = new User(new UserArgs {
+    Name = "Community Dev",
+    Description = "Extends plugins"
+});
+
+var skyline = new ComputerSystem(new ComponentArgs { Name = "Skyline Observability" });
+var controlPlane = new Container(new ComponentArgs { Name = "Control Plane", BelongsTo = skyline });
+var dataLake = new Container(new ComponentArgs { Name = "Data Lake", BelongsTo = skyline });
+var dashboards = new Container(new ComponentArgs { Name = "Dashboards", BelongsTo = skyline });
+var edgeAgents = new Container(new ComponentArgs { Name = "Cluster Agents", BelongsTo = skyline });
+
+var kubeAgent = new BackgroundJob(new ComponentArgs {
+    Name = "Kube Agent",
+    Description = "Collects metrics + logs",
+    BelongsTo = edgeAgents
+});
+
+var serviceMap = new RestApi(new ComponentArgs {
+    Name = "Service Map API",
+    Description = "Topology + traces",
+    BelongsTo = controlPlane
+});
+
+var alertManager = new RestApi(new ComponentArgs {
+    Name = "Alert Manager",
+    Description = "Rules, paging, webhooks",
+    BelongsTo = controlPlane
+});
+
+var ingestGateway = new RestApi(new ComponentArgs {
+    Name = "Ingest Gateway",
+    Description = "OpenTelemetry collector",
+    BelongsTo = controlPlane
+});
+
+var timeseriesDb = new Postgres(new ComponentArgs {
+    Name = "TSDB",
+    Description = "PromQL-compatible store",
+    BelongsTo = dataLake
+});
+
+var logStore = new Postgres(new ComponentArgs {
+    Name = "Log Store",
+    Description = "Columnar logs",
+    BelongsTo = dataLake
+});
+
+var eventsTopic = new KafkaTopic(new ComponentArgs {
+    Name = "Events Bus",
+    Description = "Alerts, deploy hooks",
+    BelongsTo = controlPlane
+});
+
+var pluginRegistry = new RestApi(new ComponentArgs {
+    Name = "Plugin Registry",
+    Description = "Hosts visualization plugins",
+    BelongsTo = dashboards
+});
+
+var explorerUi = new ReactApp(new ComponentArgs {
+    Name = "Explorer UI",
+    Description = "Dashboards + alerts",
+    BelongsTo = dashboards
+});
+
+platformEngineer
+    .SendsRequest(explorerUi, "inspect cluster")
+    .Then(explorerUi).SendsRequest(serviceMap, "fetch topology")
+    .SendsRequest(alertManager, "list alerts")
+    .SendsRequest(pluginRegistry, "load plugin")
+    .SendsRequest(eventsTopic, "audit view");
+
+kubeAgent
+    .SendsRequest(ingestGateway, "ship metrics")
+    .SendsRequest(timeseriesDb, "store metrics")
+    .SendsRequest(logStore, "store logs")
+    .SendsRequest(eventsTopic, "emit anomalies");
+
+serviceMap
+    .GetDataFrom(timeseriesDb, "metrics")
+    .GetDataFrom(logStore, "logs")
+    .SendsRequest(alertManager, "fire alerts");
+
+contributor
+    .SendsRequest(pluginRegistry, "publish plugin")
+    .SendsRequest(eventsTopic, "announce release");
+```
+
 Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-5)
