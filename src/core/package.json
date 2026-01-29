@@ -7,18 +7,22 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
       "require": "./dist/index.js"
     },
     "./infra/*": {
       "types": "./dist/infra/*.d.ts",
+      "import": "./dist/infra/*.js",
       "require": "./dist/infra/*.js"
     },
     "./parsers/*": {
       "types": "./dist/parsers/*.d.ts",
+      "import": "./dist/parsers/*.js",
       "require": "./dist/parsers/*.js"
     },
     "./types/*": {
       "types": "./dist/types/*.d.ts",
+      "import": "./dist/types/*.js",
       "require": "./dist/types/*.js"
     }
   },
