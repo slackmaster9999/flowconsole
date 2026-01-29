@@ -1,7 +1,7 @@
 import sdkSource from '@flowconsole/sdk/flowconsole-sdk.ts?raw';
 import { codeSamples, defaultSampleId } from './samples';
 import type { LanguageDefinition } from '../types';
-import { TypeScriptPlaygroundRuntime } from '../runtime';
+import { PlaygroundRuntime } from '../runtime';
 
 const SDK_MODULE_URI = 'file:///node_modules/@flowconsole/sdk/index.ts';
 const SDK_MODULE_SOURCE = sdkSource;
@@ -26,8 +26,8 @@ export const typescriptLanguage: LanguageDefinition = {
   },
   samples: codeSamples,
   defaultSampleId,
-  evaluate: (source: string) => {
-    const runtime = new TypeScriptPlaygroundRuntime();
-    return runtime.ParseDiagrammingCode(source, 'typescript');
+  evaluate: (source: string, context) => {
+    const runtime = new PlaygroundRuntime();
+    return runtime.ParseDiagrammingCode(source, 'typescript', context.apiBaseUrl);
   },
 };

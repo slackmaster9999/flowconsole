@@ -3,25 +3,25 @@ import { mapParseResultToDiagramModel, type ParseResult } from './parseResultMap
 
 const DEFAULT_API_PATH = '/api/diagram/parse';
 
-function resolveApiPath() {
-  const apiUrl =
-    (import.meta as any)?.env?.VITE_FLOWCONSOLE_API_URL ??
-    (typeof process !== 'undefined'
-      ? process.env.NEXT_PUBLIC_FLOWCONSOLE_API_URL ?? process.env.VITE_FLOWCONSOLE_API_URL
-      : undefined);
-  if(!apiUrl) {
-    throw new Error('FLOWCONSOLE_API_URL is not defined');
+function resolveApiPath(apiBaseUrl: string) {
+  if (!apiBaseUrl) {
+    throw new Error('FlowConsole API base URL is not provided.');
   }
-  return `${apiUrl}${DEFAULT_API_PATH}`;
+  const normalizedBase = apiBaseUrl.replace(/\/+$/, '');
+  return `${normalizedBase}${DEFAULT_API_PATH}`;
 }
 
 type ParseApiResponse =
   | { ok: true; result: ParseResult }
   | { ok: false; error: string };
 
-export class TypeScriptPlaygroundRuntime {
-  async ParseDiagrammingCode(source: string, language: SupportedLanguage): Promise<EvaluationResult> {
-    const apiPath = resolveApiPath();
+export class PlaygroundRuntime {
+  async ParseDiagrammingCode(
+    source: string,
+    language: SupportedLanguage,
+    apiBaseUrl: string
+  ): Promise<EvaluationResult> {
+    const apiPath = resolveApiPath(apiBaseUrl);
     const response = await fetch(apiPath, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

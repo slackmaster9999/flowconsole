@@ -1,5 +1,5 @@
 import type { LanguageDefinition } from '../types';
-import { TypeScriptPlaygroundRuntime } from '../runtime';
+import { PlaygroundRuntime } from '../runtime';
 
 const javaSamples = [
   {
@@ -32,7 +32,7 @@ app.then(api);
   },
 ] satisfies LanguageDefinition['samples'];
 
-const runtime = new TypeScriptPlaygroundRuntime();
+const runtime = new PlaygroundRuntime();
 
 export const javaLanguage: LanguageDefinition = {
   id: 'java',
@@ -41,5 +41,6 @@ export const javaLanguage: LanguageDefinition = {
   monacoSetup: () => import('monaco-editor/esm/vs/basic-languages/java/java.contribution'),
   samples: javaSamples,
   defaultSampleId: javaSamples[0]?.id,
-  evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'java'),
+  evaluate: (source: string, context) =>
+    runtime.ParseDiagrammingCode(source, 'java', context.apiBaseUrl),
 };

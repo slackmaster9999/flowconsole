@@ -13,6 +13,7 @@ export default function App() {
       </div>
       <div className={styles.workbench}>
         <CodeDiagramWorkbench
+          apiBaseUrl={import.meta.env.VITE_FLOWCONSOLE_API_URL}
           themeControls={{ resolvedScheme, scheme, toggleScheme }}
         />
       </div>

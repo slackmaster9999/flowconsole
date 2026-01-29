@@ -1,5 +1,5 @@
 import type { LanguageDefinition } from "../types";
-import { TypeScriptPlaygroundRuntime } from "../runtime";
+import { PlaygroundRuntime } from "../runtime";
 
 const csharpSamples = [
   {
@@ -31,7 +31,7 @@ app.Then(api);
   },
 ] satisfies LanguageDefinition['samples'];
 
-const runtime = new TypeScriptPlaygroundRuntime();
+const runtime = new PlaygroundRuntime();
 
 export const csharpLanguage: LanguageDefinition = {
   id: 'csharp',
@@ -40,5 +40,6 @@ export const csharpLanguage: LanguageDefinition = {
   monacoSetup: () => import('monaco-editor/esm/vs/basic-languages/csharp/csharp.contribution'),
   samples: csharpSamples,
   defaultSampleId: csharpSamples[0]?.id,
-  evaluate: (source: string) => runtime.ParseDiagrammingCode(source, 'csharp'),
+  evaluate: (source: string, context) =>
+    runtime.ParseDiagrammingCode(source, 'csharp', context.apiBaseUrl),
 };

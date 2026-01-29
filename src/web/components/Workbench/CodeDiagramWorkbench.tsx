@@ -6,15 +6,16 @@ import type { ArchitectureDiagramModel } from '../../diagram/types';
 import { VerticalSplit } from '../VerticalSplit';
 import './styles.css';
 import { DEFAULT_LANGUAGE, findLanguage, LANGUAGES } from '../../languages';
-import type { LanguageDefinition } from '../../languages/types';
+import type { EvaluationContext, LanguageDefinition } from '../../languages/types';
 import type { ThemeControls } from '../../types/theme';
 
 type Props = {
   resolvedScheme?: 'light' | 'dark';
   themeControls?: ThemeControls;
+  apiBaseUrl: string;
 };
 
-export function CodeDiagramWorkbench({ themeControls }: Props) {
+export function CodeDiagramWorkbench({ themeControls, apiBaseUrl }: Props) {
   const initialLanguage = DEFAULT_LANGUAGE;
   const initialSample =
     initialLanguage.samples.find((sample) => sample.id === initialLanguage.defaultSampleId) ??
@@ -87,8 +88,15 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
       setOverlayVisible(true);
       setError(null);
 
+      if (!apiBaseUrl) {
+        setOverlayVisible(false);
+        setError('FlowConsole API base URL is not provided.');
+        return;
+      }
+
+      const context: EvaluationContext = { apiBaseUrl };
       void language
-        .evaluate(source)
+        .evaluate(source, context)
         .then((result) => {
           if (currentEval !== evaluationCounter.current) return;
           if (activeLanguageRef.current !== targetLanguageId) return;
@@ -113,7 +121,7 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
           setError(error instanceof Error ? error.message : String(error));
         });
     },
-    []
+    [apiBaseUrl]
   );
 
   useEffect(() => {
@@ -154,7 +162,7 @@ export function CodeDiagramWorkbench({ themeControls }: Props) {
         <div className="code-pane">
           <div className="code-pane__header">
             <div>
-              <label>Architecture DSL</label>
+              <label>Welcome!</label>
               <p>Describe you architecture in {activeLanguage.label}, using fluent API.</p>
             </div>
             <div className="code-pane__sample-picker">

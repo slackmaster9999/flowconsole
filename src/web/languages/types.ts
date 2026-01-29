@@ -12,6 +12,10 @@ export type EvaluationResult =
   | { ok: true; model: ArchitectureDiagramModel }
   | { ok: false; error: string };
 
+export type EvaluationContext = {
+  apiBaseUrl: string;
+};
+
 export type SupportedLanguage = 'typescript' | 'python' | 'csharp' | 'java' | 'go';
 
 export type LanguageDefinition = {
@@ -21,5 +25,5 @@ export type LanguageDefinition = {
   monacoSetup?: (monaco: Monaco) => void;
   samples: CodeSample[];
   defaultSampleId?: string;
-  evaluate: (source: string) => Promise<EvaluationResult>;
+  evaluate: (source: string, context: EvaluationContext) => Promise<EvaluationResult>;
 };

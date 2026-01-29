@@ -39,7 +39,7 @@
       "packageId": "FlowConsole.Sdk"
     },
     "go": {
-      "moduleName": "github.com/slackmaster9999/flowconsole",
+      "moduleName": "github.com/slackmaster9999/go-flowconsole",
       "packageName": "flowconsole"
     },
     "java": {
@@ -1160,5 +1160,5 @@
     }
   },
   "version": "1.0.2",
-  "fingerprint": "f5nc/giCZmvMTrXp8Y7Q1glaXKPRJbZLd955CREurAk="
+  "fingerprint": "2LZ5vv3b6/c5Sz3uSj21cmgIoIOw4IHbbj+v8y1bgMM="
 }
