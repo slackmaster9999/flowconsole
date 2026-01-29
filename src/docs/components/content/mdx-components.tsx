@@ -5,6 +5,7 @@ import { useMDXComponent } from "next-contentlayer2/hooks";
 
 import { cn } from "@/lib/utils";
 import { MdxCard } from "@/components/content/mdx-card";
+import { CodeTab, CodeTabs } from "@/components/content/code-tabs";
 import BlurImage from "@/components/shared/blur-image";
 import { Callout } from "@/components/shared/callout";
 import { CopyButton } from "@/components/shared/copy-button";
@@ -197,6 +198,8 @@ const components = {
       {...props}
     />
   ),
+  CodeTabs,
+  CodeTab,
 };
 
 interface MdxProps {
@@ -226,6 +229,12 @@ export function Mdx({ code, images }: MdxProps) {
 
   return (
     <div className="mdx">
+      <Callout type="warning" twClass="mb-6 mt-0">
+        <p>
+          This project is under active development, so the documentation may
+          differ from the current implementation.
+        </p>
+      </Callout>
       <Component
         components={{
           ...components,

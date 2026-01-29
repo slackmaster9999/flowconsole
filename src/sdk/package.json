@@ -1,6 +1,6 @@
 {
   "name": "@flowconsole/sdk",
-  "version": "0.0.1",
+  "version": "1.0.2",
   "description": "FlowConsole SDK",
   "main": "dist/flowconsole-sdk.js",
   "scripts": {
@@ -47,8 +47,8 @@
       "java": {
         "package": "flowconsole.sdk",
         "maven": {
-          "groupId": "flowconsole",
-          "artifactId": "sdk"
+          "groupId": "io.github.slackmaster9999",
+          "artifactId": "flowconsole-sdk"
         }
       },
       "python": {
@@ -62,7 +62,7 @@
       },
       "go": {
         "packageName": "flowconsole",
-        "moduleName": "github.com/slackmaster9999/flowconsole"
+        "moduleName": "github.com/slackmaster9999/go-flowconsole"
       }
     },
     "tsconfig": "tsconfig.json",

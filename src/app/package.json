@@ -56,5 +56,6 @@
     "vite": "^7.1.7",
     "vitest": "^4.0.10",
     "concurrently": "^8.2.2"
-  }
+  },
+  "packageManager": "pnpm@10.19.0"
 }

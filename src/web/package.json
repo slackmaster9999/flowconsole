@@ -1,7 +1,7 @@
 {
   "name": "@flowconsole/web",
   "private": false,
-  "version": "0.0.1",
+  "version": "1.0.1",
   "type": "module",
   "license": "Apache-2.0",
   "description": "FlowConsole React components for architecture diagrams",
@@ -90,5 +90,6 @@
     "vite": "^7.1.7",
     "vite-plugin-dts": "^4.5.4",
     "vitest": "^4.0.10"
-  }
+  },
+  "packageManager": "pnpm@10.19.0"
 }

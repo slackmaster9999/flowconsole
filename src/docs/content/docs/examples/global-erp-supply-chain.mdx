@@ -2,65 +2,399 @@
 title: Global ERP & Supply Chain Example
 ---
 
-```typescript scroll=false showLineNumbers
-const employee: User = { name: "Regional Planner", description: "Creates purchase orders" };
-const supplier: ExternalService = { name: "Supplier API", description: "Partner integration" };
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
 
-const atlas: ComputerSystem = { name: "Atlas ERP" };
-const portal: ReactApp = {
+```typescript scroll=false showLineNumbers
+import {
+  User,
+  ExternalService,
+  ComputerSystem,
+  ReactApp,
+  Container,
+  RestApi,
+  MessageQueue,
+  BackgroundJob,
+  Postgres
+} from "@flowconsole/sdk";
+
+const employee = new User({ name: "Regional Planner", description: "Creates purchase orders" });
+const supplier = new ExternalService({ name: "Supplier API", description: "Partner integration" });
+
+const atlas = new ComputerSystem({ name: "Atlas ERP" });
+const portal = new ReactApp({
   name: "Planner Portal",
   description: "Next.js dashboard for procurement team",
   belongsTo: atlas
-};
+});
 
-const integrationHub: Container = {
+const integrationHub = new Container({
   name: "Integration Hub",
   description: "Async orchestrations + adapters",
-  system: atlas
-};
+  belongsTo: atlas
+});
 
-const planningApi: RestApi = {
+const planningApi = new RestApi({
   name: "Planning Service",
   description: "Handles demand & supply planning",
   belongsTo: integrationHub
-};
+});
 
-const inventoryApi: RestApi = {
+const inventoryApi = new RestApi({
   name: "Inventory Service",
   description: "Tracks warehouse stock",
   belongsTo: integrationHub
-};
+});
 
-const workflowQueue: MessageQueue = {
+const workflowQueue = new MessageQueue({
   name: "Workflow Queue",
   description: "Commands for async processing",
   belongsTo: integrationHub
-};
+});
 
-const reportingJob: BackgroundJob = {
+const reportingJob = new BackgroundJob({
   name: "Nightly Reconciliation",
   description: "Produces compliance extracts",
   belongsTo: integrationHub
-};
+});
 
-const erpDb: Postgres = {
+const erpDb = new Postgres({
   name: "ERP Database",
   description: "Orders, forecasts, contracts",
   belongsTo: integrationHub
-};
+});
 
-employee.sendsRequestTo(portal, "create purchase order")
-  .then(portal).sendsRequestTo(planningApi, "submit plan")
-  .sendsRequestTo(inventoryApi, "reserve stock")
-  .inParallel(
-    () => planningApi.getDataFrom(erpDb, "fetch demand"),
-    () => inventoryApi.getDataFrom(erpDb, "current stock")
-  )
-  .sendsRequestTo(workflowQueue, "publish workflow", { kind: 'async' })
-  .then(planningApi).sendsRequestTo(supplier, "send order", { kind: 'sync' });
+employee
+  .sendsRequest(portal, "create purchase order")
+  .then(portal).sendsRequest(planningApi, "submit plan")
+  .then(planningApi).sendsRequest(inventoryApi, "reserve stock")
+  .then(planningApi).getDataFrom(erpDb, "fetch demand")
+  .then(inventoryApi).getDataFrom(erpDb, "current stock")
+  .then(planningApi).sendsRequest(workflowQueue, "publish workflow")
+  .then(planningApi).sendsRequest(supplier, "send order");
 
-reportingJob.sendsRequestTo(erpDb, "load data", { kind: 'dependency' })
+reportingJob
+  .sendsRequest(erpDb, "load data")
   .executesRequest("generate nightly reports")
-  .sendsRequestTo(workflowQueue, "notify portal", { kind: 'event' });
+  .sendsRequest(workflowQueue, "notify portal");
 ```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
+
+```python scroll=false showLineNumbers
+from flowconsole import (
+    User,
+    ExternalService,
+    ComputerSystem,
+    ReactApp,
+    Container,
+    RestApi,
+    MessageQueue,
+    BackgroundJob,
+    Postgres,
+)
+
+employee = User(name="Regional Planner", description="Creates purchase orders")
+supplier = ExternalService(name="Supplier API", description="Partner integration")
+
+atlas = ComputerSystem(name="Atlas ERP")
+portal = ReactApp(
+    name="Planner Portal",
+    description="Next.js dashboard for procurement team",
+    belongs_to=atlas,
+)
+
+integration_hub = Container(
+    name="Integration Hub",
+    description="Async orchestrations + adapters",
+    belongs_to=atlas,
+)
+
+planning_api = RestApi(
+    name="Planning Service",
+    description="Handles demand & supply planning",
+    belongs_to=integration_hub,
+)
+
+inventory_api = RestApi(
+    name="Inventory Service",
+    description="Tracks warehouse stock",
+    belongs_to=integration_hub,
+)
+
+workflow_queue = MessageQueue(
+    name="Workflow Queue",
+    description="Commands for async processing",
+    belongs_to=integration_hub,
+)
+
+reporting_job = BackgroundJob(
+    name="Nightly Reconciliation",
+    description="Produces compliance extracts",
+    belongs_to=integration_hub,
+)
+
+erp_db = Postgres(
+    name="ERP Database",
+    description="Orders, forecasts, contracts",
+    belongs_to=integration_hub,
+)
+
+(
+    employee.sends_request(portal, "create purchase order")
+    .then(portal).sends_request(planning_api, "submit plan")
+    .then(planning_api).sends_request(inventory_api, "reserve stock")
+    .then(planning_api).get_data_from(erp_db, "fetch demand")
+    .then(inventory_api).get_data_from(erp_db, "current stock")
+    .then(planning_api).sends_request(workflow_queue, "publish workflow")
+    .then(planning_api).sends_request(supplier, "send order")
+)
+
+(
+    reporting_job.sends_request(erp_db, "load data")
+    .executes_request("generate nightly reports")
+    .sends_request(workflow_queue, "notify portal")
+)
+```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
+
+```go scroll=false showLineNumbers
+package main
+
+import (
+    . "github.com/slackmaster9999/go-flowconsole"
+)
+
+func main() {
+    employee := NewUser(&UserArgs{
+        Name:        &[]string{"Regional Planner"}[0],
+        Description: &[]string{"Creates purchase orders"}[0],
+    })
+    supplier := NewExternalService(&ComponentArgs{
+        Name:        &[]string{"Supplier API"}[0],
+        Description: &[]string{"Partner integration"}[0],
+    })
+
+    atlas := NewComputerSystem(&ComponentArgs{
+        Name: &[]string{"Atlas ERP"}[0],
+    })
+    portal := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"Planner Portal"}[0],
+        Description: &[]string{"Next.js dashboard for procurement team"}[0],
+        BelongsTo:   atlas,
+    })
+
+    integrationHub := NewContainer(&ComponentArgs{
+        Name:        &[]string{"Integration Hub"}[0],
+        Description: &[]string{"Async orchestrations + adapters"}[0],
+        BelongsTo:   atlas,
+    })
+
+    planningApi := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Planning Service"}[0],
+        Description: &[]string{"Handles demand & supply planning"}[0],
+        BelongsTo:   integrationHub,
+    })
+
+    inventoryApi := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Inventory Service"}[0],
+        Description: &[]string{"Tracks warehouse stock"}[0],
+        BelongsTo:   integrationHub,
+    })
+
+    workflowQueue := NewMessageQueue(&ComponentArgs{
+        Name:        &[]string{"Workflow Queue"}[0],
+        Description: &[]string{"Commands for async processing"}[0],
+        BelongsTo:   integrationHub,
+    })
+
+    reportingJob := NewBackgroundJob(&ComponentArgs{
+        Name:        &[]string{"Nightly Reconciliation"}[0],
+        Description: &[]string{"Produces compliance extracts"}[0],
+        BelongsTo:   integrationHub,
+    })
+
+    erpDb := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"ERP Database"}[0],
+        Description: &[]string{"Orders, forecasts, contracts"}[0],
+        BelongsTo:   integrationHub,
+    })
+
+    employee.SendsRequest(portal, &[]string{"create purchase order"}[0], nil).
+        Then(portal).SendsRequest(planningApi, &[]string{"submit plan"}[0], nil).
+        Then(planningApi).SendsRequest(inventoryApi, &[]string{"reserve stock"}[0], nil).
+        Then(planningApi).GetDataFrom(erpDb, &[]string{"fetch demand"}[0], nil).
+        Then(inventoryApi).GetDataFrom(erpDb, &[]string{"current stock"}[0], nil).
+        Then(planningApi).SendsRequest(workflowQueue, &[]string{"publish workflow"}[0], nil).
+        Then(planningApi).SendsRequest(supplier, &[]string{"send order"}[0], nil)
+
+    reportingJob.SendsRequest(erpDb, &[]string{"load data"}[0], nil).
+        ExecutesRequest(&[]string{"generate nightly reports"}[0]).
+        SendsRequest(workflowQueue, &[]string{"notify portal"}[0], nil)
+}
+```
+
+
+</CodeTab>
+<CodeTab value="java" label="Java">
+
+```java scroll=false showLineNumbers
+import flowconsole.sdk.*;
+
+public class GlobalErpExample {
+  public static void main(String[] args) {
+    User employee = User.Builder.create()
+      .name("Regional Planner")
+      .description("Creates purchase orders")
+      .build();
+
+    ExternalService supplier = ExternalService.Builder.create()
+      .name("Supplier API")
+      .description("Partner integration")
+      .build();
+
+    ComputerSystem atlas = ComputerSystem.Builder.create()
+      .name("Atlas ERP")
+      .build();
+
+    ReactApp portal = ReactApp.Builder.create()
+      .name("Planner Portal")
+      .description("Next.js dashboard for procurement team")
+      .belongsTo(atlas)
+      .build();
+
+    Container integrationHub = Container.Builder.create()
+      .name("Integration Hub")
+      .description("Async orchestrations + adapters")
+      .belongsTo(atlas)
+      .build();
+
+    RestApi planningApi = RestApi.Builder.create()
+      .name("Planning Service")
+      .description("Handles demand & supply planning")
+      .belongsTo(integrationHub)
+      .build();
+
+    RestApi inventoryApi = RestApi.Builder.create()
+      .name("Inventory Service")
+      .description("Tracks warehouse stock")
+      .belongsTo(integrationHub)
+      .build();
+
+    MessageQueue workflowQueue = MessageQueue.Builder.create()
+      .name("Workflow Queue")
+      .description("Commands for async processing")
+      .belongsTo(integrationHub)
+      .build();
+
+    BackgroundJob reportingJob = BackgroundJob.Builder.create()
+      .name("Nightly Reconciliation")
+      .description("Produces compliance extracts")
+      .belongsTo(integrationHub)
+      .build();
+
+    Postgres erpDb = Postgres.Builder.create()
+      .name("ERP Database")
+      .description("Orders, forecasts, contracts")
+      .belongsTo(integrationHub)
+      .build();
+
+    employee
+      .sendsRequest(portal, "create purchase order")
+      .then(portal).sendsRequest(planningApi, "submit plan")
+      .then(planningApi).sendsRequest(inventoryApi, "reserve stock")
+      .then(planningApi).getDataFrom(erpDb, "fetch demand")
+      .then(inventoryApi).getDataFrom(erpDb, "current stock")
+      .then(planningApi).sendsRequest(workflowQueue, "publish workflow")
+      .then(planningApi).sendsRequest(supplier, "send order");
+
+    reportingJob
+      .sendsRequest(erpDb, "load data")
+      .executesRequest("generate nightly reports")
+      .sendsRequest(workflowQueue, "notify portal");
+  }
+}
+```
+
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
+```csharp scroll=false showLineNumbers
+using FlowConsole;
+
+var employee = new User(new UserArgs {
+    Name = "Regional Planner",
+    Description = "Creates purchase orders"
+});
+
+var supplier = new ExternalService(new ComponentArgs {
+    Name = "Supplier API",
+    Description = "Partner integration"
+});
+
+var atlas = new ComputerSystem(new ComponentArgs { Name = "Atlas ERP" });
+
+var portal = new ReactApp(new ComponentArgs {
+    Name = "Planner Portal",
+    Description = "Next.js dashboard for procurement team",
+    BelongsTo = atlas
+});
+
+var integrationHub = new Container(new ComponentArgs {
+    Name = "Integration Hub",
+    Description = "Async orchestrations + adapters",
+    BelongsTo = atlas
+});
+
+var planningApi = new RestApi(new ComponentArgs {
+    Name = "Planning Service",
+    Description = "Handles demand & supply planning",
+    BelongsTo = integrationHub
+});
+
+var inventoryApi = new RestApi(new ComponentArgs {
+    Name = "Inventory Service",
+    Description = "Tracks warehouse stock",
+    BelongsTo = integrationHub
+});
+
+var workflowQueue = new MessageQueue(new ComponentArgs {
+    Name = "Workflow Queue",
+    Description = "Commands for async processing",
+    BelongsTo = integrationHub
+});
+
+var reportingJob = new BackgroundJob(new ComponentArgs {
+    Name = "Nightly Reconciliation",
+    Description = "Produces compliance extracts",
+    BelongsTo = integrationHub
+});
+
+var erpDb = new Postgres(new ComponentArgs {
+    Name = "ERP Database",
+    Description = "Orders, forecasts, contracts",
+    BelongsTo = integrationHub
+});
+
+employee
+    .SendsRequest(portal, "create purchase order")
+    .Then(portal).SendsRequest(planningApi, "submit plan")
+    .Then(planningApi).SendsRequest(inventoryApi, "reserve stock")
+    .Then(planningApi).GetDataFrom(erpDb, "fetch demand")
+    .Then(inventoryApi).GetDataFrom(erpDb, "current stock")
+    .Then(planningApi).SendsRequest(workflowQueue, "publish workflow")
+    .Then(planningApi).SendsRequest(supplier, "send order");
+
+reportingJob
+    .SendsRequest(erpDb, "load data")
+    .ExecutesRequest("generate nightly reports")
+    .SendsRequest(workflowQueue, "notify portal");
+```
+
+</CodeTab>
+</CodeTabs>
+
 Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-2)

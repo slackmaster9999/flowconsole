@@ -44,8 +44,8 @@
     },
     "java": {
       "maven": {
-        "artifactId": "sdk",
-        "groupId": "flowconsole"
+        "artifactId": "flowconsole-sdk",
+        "groupId": "io.github.slackmaster9999"
       },
       "package": "flowconsole.sdk"
     },
@@ -1159,6 +1159,6 @@
       "symbolId": "flowconsole-sdk:UserArgs"
     }
   },
-  "version": "0.0.2",
-  "fingerprint": "brtq2PUpi5TVllQHkT+NWTLs0uanDae29Un3CYpmkvk="
+  "version": "1.0.2",
+  "fingerprint": "f5nc/giCZmvMTrXp8Y7Q1glaXKPRJbZLd955CREurAk="
 }
