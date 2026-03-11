@@ -40,7 +40,7 @@ export default async function HeroLanding() {
         >
           Define your architecture as code and watch it come to life
         </p>
-
+        
         <div
           className="flex justify-center space-x-2 md:space-x-4"
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { ThemeProvider } from '../../src/theme/ThemeProvider';
-import NavigationPanelControls from '../../src/core/components/NavigationPanel/NavigationPanelControls';
+import NavigationPanelControls from '../../src/web/components/NavigationPanel/NavigationPanelControls';
 
 const breadcrumbs = [
   { id: 'root', title: 'Root' },

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { DiagramIntermediateModel } from '../../src/core/languages/typescript/diagramRuntime';
-import { buildReactFlowModel } from '../../src/core/languages/typescript/modelToReactflowMapper';
+import { DiagramIntermediateModel } from '../../src/web/languages/typescript/diagramRuntime';
+import { buildReactFlowModel } from '../../src/web/languages/typescript/modelToReactflowMapper';
 
 describe('buildReactFlowModel', () => {
   it('converts intermediate entities into nodes and edges', () => {

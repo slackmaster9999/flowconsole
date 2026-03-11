@@ -65,14 +65,12 @@ user.sendsRequestTo(frontApp, "opens in browser")
 
 
 ## Roadmap
-- VS Code extention
-- Jetbrains IDEA/Rider extention
-- CLI tool for CI/CD pipeline integration
-- C#(WIP), Java, Go, Python support
-- Add llm.txt
-- Export in SVG
-- Docs for architecture json scheme
-- Docs for CLI tool
+- VS Code extension
+- Jetbrains IDEA/Rider extension
+- CLI tool for artifacts generation in your CI/CD pipeline
+- C#(WIP), Java, Go, Python support(vote your language!)
+- Publish engine architecture json scheme(so LLMs can help you)
+- Drift CLI tool to check for architecture drifts
 
 
 ## Quick start scripts
@@ -98,15 +96,64 @@ user.sendsRequestTo(frontApp, "opens in browser")
 - `pnpm test:e2e` — to run tests.
 
 ## Architecture
-- `src/core/components/Workbench/CodeDiagramWorkbench`: Monaco-based editor + model preview, debounced evaluation.
-- `src/core/components/ArchitectureDiagram`: Reactflow renderer with autolayout navigation panel.
-- `src/core/languages/typescript`: DSL declarations, evaluator, and samples that compile authored code into architecture models.
-- `src/core/components/NavigationPanel`: flow and scope navigation for rendered models.
+- `src/core/components/Workbench/CodeDiagramWorkbench`: Monaco-based editor + diagram preview, debounced evaluation.
+- `src/core/components/ArchitectureDiagram`: XYFlow renderer with layout (`graphvizLayoutService`) and navigation panel.
+- `src/core/languages/typescript`: DSL declarations, evaluator, and samples that compile authored code into diagram models.
+- `src/theme/ThemeProvider`: Mantine provider + light/dark scheme handling.
+- `src/core/components/NavigationPanel`: flow and scope navigation for rendered diagrams.
+
+## Screenshots
+- TODO: add UI captures of the workbench and rendered diagrams.
+
+## Roadmap
+- See `ROADMAP.md` for current milestones and nice-to-haves.
 
 ## Contributing
+- Contributions are welcome!
 - See `CONTRIBUTING.md` for setup, standards, and how to file issues/PRs.
 - Community expectations: `CODE_OF_CONDUCT.md`.
 
 ## License
-- Core(src/core) frontend code is distributed under AGPLv3 (see `LICENSE`).
-- Some components or auxiliary parts may be under license; check file headers and/or a nearby NOTICE for those modules.
+The core of FlowConsole is released as open-source software under the
+**Apache License, Version 2.0**.
+
+You are free to:
+- use the software for any purpose,
+- modify it,
+- distribute it,
+- use it in commercial and non-commercial projects,
+- self-host it or embed it into your own systems,
+
+as long as you comply with the terms of the Apache License 2.0.
+
+See the [LICENSE](./LICENSE) file for details.  
+See the [NOTICE](./NOTICE) file for required attributions.
+---
+
+## Commercial / Hosted Offering
+
+In addition to the open-source core, the FlowConsole project may provide
+commercial offerings, such as:
+- managed SaaS deployments,
+- enterprise features,
+- proprietary plugins or extensions,
+- commercial support and services.
+
+These offerings are **not part of this open-source repository** and are
+provided under separate commercial terms.
+
+Use of the FlowConsole hosted service is governed by its own
+Terms of Service and does not change the licensing of the open-source core.
+
+---
+## Trademarks
+
+The FlowConsole name, logo, and branding are trademarks of the project
+maintainers and may not be used without permission.
+
+This does not affect your rights to use, modify, or distribute the
+open-source software itself.
+## Disclaimer
+
+This software is provided "as is", without warranty of any kind, express
+or implied. See the LICENSE file for details.

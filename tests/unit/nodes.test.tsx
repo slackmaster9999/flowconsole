@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ContainerNodeType, ElementNodeType } from '../../src/core/diagram/types';
-import { ContainerNode } from '../../src/core/reactflow/nodes/ContainerNode';
-import { ElementNode } from '../../src/core/reactflow/nodes/ElementNode';
+import { ContainerNodeType, ElementNodeType } from '../../src/web/diagram/types';
+import { ContainerNode } from '../../src/web/reactflow/nodes/ContainerNode';
+import { ElementNode } from '../../src/web/reactflow/nodes/ElementNode';
 
-vi.mock('../../src/core/reactflow/nodes/HiddenHandles', () => ({
+vi.mock('../../src/web/reactflow/nodes/HiddenHandles', () => ({
   HiddenHandles: () => <div data-testid="handles" />,
 }));
 

@@ -6,7 +6,7 @@ export const BLOG_CATEGORIES: {
   {
     title: "News",
     slug: "news",
-    description: "Updates and announcements from Next Flow Console.",
+    description: "Updates and announcements from Next FlowConsole.",
   },
   {
     title: "Education",

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { DiagramRuntime } from '../../src/core/languages/typescript/diagramRuntime';
+import { DiagramRuntime } from '../../src/web/languages/typescript/diagramRuntime';
 
 function createEntity(runtime: DiagramRuntime, type: Parameters<DiagramRuntime['createEntityInvoker']>[0], value: Record<string, unknown>) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

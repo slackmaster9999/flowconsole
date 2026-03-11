@@ -1,0 +1,616 @@
+---
+title: Global Media Streaming Platform Example
+---
+
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
+```typescript scroll=false showLineNumbers
+import {
+  User,
+  ComputerSystem,
+  Container,
+  ReactApp,
+  RestApi,
+  BackgroundJob,
+  ExternalService,
+  Postgres,
+  KafkaTopic
+} from "@flowconsole/sdk";
+
+const viewer = new User({ name: "Subscriber", description: "Streams movies" });
+const operator = new User({ name: "Ops Engineer", description: "Monitors health" });
+
+const streamly = new ComputerSystem({ name: "Streamly" });
+const deviceApps = new Container({ name: "Device Apps", belongsTo: streamly });
+const controlPlane = new Container({ name: "Control Plane", belongsTo: streamly });
+const dataPlane = new Container({ name: "Data Plane", belongsTo: streamly });
+const observability = new Container({ name: "Observability", belongsTo: streamly });
+
+const tvApp = new ReactApp({
+  name: "TV App",
+  description: "Smart TV + set-top box UI",
+  belongsTo: deviceApps
+});
+
+const mobileApp = new ReactApp({
+  name: "Mobile App",
+  description: "iOS/Android client",
+  belongsTo: deviceApps
+});
+
+const authService = new RestApi({
+  name: "Identity",
+  description: "Login, entitlements",
+  belongsTo: controlPlane
+});
+
+const catalogService = new RestApi({
+  name: "Catalog",
+  description: "Metadata, search, personalization",
+  belongsTo: controlPlane
+});
+
+const playbackService = new RestApi({
+  name: "Playback Service",
+  description: "Session tokens, DRM",
+  belongsTo: controlPlane
+});
+
+const ingestPipeline = new BackgroundJob({
+  name: "Content Ingest",
+  description: "Transcodes uploads",
+  belongsTo: dataPlane
+});
+
+const edgeCache = new ExternalService({
+  name: "Global CDN",
+  description: "Edge delivery network",
+  belongsTo: dataPlane
+});
+
+const profilesStore = new Postgres({
+  name: "Profiles DB",
+  description: "Viewer profiles, settings",
+  belongsTo: controlPlane
+});
+
+const recommendationService = new RestApi({
+  name: "Recommendations",
+  description: "ML ranking service",
+  belongsTo: controlPlane
+});
+
+const watchEvents = new KafkaTopic({
+  name: "Watch Events",
+  description: "View, pause, seek telemetry",
+  belongsTo: observability
+});
+
+const metricsApi = new RestApi({
+  name: "Metrics API",
+  description: "Real-time health",
+  belongsTo: observability
+});
+
+viewer
+  .sendsRequest(tvApp, "open app")
+  .then(tvApp).sendsRequest(authService, "login")
+  .then(tvApp).sendsRequest(catalogService, "browse catalog")
+  .then(tvApp).sendsRequest(recommendationService, "personal picks")
+  .then(tvApp).sendsRequest(playbackService, "start playback")
+  .then(playbackService).getDataFrom(profilesStore, "profile rights")
+  .then(playbackService).sendsRequest(edgeCache, "issue token")
+  .then(playbackService).sendsRequest(watchEvents, "emit play");
+
+mobileApp
+  .sendsRequest(playbackService, "resume session")
+  .then(playbackService).getDataFrom(profilesStore, "device list")
+  .then(playbackService).sendsRequest(edgeCache, "refresh CDN token");
+
+ingestPipeline
+  .sendsRequest(edgeCache, "push renditions")
+  .sendsRequest(watchEvents, "publish ingest status");
+
+operator
+  .sendsRequest(metricsApi, "check SLOs")
+  .sendsRequest(watchEvents, "trace anomalies");
+```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
+
+```python scroll=false showLineNumbers
+from flowconsole import (
+    User,
+    ComputerSystem,
+    Container,
+    ReactApp,
+    RestApi,
+    BackgroundJob,
+    ExternalService,
+    Postgres,
+    KafkaTopic,
+)
+
+viewer = User(name="Subscriber", description="Streams movies")
+operator = User(name="Ops Engineer", description="Monitors health")
+
+streamly = ComputerSystem(name="Streamly")
+device_apps = Container(name="Device Apps", belongs_to=streamly)
+control_plane = Container(name="Control Plane", belongs_to=streamly)
+data_plane = Container(name="Data Plane", belongs_to=streamly)
+observability = Container(name="Observability", belongs_to=streamly)
+
+tv_app = ReactApp(
+    name="TV App",
+    description="Smart TV + set-top box UI",
+    belongs_to=device_apps,
+)
+
+mobile_app = ReactApp(
+    name="Mobile App",
+    description="iOS/Android client",
+    belongs_to=device_apps,
+)
+
+auth_service = RestApi(
+    name="Identity",
+    description="Login, entitlements",
+    belongs_to=control_plane,
+)
+
+catalog_service = RestApi(
+    name="Catalog",
+    description="Metadata, search, personalization",
+    belongs_to=control_plane,
+)
+
+playback_service = RestApi(
+    name="Playback Service",
+    description="Session tokens, DRM",
+    belongs_to=control_plane,
+)
+
+ingest_pipeline = BackgroundJob(
+    name="Content Ingest",
+    description="Transcodes uploads",
+    belongs_to=data_plane,
+)
+
+edge_cache = ExternalService(
+    name="Global CDN",
+    description="Edge delivery network",
+    belongs_to=data_plane,
+)
+
+profiles_store = Postgres(
+    name="Profiles DB",
+    description="Viewer profiles, settings",
+    belongs_to=control_plane,
+)
+
+recommendation_service = RestApi(
+    name="Recommendations",
+    description="ML ranking service",
+    belongs_to=control_plane,
+)
+
+watch_events = KafkaTopic(
+    name="Watch Events",
+    description="View, pause, seek telemetry",
+    belongs_to=observability,
+)
+
+metrics_api = RestApi(
+    name="Metrics API",
+    description="Real-time health",
+    belongs_to=observability,
+)
+
+(
+    viewer.sends_request(tv_app, "open app")
+    .then(tv_app).sends_request(auth_service, "login")
+    .then(tv_app).sends_request(catalog_service, "browse catalog")
+    .then(tv_app).sends_request(recommendation_service, "personal picks")
+    .then(tv_app).sends_request(playback_service, "start playback")
+    .then(playback_service).get_data_from(profiles_store, "profile rights")
+    .then(playback_service).sends_request(edge_cache, "issue token")
+    .then(playback_service).sends_request(watch_events, "emit play")
+)
+
+(
+    mobile_app.sends_request(playback_service, "resume session")
+    .then(playback_service).get_data_from(profiles_store, "device list")
+    .then(playback_service).sends_request(edge_cache, "refresh CDN token")
+)
+
+(
+    ingest_pipeline.sends_request(edge_cache, "push renditions")
+    .sends_request(watch_events, "publish ingest status")
+)
+
+(
+    operator.sends_request(metrics_api, "check SLOs")
+    .sends_request(watch_events, "trace anomalies")
+)
+```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
+
+```go scroll=false showLineNumbers
+package main
+
+import (
+    . "github.com/slackmaster9999/go-flowconsole"
+)
+
+func main() {
+    viewer := NewUser(&UserArgs{
+        Name:        &[]string{"Subscriber"}[0],
+        Description: &[]string{"Streams movies"}[0],
+    })
+    operator := NewUser(&UserArgs{
+        Name:        &[]string{"Ops Engineer"}[0],
+        Description: &[]string{"Monitors health"}[0],
+    })
+
+    streamly := NewComputerSystem(&ComponentArgs{
+        Name: &[]string{"Streamly"}[0],
+    })
+    deviceApps := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Device Apps"}[0],
+        BelongsTo: streamly,
+    })
+    controlPlane := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Control Plane"}[0],
+        BelongsTo: streamly,
+    })
+    dataPlane := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Data Plane"}[0],
+        BelongsTo: streamly,
+    })
+    observability := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Observability"}[0],
+        BelongsTo: streamly,
+    })
+
+    tvApp := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"TV App"}[0],
+        Description: &[]string{"Smart TV + set-top box UI"}[0],
+        BelongsTo:   deviceApps,
+    })
+
+    mobileApp := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"Mobile App"}[0],
+        Description: &[]string{"iOS/Android client"}[0],
+        BelongsTo:   deviceApps,
+    })
+
+    authService := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Identity"}[0],
+        Description: &[]string{"Login, entitlements"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    catalogService := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Catalog"}[0],
+        Description: &[]string{"Metadata, search, personalization"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    playbackService := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Playback Service"}[0],
+        Description: &[]string{"Session tokens, DRM"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    ingestPipeline := NewBackgroundJob(&ComponentArgs{
+        Name:        &[]string{"Content Ingest"}[0],
+        Description: &[]string{"Transcodes uploads"}[0],
+        BelongsTo:   dataPlane,
+    })
+
+    edgeCache := NewExternalService(&ComponentArgs{
+        Name:        &[]string{"Global CDN"}[0],
+        Description: &[]string{"Edge delivery network"}[0],
+        BelongsTo:   dataPlane,
+    })
+
+    profilesStore := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"Profiles DB"}[0],
+        Description: &[]string{"Viewer profiles, settings"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    recommendationService := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Recommendations"}[0],
+        Description: &[]string{"ML ranking service"}[0],
+        BelongsTo:   controlPlane,
+    })
+
+    watchEvents := NewKafkaTopic(&ComponentArgs{
+        Name:        &[]string{"Watch Events"}[0],
+        Description: &[]string{"View, pause, seek telemetry"}[0],
+        BelongsTo:   observability,
+    })
+
+    metricsApi := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Metrics API"}[0],
+        Description: &[]string{"Real-time health"}[0],
+        BelongsTo:   observability,
+    })
+
+    viewer.SendsRequest(tvApp, &[]string{"open app"}[0], nil).
+        Then(tvApp).SendsRequest(authService, &[]string{"login"}[0], nil).
+        Then(tvApp).SendsRequest(catalogService, &[]string{"browse catalog"}[0], nil).
+        Then(tvApp).SendsRequest(recommendationService, &[]string{"personal picks"}[0], nil).
+        Then(tvApp).SendsRequest(playbackService, &[]string{"start playback"}[0], nil).
+        Then(playbackService).GetDataFrom(profilesStore, &[]string{"profile rights"}[0], nil).
+        Then(playbackService).SendsRequest(edgeCache, &[]string{"issue token"}[0], nil).
+        Then(playbackService).SendsRequest(watchEvents, &[]string{"emit play"}[0], nil)
+
+    mobileApp.SendsRequest(playbackService, &[]string{"resume session"}[0], nil).
+        Then(playbackService).GetDataFrom(profilesStore, &[]string{"device list"}[0], nil).
+        Then(playbackService).SendsRequest(edgeCache, &[]string{"refresh CDN token"}[0], nil)
+
+    ingestPipeline.SendsRequest(edgeCache, &[]string{"push renditions"}[0], nil).
+        SendsRequest(watchEvents, &[]string{"publish ingest status"}[0], nil)
+
+    operator.SendsRequest(metricsApi, &[]string{"check SLOs"}[0], nil).
+        SendsRequest(watchEvents, &[]string{"trace anomalies"}[0], nil)
+}
+```
+
+
+</CodeTab>
+<CodeTab value="java" label="Java">
+
+```java scroll=false showLineNumbers
+import flowconsole.sdk.*;
+
+public class GlobalMediaExample {
+  public static void main(String[] args) {
+    User viewer = User.Builder.create()
+      .name("Subscriber")
+      .description("Streams movies")
+      .build();
+
+    User operator = User.Builder.create()
+      .name("Ops Engineer")
+      .description("Monitors health")
+      .build();
+
+    ComputerSystem streamly = ComputerSystem.Builder.create()
+      .name("Streamly")
+      .build();
+
+    Container deviceApps = Container.Builder.create()
+      .name("Device Apps")
+      .belongsTo(streamly)
+      .build();
+
+    Container controlPlane = Container.Builder.create()
+      .name("Control Plane")
+      .belongsTo(streamly)
+      .build();
+
+    Container dataPlane = Container.Builder.create()
+      .name("Data Plane")
+      .belongsTo(streamly)
+      .build();
+
+    Container observability = Container.Builder.create()
+      .name("Observability")
+      .belongsTo(streamly)
+      .build();
+
+    ReactApp tvApp = ReactApp.Builder.create()
+      .name("TV App")
+      .description("Smart TV + set-top box UI")
+      .belongsTo(deviceApps)
+      .build();
+
+    ReactApp mobileApp = ReactApp.Builder.create()
+      .name("Mobile App")
+      .description("iOS/Android client")
+      .belongsTo(deviceApps)
+      .build();
+
+    RestApi authService = RestApi.Builder.create()
+      .name("Identity")
+      .description("Login, entitlements")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi catalogService = RestApi.Builder.create()
+      .name("Catalog")
+      .description("Metadata, search, personalization")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi playbackService = RestApi.Builder.create()
+      .name("Playback Service")
+      .description("Session tokens, DRM")
+      .belongsTo(controlPlane)
+      .build();
+
+    BackgroundJob ingestPipeline = BackgroundJob.Builder.create()
+      .name("Content Ingest")
+      .description("Transcodes uploads")
+      .belongsTo(dataPlane)
+      .build();
+
+    ExternalService edgeCache = ExternalService.Builder.create()
+      .name("Global CDN")
+      .description("Edge delivery network")
+      .belongsTo(dataPlane)
+      .build();
+
+    Postgres profilesStore = Postgres.Builder.create()
+      .name("Profiles DB")
+      .description("Viewer profiles, settings")
+      .belongsTo(controlPlane)
+      .build();
+
+    RestApi recommendationService = RestApi.Builder.create()
+      .name("Recommendations")
+      .description("ML ranking service")
+      .belongsTo(controlPlane)
+      .build();
+
+    KafkaTopic watchEvents = KafkaTopic.Builder.create()
+      .name("Watch Events")
+      .description("View, pause, seek telemetry")
+      .belongsTo(observability)
+      .build();
+
+    RestApi metricsApi = RestApi.Builder.create()
+      .name("Metrics API")
+      .description("Real-time health")
+      .belongsTo(observability)
+      .build();
+
+    viewer
+      .sendsRequest(tvApp, "open app")
+      .then(tvApp).sendsRequest(authService, "login")
+      .then(tvApp).sendsRequest(catalogService, "browse catalog")
+      .then(tvApp).sendsRequest(recommendationService, "personal picks")
+      .then(tvApp).sendsRequest(playbackService, "start playback")
+      .then(playbackService).getDataFrom(profilesStore, "profile rights")
+      .then(playbackService).sendsRequest(edgeCache, "issue token")
+      .then(playbackService).sendsRequest(watchEvents, "emit play");
+
+    mobileApp
+      .sendsRequest(playbackService, "resume session")
+      .then(playbackService).getDataFrom(profilesStore, "device list")
+      .then(playbackService).sendsRequest(edgeCache, "refresh CDN token");
+
+    ingestPipeline
+      .sendsRequest(edgeCache, "push renditions")
+      .sendsRequest(watchEvents, "publish ingest status");
+
+    operator
+      .sendsRequest(metricsApi, "check SLOs")
+      .sendsRequest(watchEvents, "trace anomalies");
+  }
+}
+```
+
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
+```csharp scroll=false showLineNumbers
+using FlowConsole;
+
+var viewer = new User(new UserArgs {
+    Name = "Subscriber",
+    Description = "Streams movies"
+});
+
+var operator = new User(new UserArgs {
+    Name = "Ops Engineer",
+    Description = "Monitors health"
+});
+
+var streamly = new ComputerSystem(new ComponentArgs { Name = "Streamly" });
+var deviceApps = new Container(new ComponentArgs { Name = "Device Apps", BelongsTo = streamly });
+var controlPlane = new Container(new ComponentArgs { Name = "Control Plane", BelongsTo = streamly });
+var dataPlane = new Container(new ComponentArgs { Name = "Data Plane", BelongsTo = streamly });
+var observability = new Container(new ComponentArgs { Name = "Observability", BelongsTo = streamly });
+
+var tvApp = new ReactApp(new ComponentArgs {
+    Name = "TV App",
+    Description = "Smart TV + set-top box UI",
+    BelongsTo = deviceApps
+});
+
+var mobileApp = new ReactApp(new ComponentArgs {
+    Name = "Mobile App",
+    Description = "iOS/Android client",
+    BelongsTo = deviceApps
+});
+
+var authService = new RestApi(new ComponentArgs {
+    Name = "Identity",
+    Description = "Login, entitlements",
+    BelongsTo = controlPlane
+});
+
+var catalogService = new RestApi(new ComponentArgs {
+    Name = "Catalog",
+    Description = "Metadata, search, personalization",
+    BelongsTo = controlPlane
+});
+
+var playbackService = new RestApi(new ComponentArgs {
+    Name = "Playback Service",
+    Description = "Session tokens, DRM",
+    BelongsTo = controlPlane
+});
+
+var ingestPipeline = new BackgroundJob(new ComponentArgs {
+    Name = "Content Ingest",
+    Description = "Transcodes uploads",
+    BelongsTo = dataPlane
+});
+
+var edgeCache = new ExternalService(new ComponentArgs {
+    Name = "Global CDN",
+    Description = "Edge delivery network",
+    BelongsTo = dataPlane
+});
+
+var profilesStore = new Postgres(new ComponentArgs {
+    Name = "Profiles DB",
+    Description = "Viewer profiles, settings",
+    BelongsTo = controlPlane
+});
+
+var recommendationService = new RestApi(new ComponentArgs {
+    Name = "Recommendations",
+    Description = "ML ranking service",
+    BelongsTo = controlPlane
+});
+
+var watchEvents = new KafkaTopic(new ComponentArgs {
+    Name = "Watch Events",
+    Description = "View, pause, seek telemetry",
+    BelongsTo = observability
+});
+
+var metricsApi = new RestApi(new ComponentArgs {
+    Name = "Metrics API",
+    Description = "Real-time health",
+    BelongsTo = observability
+});
+
+viewer
+    .SendsRequest(tvApp, "open app")
+    .Then(tvApp).SendsRequest(authService, "login")
+    .Then(tvApp).SendsRequest(catalogService, "browse catalog")
+    .Then(tvApp).SendsRequest(recommendationService, "personal picks")
+    .Then(tvApp).SendsRequest(playbackService, "start playback")
+    .Then(playbackService).GetDataFrom(profilesStore, "profile rights")
+    .Then(playbackService).SendsRequest(edgeCache, "issue token")
+    .Then(playbackService).SendsRequest(watchEvents, "emit play");
+
+mobileApp
+    .SendsRequest(playbackService, "resume session")
+    .Then(playbackService).GetDataFrom(profilesStore, "device list")
+    .Then(playbackService).SendsRequest(edgeCache, "refresh CDN token");
+
+ingestPipeline
+    .SendsRequest(edgeCache, "push renditions")
+    .SendsRequest(watchEvents, "publish ingest status");
+
+operator
+    .SendsRequest(metricsApi, "check SLOs")
+    .SendsRequest(watchEvents, "trace anomalies");
+```
+
+</CodeTab>
+</CodeTabs>
+
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-4)

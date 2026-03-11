@@ -1,0 +1,28 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.banner {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  max-width: min(360px, 90vw);
+  background: #fff4e6;
+  border: 1px solid #f2c38a;
+  color: #7a4b00;
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(122, 75, 0, 0.15);
+  pointer-events: none;
+}
+
+.workbench {
+  flex: 1;
+  min-height: 0;
+}

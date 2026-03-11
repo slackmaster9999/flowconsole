@@ -1,0 +1,82 @@
+---
+title: API Reference
+---
+
+FlowConsole DSL lets you describe your system’s schema (actors, systems, containers, components, and their interactions) as regular TypeScript. The types below are available from `@flowconsole/sdk` and are the building blocks the renderer understands.
+
+## Quick start
+
+```typescript
+import {
+  User,
+  ComputerSystem,
+  Container,
+  ReactApp,
+  RestApi,
+  Redis,
+  Postgres,
+  KafkaTopic,
+  MessageQueue,
+  ExternalService,
+  BackgroundJob
+} from "@flowconsole/sdk";
+```
+
+## Core node properties
+
+All nodes share the same base properties (from `ComponentArgs`):
+
+- `name?: string` — display name on the diagram (recommended).
+- `description?: string` — short description for tooltips.
+- `belongsTo?: Container | ComputerSystem` — parent grouping.
+- `tags?: string[]` — categorization tags.
+- `badge?: string` — small label shown with the node.
+- `tone?: 'primary' | 'muted' | 'success' | 'warning' | 'danger'` — accent color.
+- `id?: string` — stable identifier.
+
+### Specialized nodes
+
+Each specialized node adds optional fields on top of `ComponentArgs`:
+
+- `User` — [C1 level] end users or system actors; `role?: string`.
+- `ComputerSystem` — [C1 level] top-level product/domain; `domain?: string`.
+- `Container` — [C2 level] subsystem/module boundary; `technology?: string`.
+- `ReactApp` — [C3 level] client apps (SPA/mobile shell); `framework?: string`, `url?: string`.
+- `RestApi` — [C3 level] HTTP API services; `method?: string`, `endpoint?: string`.
+- `Redis` — [C3 level] Redis instance/cluster for cache or sessions; `cluster?: string`.
+- `Postgres` — [C3 level] PostgreSQL database; `schema?: string`.
+- `KafkaTopic` — [C3 level] Kafka topic for events/telemetry; `partitionCount?: number`.
+- `MessageQueue` — [C3 level] async queue (e.g., SQS/RabbitMQ); `throughput?: string`.
+- `ExternalService` — [C3 level] third-party/SaaS dependency; `vendor?: string`.
+- `BackgroundJob` — [C3 level] scheduled job/pipeline/worker; `schedule?: string`.
+
+## Fluent API
+
+Every node can initiate or receive flows. Flows are chainable.
+
+- `sendsRequest(target, label, options?)` — request/command to another component;
+- `getDataFrom(target, label, options?)`  — data retrieval from component;
+- `executesRequest(action)` — marks an action without a target;
+- `then(nextNode)` — returns `nextNode` to add new subflow.
+
+`options` (`ConnectionOptions`):
+
+- `kind?: 'sync' | 'async' | 'event' | 'dependency'` — interaction type;
+- `detail?: string` — additional info for tooltips;
+- `icon?: string` — custom icon URL for the flow arrow;
+- `muted?: boolean` — visually de-emphasize the flow.
+
+## Example
+
+```typescript
+const user = new User({ name: "Customer", role: "Retail banking" });
+const core = new ComputerSystem({ name: "Core Banking", domain: "Banking" });
+const api = new RestApi({ name: "Accounts API", method: "GET", belongsTo: core });
+const db = new Postgres({ name: "Ledger DB", schema: "public", belongsTo: core });
+const auditStream = new KafkaTopic({ name: "Audit Events", partitionCount: 12, belongsTo: core });
+
+user
+  .sendsRequest(api, "login")
+  .getDataFrom(db, "verify credentials", { kind: "sync" })
+  .sendsRequest(auditStream, "emit audit", { kind: "event" });
+```

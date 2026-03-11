@@ -1,0 +1,390 @@
+---
+title: Retail Banking Example
+---
+
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
+```typescript scroll=false showLineNumbers
+import {
+  User,
+  ComputerSystem,
+  Container,
+  ReactApp,
+  RestApi,
+  Redis,
+  Postgres,
+  KafkaTopic,
+  ExternalService
+} from "@flowconsole/sdk";
+
+const user = new User({ name: "Customer", description: "Retail banking customer" });
+
+const system = new ComputerSystem({ name: "Cloud Banking" });
+const storage = new Container({ name: "Data Store", belongsTo: system });
+const backend = new Container({ name: "Core Services", belongsTo: system });
+
+const frontApp = new ReactApp({
+  name: "Customer Dashboard",
+  description: "Browser Single-page Application",
+  belongsTo: system
+});
+
+const authApi = new RestApi({
+  name: "Authentication",
+  description: "Self-Hosted Authentication Service",
+  belongsTo: backend
+});
+
+const accountsApi = new RestApi({
+  name: "Accounts API",
+  description: "Java Spring service for balances and payments",
+  belongsTo: backend
+});
+
+const cache = new Redis({
+  name: "Session Cache",
+  description: "Stores customer session payloads",
+  belongsTo: storage
+});
+
+const db = new Postgres({
+  name: "Ledger DB",
+  description: "Persistent customer and transaction data",
+  belongsTo: storage
+});
+
+const auditStream = new KafkaTopic({
+  name: "Audit Events",
+  description: "Every request produces an audit record",
+  belongsTo: backend
+});
+
+const fraudService = new ExternalService({
+  name: "Fraud Guard",
+  description: "3rd-party fraud scoring",
+  belongsTo: backend
+});
+
+user
+  .sendsRequest(frontApp, "launch app")
+  .then(frontApp).sendsRequest(authApi, "login")
+  .then(frontApp).sendsRequest(accountsApi, "load dashboard")
+  .then(accountsApi).getDataFrom(cache, "session context")
+  .then(accountsApi).getDataFrom(db, "account snapshot")
+  .then(accountsApi).sendsRequest(authApi, "validate token")
+  .then(accountsApi).sendsRequest(auditStream, "emit audit")
+  .then(accountsApi).sendsRequest(fraudService, "score transaction");
+```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
+
+```python scroll=false showLineNumbers
+from flowconsole import (
+    User,
+    ComputerSystem,
+    Container,
+    ReactApp,
+    RestApi,
+    Redis,
+    Postgres,
+    KafkaTopic,
+    ExternalService,
+)
+
+user = User(name="Customer", description="Retail banking customer")
+
+system = ComputerSystem(name="Cloud Banking")
+storage = Container(name="Data Store", belongs_to=system)
+backend = Container(name="Core Services", belongs_to=system)
+
+front_app = ReactApp(
+    name="Customer Dashboard",
+    description="Browser Single-page Application",
+    belongs_to=system,
+)
+
+auth_api = RestApi(
+    name="Authentication",
+    description="Self-Hosted Authentication Service",
+    belongs_to=backend,
+)
+
+accounts_api = RestApi(
+    name="Accounts API",
+    description="Java Spring service for balances and payments",
+    belongs_to=backend,
+)
+
+cache = Redis(
+    name="Session Cache",
+    description="Stores customer session payloads",
+    belongs_to=storage,
+)
+
+db = Postgres(
+    name="Ledger DB",
+    description="Persistent customer and transaction data",
+    belongs_to=storage,
+)
+
+audit_stream = KafkaTopic(
+    name="Audit Events",
+    description="Every request produces an audit record",
+    belongs_to=backend,
+)
+
+fraud_service = ExternalService(
+    name="Fraud Guard",
+    description="3rd-party fraud scoring",
+    belongs_to=backend,
+)
+
+(
+    user.sends_request(front_app, "launch app")
+    .then(front_app).sends_request(auth_api, "login")
+    .then(front_app).sends_request(accounts_api, "load dashboard")
+    .then(accounts_api).get_data_from(cache, "session context")
+    .then(accounts_api).get_data_from(db, "account snapshot")
+    .then(accounts_api).sends_request(auth_api, "validate token")
+    .then(accounts_api).sends_request(audit_stream, "emit audit")
+    .then(accounts_api).sends_request(fraud_service, "score transaction")
+)
+```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
+
+```go scroll=false showLineNumbers
+package main
+
+import (
+    . "github.com/slackmaster9999/go-flowconsole"
+)
+
+func main() {
+    user := NewUser(&UserArgs{
+        Name:        &[]string{"Customer"}[0],
+        Description: &[]string{"Retail banking customer"}[0],
+    })
+
+    system := NewComputerSystem(&ComponentArgs{
+        Name: &[]string{"Cloud Banking"}[0],
+    })
+    storage := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Data Store"}[0],
+        BelongsTo: system,
+    })
+    backend := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Core Services"}[0],
+        BelongsTo: system,
+    })
+
+    frontApp := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"Customer Dashboard"}[0],
+        Description: &[]string{"Browser Single-page Application"}[0],
+        BelongsTo:   system,
+    })
+
+    authApi := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Authentication"}[0],
+        Description: &[]string{"Self-Hosted Authentication Service"}[0],
+        BelongsTo:   backend,
+    })
+
+    accountsApi := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Accounts API"}[0],
+        Description: &[]string{"Java Spring service for balances and payments"}[0],
+        BelongsTo:   backend,
+    })
+
+    cache := NewRedis(&ComponentArgs{
+        Name:        &[]string{"Session Cache"}[0],
+        Description: &[]string{"Stores customer session payloads"}[0],
+        BelongsTo:   storage,
+    })
+
+    db := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"Ledger DB"}[0],
+        Description: &[]string{"Persistent customer and transaction data"}[0],
+        BelongsTo:   storage,
+    })
+
+    auditStream := NewKafkaTopic(&ComponentArgs{
+        Name:        &[]string{"Audit Events"}[0],
+        Description: &[]string{"Every request produces an audit record"}[0],
+        BelongsTo:   backend,
+    })
+
+    fraudService := NewExternalService(&ComponentArgs{
+        Name:        &[]string{"Fraud Guard"}[0],
+        Description: &[]string{"3rd-party fraud scoring"}[0],
+        BelongsTo:   backend,
+    })
+
+    user.SendsRequest(frontApp, &[]string{"launch app"}[0], nil).
+        Then(frontApp).SendsRequest(authApi, &[]string{"login"}[0], nil).
+        Then(frontApp).SendsRequest(accountsApi, &[]string{"load dashboard"}[0], nil).
+        Then(accountsApi).GetDataFrom(cache, &[]string{"session context"}[0], nil).
+        Then(accountsApi).GetDataFrom(db, &[]string{"account snapshot"}[0], nil).
+        Then(accountsApi).SendsRequest(authApi, &[]string{"validate token"}[0], nil).
+        Then(accountsApi).SendsRequest(auditStream, &[]string{"emit audit"}[0], nil).
+        Then(accountsApi).SendsRequest(fraudService, &[]string{"score transaction"}[0], nil)
+}
+```
+
+</CodeTab>
+<CodeTab value="java" label="Java">
+
+```java scroll=false showLineNumbers
+import flowconsole.sdk.*;
+
+public class RetailBankingExample {
+  public static void main(String[] args) {
+    User user = User.Builder.create()
+      .name("Customer")
+      .description("Retail banking customer")
+      .build();
+
+    ComputerSystem system = ComputerSystem.Builder.create()
+      .name("Cloud Banking")
+      .build();
+
+    Container storage = Container.Builder.create()
+      .name("Data Store")
+      .belongsTo(system)
+      .build();
+
+    Container backend = Container.Builder.create()
+      .name("Core Services")
+      .belongsTo(system)
+      .build();
+
+    ReactApp frontApp = ReactApp.Builder.create()
+      .name("Customer Dashboard")
+      .description("Browser Single-page Application")
+      .belongsTo(system)
+      .build();
+
+    RestApi authApi = RestApi.Builder.create()
+      .name("Authentication")
+      .description("Self-Hosted Authentication Service")
+      .belongsTo(backend)
+      .build();
+
+    RestApi accountsApi = RestApi.Builder.create()
+      .name("Accounts API")
+      .description("Java Spring service for balances and payments")
+      .belongsTo(backend)
+      .build();
+
+    Redis cache = Redis.Builder.create()
+      .name("Session Cache")
+      .description("Stores customer session payloads")
+      .belongsTo(storage)
+      .build();
+
+    Postgres db = Postgres.Builder.create()
+      .name("Ledger DB")
+      .description("Persistent customer and transaction data")
+      .belongsTo(storage)
+      .build();
+
+    KafkaTopic auditStream = KafkaTopic.Builder.create()
+      .name("Audit Events")
+      .description("Every request produces an audit record")
+      .belongsTo(backend)
+      .build();
+
+    ExternalService fraudService = ExternalService.Builder.create()
+      .name("Fraud Guard")
+      .description("3rd-party fraud scoring")
+      .belongsTo(backend)
+      .build();
+
+    user
+      .sendsRequest(frontApp, "launch app")
+      .then(frontApp).sendsRequest(authApi, "login")
+      .then(frontApp).sendsRequest(accountsApi, "load dashboard")
+      .then(accountsApi).getDataFrom(cache, "session context")
+      .then(accountsApi).getDataFrom(db, "account snapshot")
+      .then(accountsApi).sendsRequest(authApi, "validate token")
+      .then(accountsApi).sendsRequest(auditStream, "emit audit")
+      .then(accountsApi).sendsRequest(fraudService, "score transaction");
+  }
+}
+```
+
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
+```csharp scroll=false showLineNumbers
+using FlowConsole;
+
+var user = new User(new UserArgs {
+    Name = "Customer",
+    Description = "Retail banking customer"
+});
+
+var system = new ComputerSystem(new ComponentArgs { Name = "Cloud Banking" });
+var storage = new Container(new ComponentArgs { Name = "Data Store", BelongsTo = system });
+var backend = new Container(new ComponentArgs { Name = "Core Services", BelongsTo = system });
+
+var frontApp = new ReactApp(new ComponentArgs {
+    Name = "Customer Dashboard",
+    Description = "Browser Single-page Application",
+    BelongsTo = system
+});
+
+var authApi = new RestApi(new ComponentArgs {
+    Name = "Authentication",
+    Description = "Self-Hosted Authentication Service",
+    BelongsTo = backend
+});
+
+var accountsApi = new RestApi(new ComponentArgs {
+    Name = "Accounts API",
+    Description = "Java Spring service for balances and payments",
+    BelongsTo = backend
+});
+
+var cache = new Redis(new ComponentArgs {
+    Name = "Session Cache",
+    Description = "Stores customer session payloads",
+    BelongsTo = storage
+});
+
+var db = new Postgres(new ComponentArgs {
+    Name = "Ledger DB",
+    Description = "Persistent customer and transaction data",
+    BelongsTo = storage
+});
+
+var auditStream = new KafkaTopic(new ComponentArgs {
+    Name = "Audit Events",
+    Description = "Every request produces an audit record",
+    BelongsTo = backend
+});
+
+var fraudService = new ExternalService(new ComponentArgs {
+    Name = "Fraud Guard",
+    Description = "3rd-party fraud scoring",
+    BelongsTo = backend
+});
+
+user
+    .SendsRequest(frontApp, "launch app")
+    .Then(frontApp).SendsRequest(authApi, "login")
+    .Then(frontApp).SendsRequest(accountsApi, "load dashboard")
+    .Then(accountsApi).GetDataFrom(cache, "session context")
+    .Then(accountsApi).GetDataFrom(db, "account snapshot")
+    .Then(accountsApi).SendsRequest(authApi, "validate token")
+    .Then(accountsApi).SendsRequest(auditStream, "emit audit")
+    .Then(accountsApi).SendsRequest(fraudService, "score transaction");
+```
+
+</CodeTab>
+</CodeTabs>
+
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-1)

@@ -1,0 +1,79 @@
+{
+  "name": "@flowconsole/sdk",
+  "version": "1.0.2",
+  "description": "FlowConsole SDK",
+  "main": "dist/flowconsole-sdk.js",
+  "scripts": {
+    "build": "jsii",
+    "build:watch": "jsii --watch",
+    "package": "jsii-pacmak --clean --verbose",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": {
+    "name": "Vladimir Golubev",
+    "email": "v@flowconsole.tech"
+  },
+  "repository": {
+    "url": "https://github.com/slackmaster9999/flowconsole.git",
+    "directory": "src/sdk"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/flowconsole-sdk.d.ts",
+      "require": "./dist/flowconsole-sdk.js"
+    },
+    "./flowconsole-sdk.ts": "./flowconsole-sdk.ts",
+    "./*": "./*"
+  },
+  "files": [
+    "dist/flowconsole-sdk.js",
+    "dist/flowconsole-sdk.d.ts",
+    ".jsii",
+    ".jsii.gz",
+    "flowconsole-sdk.ts"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@10.19.0",
+  "stability": "stable",
+  "types": "dist/flowconsole-sdk.d.ts",
+  "jsii": {
+    "outdir": "dist",
+    "versionFormat": "full",
+    "targets": {
+      "java": {
+        "package": "flowconsole.sdk",
+        "maven": {
+          "groupId": "io.github.slackmaster9999",
+          "artifactId": "flowconsole-sdk"
+        }
+      },
+      "python": {
+        "distName": "flowconsole-sdk",
+        "module": "flowconsole"
+      },
+      "dotnet": {
+        "namespace": "FlowConsole",
+        "packageId": "FlowConsole.Sdk",
+        "iconUrl": "https://raw.githubusercontent.com/slackmaster9999/flowconsole/main/src/docs/public/_static/favicons/android-chrome-512x512.png"
+      },
+      "go": {
+        "packageName": "flowconsole",
+        "moduleName": "github.com/slackmaster9999/go-flowconsole"
+      }
+    },
+    "tsconfig": "tsconfig.json",
+    "validateTsconfig": "minimal",
+    "tsc": {
+      "outDir": "dist",
+      "rootDir": "."
+    }
+  },
+  "devDependencies": {
+    "jsii": "^5.9.22",
+    "jsii-pacmak": "^1.125.0"
+  }
+}

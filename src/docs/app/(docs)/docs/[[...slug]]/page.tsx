@@ -38,7 +38,7 @@ export async function generateMetadata({
   const { title, description } = doc;
 
   return constructMetadata({
-    title: `${title} – Flow Console`,
+    title: `${title} – FlowConsole`,
     description: description,
   });
 }

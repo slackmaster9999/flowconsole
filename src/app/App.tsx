@@ -1,14 +1,22 @@
-import '@mantine/core/styles.css';
 import '@xyflow/react/dist/style.css';
-import { CodeDiagramWorkbench } from 'flowconsole/components/Workbench/CodeDiagramWorkbench';
-import { useTheme } from 'flowconsole/theme/ThemeProvider';
+import { CodeDiagramWorkbench, useTheme } from '@flowconsole/web';
+import styles from './App.module.css';
 
-
-export default function App() { 
+export default function App() {
   const { resolvedScheme, scheme, toggleScheme } = useTheme();
+
   return (
-    <CodeDiagramWorkbench 
-      themeControls={{ resolvedScheme, scheme, toggleScheme }}
-    />
+    <div className={styles.root}>
+      <div className={styles.banner} role="status">
+        Showing generated diagrams is temporarily unavailable while we migrate to a new
+        version.
+      </div>
+      <div className={styles.workbench}>
+        <CodeDiagramWorkbench
+          apiBaseUrl={import.meta.env.VITE_FLOWCONSOLE_API_URL}
+          themeControls={{ resolvedScheme, scheme, toggleScheme }}
+        />
+      </div>
+    </div>
   );
 }

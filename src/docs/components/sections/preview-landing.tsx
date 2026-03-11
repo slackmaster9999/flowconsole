@@ -5,9 +5,9 @@ import Link from "next/link";
 import { buttonVariants } from "../ui/button";
 import { Icons } from "../shared/icons";
 import { cn } from "@/lib/utils";
-import { ArchitectureDiagram } from "flowconsole/components/ArchitectureDiagram";
-import { ThemeProvider } from "flowconsole/theme/ThemeProvider";
-import { architectureNodeTypes, architectureEdgeTypes } from "flowconsole/diagram/registry";
+import { ArchitectureDiagram } from "@flowconsole/web";
+import { ThemeProvider } from "@flowconsole/web";
+import { ArchitectureNodeTypes, ArchitectureEdgeTypes } from "@flowconsole/web";
 import { useTheme } from "next-themes";
 import "@/styles/preview-landing.css";
 
@@ -344,7 +344,7 @@ export default function PreviewLanding() {
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
         >
           <Link
-            href="https://dev.flowconsole.pages.dev/"
+            href="https://dev.flowconsole.pages.dev/utm_source=docs_main"
             prefetch={true}
             className={cn(
               buttonVariants({ size: "lg", rounded: "full" }),

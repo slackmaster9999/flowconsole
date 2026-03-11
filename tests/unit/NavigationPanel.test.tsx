@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 
 
-import { ArchitectureDiagramModel } from '../../src/core/diagram/types';
-import NavigationPanel from '../../src/core/components/NavigationPanel';
+import { ArchitectureDiagramModel } from '../../src/web/diagram/types';
+import NavigationPanel from '../../src/web/components/NavigationPanel';
 
 const fitView = vi.fn();
 const getNode = vi.fn().mockReturnValue({ id: 'service-a' });
@@ -15,9 +15,9 @@ vi.mock('@xyflow/react', () => ({
   }),
 }));
 
-vi.mock('../../src/core/hooks/hooks', async () => {
-  const actual = await vi.importActual<typeof import('../../src/core/components/NavigationPanel')>(
-    '../../src/core/hooks/hooks'
+vi.mock('../../src/web/hooks/hooks', async () => {
+  const actual = await vi.importActual<typeof import('../../src/web/components/NavigationPanel')>(
+    '../../src/web/hooks/hooks'
   );
   return {
     ...actual,
@@ -33,12 +33,12 @@ vi.mock('../../src/core/hooks/hooks', async () => {
   };
 });
 
-vi.mock('../../src/core/components/NavigationPanel/NavigationPanelControls', () => ({
+vi.mock('../../src/web/components/NavigationPanel/NavigationPanelControls', () => ({
   NavigationPanelControls: () => <div data-testid="controls" />,
   default: () => <div data-testid="controls" />,
 }));
 
-vi.mock('../../src/core/components/NavigationPanel/NavigationPanelDropdown', () => ({
+vi.mock('../../src/web/components/NavigationPanel/NavigationPanelDropdown', () => ({
   NavigationPanelDropdown: ({ flat, onSelect }: any) => (
     <div>
       {flat.map((item: any) => (
@@ -59,7 +59,7 @@ vi.mock('../../src/core/components/NavigationPanel/NavigationPanelDropdown', () 
   ),
 }));
 
-vi.mock('../../src/core/components/NavigationPanel/SearchOverlay', () => ({
+vi.mock('../../src/web/components/NavigationPanel/SearchOverlay', () => ({
   default: () => null,
 }));
 

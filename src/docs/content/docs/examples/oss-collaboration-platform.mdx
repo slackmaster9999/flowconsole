@@ -1,0 +1,459 @@
+---
+title: OSS Collaboration Platform Example
+---
+
+<CodeTabs defaultValue="typescript">
+<CodeTab value="typescript" label="TypeScript">
+
+```typescript scroll=false showLineNumbers
+import {
+  User,
+  ComputerSystem,
+  Container,
+  ReactApp,
+  RestApi,
+  BackgroundJob,
+  MessageQueue,
+  KafkaTopic,
+  Postgres
+} from "@flowconsole/sdk";
+
+const contributor = new User({ name: "Contributor", description: "Sends pull requests" });
+const maintainer = new User({ name: "Maintainer", description: "Reviews and deploys" });
+
+const helios = new ComputerSystem({ name: "Helios OSS" });
+const gitGateway = new Container({ name: "Git Gateway", belongsTo: helios });
+const ciCluster = new Container({ name: "CI Cluster", belongsTo: helios });
+const observability = new Container({ name: "Observability", belongsTo: helios });
+
+const webApp = new ReactApp({
+  name: "Helios Web",
+  description: "Next.js UI for issues, merge requests, pipelines",
+  belongsTo: helios
+});
+
+const gitHttp = new RestApi({
+  name: "Git HTTP",
+  description: "Clone & push over HTTPS",
+  belongsTo: gitGateway
+});
+
+const apiGateway = new RestApi({
+  name: "GraphQL API",
+  description: "Issues, projects, releases",
+  belongsTo: gitGateway
+});
+
+const ciRunner = new BackgroundJob({
+  name: "CI Runner",
+  description: "Executes pipelines from queue",
+  belongsTo: ciCluster
+});
+
+const pipelineQueue = new MessageQueue({
+  name: "Pipeline Queue",
+  description: "Jobs waiting for runners",
+  belongsTo: ciCluster
+});
+
+const eventStream = new KafkaTopic({
+  name: "Activity Stream",
+  description: "Push events, comments, deployments",
+  belongsTo: observability
+});
+
+const metricsStore = new Postgres({
+  name: "Metrics Store",
+  description: "Usage, billing, analytics",
+  belongsTo: observability
+});
+
+contributor
+  .sendsRequest(webApp, "open MR")
+  .then(webApp).sendsRequest(apiGateway, "create merge request")
+  .sendsRequest(gitHttp, "push commits")
+  .then(apiGateway).sendsRequest(pipelineQueue, "enqueue pipeline")
+  .sendsRequest(eventStream, "publish activity");
+
+ciRunner
+  .sendsRequest(pipelineQueue, "claim job")
+  .executesRequest("run tests")
+  .sendsRequest(apiGateway, "update status")
+  .sendsRequest(eventStream, "emit pipeline events");
+
+maintainer
+  .sendsRequest(webApp, "review & deploy")
+  .then(webApp).sendsRequest(apiGateway, "approve merge")
+  .sendsRequest(metricsStore, "record deployment")
+  .then(apiGateway).sendsRequest(eventStream, "log deployment");
+```
+
+</CodeTab>
+<CodeTab value="python" label="Python">
+
+```python scroll=false showLineNumbers
+from flowconsole import (
+    User,
+    ComputerSystem,
+    Container,
+    ReactApp,
+    RestApi,
+    BackgroundJob,
+    MessageQueue,
+    KafkaTopic,
+    Postgres,
+)
+
+contributor = User(name="Contributor", description="Sends pull requests")
+maintainer = User(name="Maintainer", description="Reviews and deploys")
+
+helios = ComputerSystem(name="Helios OSS")
+git_gateway = Container(name="Git Gateway", belongs_to=helios)
+ci_cluster = Container(name="CI Cluster", belongs_to=helios)
+observability = Container(name="Observability", belongs_to=helios)
+
+web_app = ReactApp(
+    name="Helios Web",
+    description="Next.js UI for issues, merge requests, pipelines",
+    belongs_to=helios,
+)
+
+git_http = RestApi(
+    name="Git HTTP",
+    description="Clone & push over HTTPS",
+    belongs_to=git_gateway,
+)
+
+api_gateway = RestApi(
+    name="GraphQL API",
+    description="Issues, projects, releases",
+    belongs_to=git_gateway,
+)
+
+ci_runner = BackgroundJob(
+    name="CI Runner",
+    description="Executes pipelines from queue",
+    belongs_to=ci_cluster,
+)
+
+pipeline_queue = MessageQueue(
+    name="Pipeline Queue",
+    description="Jobs waiting for runners",
+    belongs_to=ci_cluster,
+)
+
+event_stream = KafkaTopic(
+    name="Activity Stream",
+    description="Push events, comments, deployments",
+    belongs_to=observability,
+)
+
+metrics_store = Postgres(
+    name="Metrics Store",
+    description="Usage, billing, analytics",
+    belongs_to=observability,
+)
+
+(
+    contributor.sends_request(web_app, "open MR")
+    .then(web_app).sends_request(api_gateway, "create merge request")
+    .sends_request(git_http, "push commits")
+    .then(api_gateway).sends_request(pipeline_queue, "enqueue pipeline")
+    .sends_request(event_stream, "publish activity")
+)
+
+(
+    ci_runner.sends_request(pipeline_queue, "claim job")
+    .executes_request("run tests")
+    .sends_request(api_gateway, "update status")
+    .sends_request(event_stream, "emit pipeline events")
+)
+
+(
+    maintainer.sends_request(web_app, "review & deploy")
+    .then(web_app).sends_request(api_gateway, "approve merge")
+    .sends_request(metrics_store, "record deployment")
+    .then(api_gateway).sends_request(event_stream, "log deployment")
+)
+```
+
+</CodeTab>
+<CodeTab value="go" label="Go">
+
+```go scroll=false showLineNumbers
+package main
+
+import (
+    . "github.com/slackmaster9999/go-flowconsole"
+)
+
+func main() {
+    contributor := NewUser(&UserArgs{
+        Name:        &[]string{"Contributor"}[0],
+        Description: &[]string{"Sends pull requests"}[0],
+    })
+    maintainer := NewUser(&UserArgs{
+        Name:        &[]string{"Maintainer"}[0],
+        Description: &[]string{"Reviews and deploys"}[0],
+    })
+
+    helios := NewComputerSystem(&ComponentArgs{
+        Name: &[]string{"Helios OSS"}[0],
+    })
+    gitGateway := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Git Gateway"}[0],
+        BelongsTo: helios,
+    })
+    ciCluster := NewContainer(&ComponentArgs{
+        Name:      &[]string{"CI Cluster"}[0],
+        BelongsTo: helios,
+    })
+    observability := NewContainer(&ComponentArgs{
+        Name:      &[]string{"Observability"}[0],
+        BelongsTo: helios,
+    })
+
+    webApp := NewReactApp(&ComponentArgs{
+        Name:        &[]string{"Helios Web"}[0],
+        Description: &[]string{"Next.js UI for issues, merge requests, pipelines"}[0],
+        BelongsTo:   helios,
+    })
+
+    gitHttp := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"Git HTTP"}[0],
+        Description: &[]string{"Clone & push over HTTPS"}[0],
+        BelongsTo:   gitGateway,
+    })
+
+    apiGateway := NewRestApi(&ComponentArgs{
+        Name:        &[]string{"GraphQL API"}[0],
+        Description: &[]string{"Issues, projects, releases"}[0],
+        BelongsTo:   gitGateway,
+    })
+
+    ciRunner := NewBackgroundJob(&ComponentArgs{
+        Name:        &[]string{"CI Runner"}[0],
+        Description: &[]string{"Executes pipelines from queue"}[0],
+        BelongsTo:   ciCluster,
+    })
+
+    pipelineQueue := NewMessageQueue(&ComponentArgs{
+        Name:        &[]string{"Pipeline Queue"}[0],
+        Description: &[]string{"Jobs waiting for runners"}[0],
+        BelongsTo:   ciCluster,
+    })
+
+    eventStream := NewKafkaTopic(&ComponentArgs{
+        Name:        &[]string{"Activity Stream"}[0],
+        Description: &[]string{"Push events, comments, deployments"}[0],
+        BelongsTo:   observability,
+    })
+
+    metricsStore := NewPostgres(&ComponentArgs{
+        Name:        &[]string{"Metrics Store"}[0],
+        Description: &[]string{"Usage, billing, analytics"}[0],
+        BelongsTo:   observability,
+    })
+
+    contributor.SendsRequest(webApp, &[]string{"open MR"}[0], nil).
+        Then(webApp).SendsRequest(apiGateway, &[]string{"create merge request"}[0], nil).
+        SendsRequest(gitHttp, &[]string{"push commits"}[0], nil).
+        Then(apiGateway).SendsRequest(pipelineQueue, &[]string{"enqueue pipeline"}[0], nil).
+        SendsRequest(eventStream, &[]string{"publish activity"}[0], nil)
+
+    ciRunner.SendsRequest(pipelineQueue, &[]string{"claim job"}[0], nil).
+        ExecutesRequest(&[]string{"run tests"}[0]).
+        SendsRequest(apiGateway, &[]string{"update status"}[0], nil).
+        SendsRequest(eventStream, &[]string{"emit pipeline events"}[0], nil)
+}
+```
+
+
+</CodeTab>
+<CodeTab value="java" label="Java">
+
+```java scroll=false showLineNumbers
+import flowconsole.sdk.*;
+
+public class OssCollaborationExample {
+  public static void main(String[] args) {
+    User contributor = User.Builder.create()
+      .name("Contributor")
+      .description("Sends pull requests")
+      .build();
+
+    User maintainer = User.Builder.create()
+      .name("Maintainer")
+      .description("Reviews and deploys")
+      .build();
+
+    ComputerSystem helios = ComputerSystem.Builder.create()
+      .name("Helios OSS")
+      .build();
+
+    Container gitGateway = Container.Builder.create()
+      .name("Git Gateway")
+      .belongsTo(helios)
+      .build();
+
+    Container ciCluster = Container.Builder.create()
+      .name("CI Cluster")
+      .belongsTo(helios)
+      .build();
+
+    Container observability = Container.Builder.create()
+      .name("Observability")
+      .belongsTo(helios)
+      .build();
+
+    ReactApp webApp = ReactApp.Builder.create()
+      .name("Helios Web")
+      .description("Next.js UI for issues, merge requests, pipelines")
+      .belongsTo(helios)
+      .build();
+
+    RestApi gitHttp = RestApi.Builder.create()
+      .name("Git HTTP")
+      .description("Clone & push over HTTPS")
+      .belongsTo(gitGateway)
+      .build();
+
+    RestApi apiGateway = RestApi.Builder.create()
+      .name("GraphQL API")
+      .description("Issues, projects, releases")
+      .belongsTo(gitGateway)
+      .build();
+
+    BackgroundJob ciRunner = BackgroundJob.Builder.create()
+      .name("CI Runner")
+      .description("Executes pipelines from queue")
+      .belongsTo(ciCluster)
+      .build();
+
+    MessageQueue pipelineQueue = MessageQueue.Builder.create()
+      .name("Pipeline Queue")
+      .description("Jobs waiting for runners")
+      .belongsTo(ciCluster)
+      .build();
+
+    KafkaTopic eventStream = KafkaTopic.Builder.create()
+      .name("Activity Stream")
+      .description("Push events, comments, deployments")
+      .belongsTo(observability)
+      .build();
+
+    Postgres metricsStore = Postgres.Builder.create()
+      .name("Metrics Store")
+      .description("Usage, billing, analytics")
+      .belongsTo(observability)
+      .build();
+
+    contributor
+      .sendsRequest(webApp, "open MR")
+      .then(webApp).sendsRequest(apiGateway, "create merge request")
+      .sendsRequest(gitHttp, "push commits")
+      .then(apiGateway).sendsRequest(pipelineQueue, "enqueue pipeline")
+      .sendsRequest(eventStream, "publish activity");
+
+    ciRunner
+      .sendsRequest(pipelineQueue, "claim job")
+      .executesRequest("run tests")
+      .sendsRequest(apiGateway, "update status")
+      .sendsRequest(eventStream, "emit pipeline events");
+
+    maintainer
+      .sendsRequest(webApp, "review & deploy")
+      .then(webApp).sendsRequest(apiGateway, "approve merge")
+      .sendsRequest(metricsStore, "record deployment")
+      .then(apiGateway).sendsRequest(eventStream, "log deployment");
+  }
+}
+```
+
+</CodeTab>
+<CodeTab value="csharp" label="C#">
+
+```csharp scroll=false showLineNumbers
+using FlowConsole;
+
+var contributor = new User(new UserArgs {
+    Name = "Contributor",
+    Description = "Sends pull requests"
+});
+
+var maintainer = new User(new UserArgs {
+    Name = "Maintainer",
+    Description = "Reviews and deploys"
+});
+
+var helios = new ComputerSystem(new ComponentArgs { Name = "Helios OSS" });
+var gitGateway = new Container(new ComponentArgs { Name = "Git Gateway", BelongsTo = helios });
+var ciCluster = new Container(new ComponentArgs { Name = "CI Cluster", BelongsTo = helios });
+var observability = new Container(new ComponentArgs { Name = "Observability", BelongsTo = helios });
+
+var webApp = new ReactApp(new ComponentArgs {
+    Name = "Helios Web",
+    Description = "Next.js UI for issues, merge requests, pipelines",
+    BelongsTo = helios
+});
+
+var gitHttp = new RestApi(new ComponentArgs {
+    Name = "Git HTTP",
+    Description = "Clone & push over HTTPS",
+    BelongsTo = gitGateway
+});
+
+var apiGateway = new RestApi(new ComponentArgs {
+    Name = "GraphQL API",
+    Description = "Issues, projects, releases",
+    BelongsTo = gitGateway
+});
+
+var ciRunner = new BackgroundJob(new ComponentArgs {
+    Name = "CI Runner",
+    Description = "Executes pipelines from queue",
+    BelongsTo = ciCluster
+});
+
+var pipelineQueue = new MessageQueue(new ComponentArgs {
+    Name = "Pipeline Queue",
+    Description = "Jobs waiting for runners",
+    BelongsTo = ciCluster
+});
+
+var eventStream = new KafkaTopic(new ComponentArgs {
+    Name = "Activity Stream",
+    Description = "Push events, comments, deployments",
+    BelongsTo = observability
+});
+
+var metricsStore = new Postgres(new ComponentArgs {
+    Name = "Metrics Store",
+    Description = "Usage, billing, analytics",
+    BelongsTo = observability
+});
+
+contributor
+    .SendsRequest(webApp, "open MR")
+    .Then(webApp).SendsRequest(apiGateway, "create merge request")
+    .SendsRequest(gitHttp, "push commits")
+    .Then(apiGateway).SendsRequest(pipelineQueue, "enqueue pipeline")
+    .SendsRequest(eventStream, "publish activity");
+
+ciRunner
+    .SendsRequest(pipelineQueue, "claim job")
+    .ExecutesRequest("run tests")
+    .SendsRequest(apiGateway, "update status")
+    .SendsRequest(eventStream, "emit pipeline events");
+
+maintainer
+    .SendsRequest(webApp, "review & deploy")
+    .Then(webApp).SendsRequest(apiGateway, "approve merge")
+    .SendsRequest(metricsStore, "record deployment")
+    .Then(apiGateway).SendsRequest(eventStream, "log deployment");
+```
+
+</CodeTab>
+</CodeTabs>
+
+Try it in [Playground](https://dev.flowconsole.pages.dev/?utm_source=example-3)

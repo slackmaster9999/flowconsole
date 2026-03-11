@@ -1,0 +1,228 @@
+name: Release Preview
+
+on:
+  push:
+    branches: ['feature/**', dev]
+  
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-preview:
+    env:
+      NEXT_PUBLIC_APP_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+      NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+    environment:
+      name: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Set preview versions (beta + short sha)
+        run: |
+          bash ./set-preview-versions.sh
+
+      - name: Build all packages
+        run: pnpm build
+
+      - name: Run tests
+        run: |
+          pnpm --filter @flowconsole/core test
+
+      - name: Build SDK artifacts (jsii + pacmak)
+        run: |
+          pnpm --dir src/sdk package
+
+      - name: Publish preview packages (beta tag)
+        run: pnpm -r publish --tag beta --no-git-checks
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish Go SDK (beta)
+        env:
+          GO_SDK_PUSH_TOKEN: ${{ secrets.GO_SDK_PUSH_TOKEN }}
+        working-directory: src/sdk
+        run: |
+          if [ -z "$GO_SDK_PUSH_TOKEN" ]; then
+            echo "GO_SDK_PUSH_TOKEN is not set; skipping Go publish."
+            exit 0
+          fi
+          if [ ! -f dist/go/flowconsole/go.mod ]; then
+            echo "No Go SDK artifacts found in dist/go/flowconsole; skipping publish."
+            exit 0
+          fi
+          TAG="v0.0.0-preview"
+          TMP="$(mktemp -d)"
+          git clone "https://x-access-token:${GO_SDK_PUSH_TOKEN}@github.com/slackmaster9999/go-flowconsole.git" "$TMP"
+          git -C "$TMP" config user.name "github-actions[bot]"
+          git -C "$TMP" config user.email "github-actions[bot]@users.noreply.github.com"
+          git -C "$TMP" reset --hard
+          git -C "$TMP" clean -fdx
+          cp -a dist/go/flowconsole/. "$TMP"/
+          git -C "$TMP" add -A
+          if git -C "$TMP" diff --cached --quiet; then
+            echo "No Go SDK changes to publish."
+          else
+            git -C "$TMP" commit -m "chore: publish go sdk preview"
+          fi
+          git -C "$TMP" tag -f "$TAG"
+          git -C "$TMP" push origin HEAD:main
+          git -C "$TMP" push origin "$TAG" --force
+
+      - name: Check Python SDK artifacts
+        id: python_artifacts
+        run: |
+          if ls dist/python/*.whl >/dev/null 2>&1 || ls dist/python/*.tar.gz >/dev/null 2>&1; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No Python artifacts found in dist/python; skipping publish."
+          fi
+        working-directory: src/sdk
+
+      - name: Setup Python
+        if: steps.python_artifacts.outputs.found == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Publish PyPI packages (beta)
+        if: steps.python_artifacts.outputs.found == 'true'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: src/sdk/dist/python/
+          password: ${{ secrets.PYPI_API_TOKEN }}
+
+      - name: Check Java SDK artifacts
+        id: java_artifacts
+        run: |
+          POM_PATH=$(find dist/java -type f -name "*.pom" ! -name "*.pom.*" | head -n 1)
+          if [ -n "$POM_PATH" ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+            echo "pom_path=$POM_PATH" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No Java artifacts found in src/sdk/dist/java; skipping publish."
+          fi
+        working-directory: src/sdk
+
+      - name: Setup Java
+        if: steps.java_artifacts.outputs.found == 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          server-id: central
+          server-username: CENTRAL_TOKEN_USERNAME
+          server-password: CENTRAL_TOKEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: GPG_PASSPHRASE
+        env:
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Publish GPG public key to keyserver
+        if: steps.java_artifacts.outputs.found == 'true'
+        run: |
+          KEY_ID=$(gpg --list-keys --keyid-format long --with-colons | awk -F: '/^pub/{print $5}' | head -1)
+          if [ -z "$KEY_ID" ]; then
+            echo "No GPG key found; skipping keyserver upload."
+            exit 0
+          fi
+          echo "Publishing GPG key $KEY_ID to keyserver.ubuntu.com"
+          gpg --keyserver keyserver.ubuntu.com --send-keys "$KEY_ID"
+
+      - name: Publish Maven packages (beta)
+        if: steps.java_artifacts.outputs.found == 'true'
+        env:
+          CENTRAL_TOKEN_USERNAME: ${{ secrets.CENTRAL_TOKEN_USERNAME }}
+          CENTRAL_TOKEN_PASSWORD: ${{ secrets.CENTRAL_TOKEN_PASSWORD }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        working-directory: src/sdk
+        run: |
+          set -euo pipefail
+
+          # 1. Locate POM and extract coordinates from dist path
+          POM_PATH="${{ steps.java_artifacts.outputs.pom_path }}"
+          if [ -z "$POM_PATH" ] || [ ! -f "$POM_PATH" ]; then
+            echo "Missing jsii-generated POM; skipping publish."
+            exit 0
+          fi
+          ARTIFACT_DIR="$(dirname "$POM_PATH")"
+          VERSION="$(basename "$ARTIFACT_DIR")"
+          ARTIFACT_ID="$(basename "$(dirname "$ARTIFACT_DIR")")"
+          echo "Publishing: $ARTIFACT_ID $VERSION from $ARTIFACT_DIR"
+
+          # 2. GPG sign all JARs and POM
+          for FILE in "$ARTIFACT_DIR"/*.jar "$ARTIFACT_DIR"/*.pom; do
+            [ -f "$FILE" ] || continue
+            echo "Signing: $(basename "$FILE")"
+            gpg --batch --yes --pinentry-mode loopback \
+              --passphrase "$GPG_PASSPHRASE" \
+              --armor --detach-sign "$FILE"
+          done
+
+          # 3. Create deployment bundle with Maven repo layout
+          BUNDLE_DIR="$(mktemp -d)"
+          GROUP_PATH="$(echo "$ARTIFACT_DIR" | sed 's|.*dist/java/||')"
+          mkdir -p "$BUNDLE_DIR/$GROUP_PATH"
+          cp "$ARTIFACT_DIR"/* "$BUNDLE_DIR/$GROUP_PATH/"
+          echo "--- Bundle contents ---"
+          find "$BUNDLE_DIR" -type f | sort
+
+          BUNDLE_ZIP="$(mktemp).zip"
+          (cd "$BUNDLE_DIR" && zip -r "$BUNDLE_ZIP" .)
+
+          # 4. Upload to Central Portal REST API
+          AUTH_TOKEN=$(printf '%s:%s' "$CENTRAL_TOKEN_USERNAME" "$CENTRAL_TOKEN_PASSWORD" | base64 -w0)
+          RESPONSE=$(curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "Authorization: Bearer $AUTH_TOKEN" \
+            --form "bundle=@${BUNDLE_ZIP};type=application/octet-stream" \
+            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=AUTOMATIC&name=${ARTIFACT_ID}-${VERSION}")
+          echo "Upload successful. Deployment ID: $RESPONSE"
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Publish NuGet packages (beta)
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        working-directory: src/sdk
+        run: |
+          NUGET_PACKAGES=$(find dist/dotnet -type f -name "*.nupkg")
+          if [ -z "$NUGET_PACKAGES" ]; then
+            echo "No NuGet packages found in dist/dotnet; skipping publish."
+            exit 0
+          fi
+          dotnet nuget push $NUGET_PACKAGES \
+            --api-key "$NUGET_API_KEY" \
+            --source https://api.nuget.org/v3/index.json \
+            --skip-duplicate

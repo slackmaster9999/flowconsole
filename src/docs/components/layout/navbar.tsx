@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { FlowConsoleLogo } from "flowconsole/components/FlowConsoleLogo";
+import { FlowConsoleLogo } from "@flowconsole/web";
 import { docsConfig } from "@/config/docs";
 import { marketingConfig } from "@/config/marketing";
 import { siteConfig } from "@/config/site";
@@ -79,7 +79,7 @@ export function NavBar({ scroll = false }: NavBarProps) {
             <div className="hidden flex-1 items-center space-x-4 sm:justify-end lg:flex">
               <div className="hidden lg:flex lg:grow-0">
                 {/* right header for docs */}
-                {documentation ? <DocsSearch /> : null}
+                {/*documentation ? <DocsSearch /> : null */}
               </div>
               <div className="flex lg:hidden">
                 <Icons.search className="size-6 text-muted-foreground" />

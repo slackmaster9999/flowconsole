@@ -2,11 +2,23 @@
   "name": "oss",
   "private": true,
   "scripts": {
+    "build": "pnpm run build:workspace",
+    "build:workspace": "pnpm -r --filter '!flowconsole-docs' build",
+    "build:app": "pnpm --dir src/app build",
+    "build:web": "pnpm --dir src/web build",
+    "build:core": "pnpm --dir src/core build",
+    "build:docs": "pnpm --dir src/docs build",
+    "build:cli": "pnpm --dir src/cli build",
+    "build:sdk": "pnpm --dir src/sdk build",
     "test": "pnpm run test:unit && pnpm run test:e2e",
     "test:unit": "pnpm --filter flowconsole test:unit",
-    "test:e2e": "pnpm --filter flowconsole test:e2e"
+    "test:e2e": "pnpm --filter flowconsole test:e2e",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "pnpm -r build && pnpm -r publish --no-git-checks"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -14,5 +26,6 @@
     "@xyflow/react": "^12.10.0",
     "react": "19.2.1",
     "vitest": "^4.0.15"
-  }
+  },
+  "packageManager": "pnpm@10.19.0"
 }

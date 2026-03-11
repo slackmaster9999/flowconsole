@@ -7,17 +7,19 @@ import { docco, gradientDark } from 'react-syntax-highlighter/dist/esm/styles/hl
 export default function BentoGrid() {
   const { theme } = useTheme(); 
   const highlighterTheme = theme === 'dark' ? gradientDark : docco;
-  const sample = `const user: User = { name: "Customer", description: "Customer of Cloud System" };
+  const sample = `import { User, ComputerSystem, Container, ReactApp } from "@flowconsole/sdk";
 
-const system: ComputerSystem = { name: "Cloud System" };
-const storage: Container = { name: "Data Store", system: system };
-const backend: Container = { name: "Backend", system: system };
+const user = new User({ name: "Customer", description: "Customer of Cloud System" });
 
-const frontApp: ReactApp = {
+const system = new ComputerSystem({ name: "Cloud System" });
+const storage = new Container({ name: "Data Store", belongsTo: system });
+const backend = new Container({ name: "Backend", belongsTo: system });
+
+const frontApp = new ReactApp({
   name: "Customer Dashboard",
   description: "Browser Single-page Application",
   belongsTo: system
-};`;
+});`;
   return (
     <section className="py-32">
       <MaxWidthWrapper>
@@ -33,7 +35,7 @@ const frontApp: ReactApp = {
                 Define your architecture in Typescript
               </h2>
               <br/>
-              <span className="mt-6 text-center text-gradient_indigo-purple">[WIP] C#, Java, Go, Python</span>
+              <span className="mt-6 text-center text-gradient_indigo-purple">C#, Java, Go, Python (preview)</span>
             </div>
           </div>
 
