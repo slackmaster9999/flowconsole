@@ -2,7 +2,6 @@ import { ActionIcon, Group, Text, Tooltip } from '../ui';
 import { IconArrowLeft, IconArrowRight, IconChevronRight, IconGitBranch, IconMoonStars, IconSearch, IconSunHigh } from '@tabler/icons-react';
 import { isMacOs } from '@xyflow/system';
 import type { ThemeControls } from '../../types/theme';
-import { FlowConsoleLogo } from '../FlowConsoleLogo';
 
 type Crumb = { id: string; title: string };
 
@@ -49,7 +48,7 @@ export function NavigationPanelControls({
   return (
     <div className="navpanel-controls" onClick={onToggle}>
       <Group gap={8} style={{ flexWrap: 'nowrap' }}>
-        <FlowConsoleLogo color="#7c3aed" />
+
         <div
           className="navpanel-meta"
           onMouseEnter={onTitleHoverStart}
